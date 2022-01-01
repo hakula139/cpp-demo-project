@@ -1,7 +1,9 @@
 ## Customized
 
+.DS_STORE
 bin/
 build/
+*.log
 
 
 ## Cpp
