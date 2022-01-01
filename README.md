@@ -1,6 +1,10 @@
-# cpp_test_env
+# C++ Testing Environment
 
 My simple testing environment for C++ (VS Code).
+
+Currently supports:
+
+- macOS (armv8)
 
 ## Contributors
 
