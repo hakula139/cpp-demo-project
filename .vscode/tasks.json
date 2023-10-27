@@ -6,11 +6,11 @@
       "type": "cppbuild",
       "command": "/usr/bin/clang++",
       "args": [
+        "-std=c++20",
         "-fcolor-diagnostics",
         "-fansi-escape-codes",
         "-g",
         "-Wall",
-        "-std=c++20",
         "${file}",
         "-o",
         "${workspaceFolder}/bin/${fileBasenameNoExtension}"
