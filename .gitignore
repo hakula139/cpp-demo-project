@@ -1,12 +1,11 @@
-## Customized
+## Customized ##
 
-.DS_STORE
 bin/
 build/
 *.log
 
 
-## Cpp
+## Cpp ##
 
 # Prerequisites
 *.d
