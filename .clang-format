@@ -1,12 +1,6 @@
 Language: Cpp
 BasedOnStyle: Google
 
-AlignAfterOpenBracket: AlwaysBreak
-AllowShortBlocksOnASingleLine: true
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: true
-BinPackArguments: false
-BinPackParameters: false
 PenaltyBreakAssignment: 60
 PenaltyBreakBeforeFirstCallParameter: 0
-SpaceBeforeCpp11BracedList: true
+PenaltyIndentedWhitespace: 8
