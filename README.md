@@ -4,11 +4,12 @@ My simple testing environment for C++ (VS Code).
 
 Currently supports:
 
-- macOS (armv8)
+- macOS (ARM64) + Clang + LLDB
+- Linux (x86_64) + GCC + GDB
 
 ## Contributors
 
-- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
+- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)>
 
 ## License
 
