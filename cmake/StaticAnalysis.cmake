@@ -1,13 +1,13 @@
 # Static analysis tools configuration
 
-option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
-option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" ON)
+option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" ON)
 
 if(ENABLE_CLANG_TIDY)
-    find_program(CLANGTIDY clang-tidy)
-    if(CLANGTIDY)
-        set(CMAKE_CXX_CLANG_TIDY ${CLANGTIDY} -extra-arg=-Wno-unknown-warning-option)
-        message(STATUS "Clang-Tidy finished setting up.")
+    find_program(CLANG_TIDY clang-tidy)
+    if(CLANG_TIDY)
+        set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY})
+        message(STATUS "clang-tidy finished setting up")
     else()
         message(WARNING "clang-tidy requested but executable not found")
     endif()
@@ -18,11 +18,12 @@ if(ENABLE_CPPCHECK)
     if(CPPCHECK)
         set(CMAKE_CXX_CPPCHECK
             ${CPPCHECK}
-            --suppress=missingInclude
             --enable=all
-            --inline-suppr
-            --inconclusive)
-        message(STATUS "Cppcheck finished setting up.")
+            --inconclusive
+            --suppress=missingIncludeSystem
+            --suppress=unusedFunction
+        )
+        message(STATUS "cppcheck finished setting up")
     else()
         message(WARNING "cppcheck requested but executable not found")
     endif()

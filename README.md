@@ -1,11 +1,12 @@
-# C++23 Features Demo Project
+# Modern C++ Features Demo Project
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com)
-[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://isocpp.org/)
-[![CMake](https://img.shields.io/badge/CMake-3.23+-blue.svg)](https://cmake.org/)
+[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://isocpp.org)
+[![CMake](https://img.shields.io/badge/CMake-3.23+-blue.svg)](https://cmake.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A comprehensive demonstration project showcasing modern C++23 features, best practices, and advanced programming techniques. This project serves as both a learning resource and a reference implementation for modern C++ development.
+A comprehensive demonstration project showcasing modern C++23 features, best practices, and advanced programming techniques.
+This project serves as both a learning resource and a reference implementation for modern C++ development.
 
 ## 🚀 Features
 
@@ -22,101 +23,66 @@ A comprehensive demonstration project showcasing modern C++23 features, best pra
 
 - [🚀 Features](#-features)
 - [📋 Table of Contents](#-table-of-contents)
-- [🏃‍♂️ Quick Start](#️-quick-start)
 - [🛠️ Installation](#️-installation)
   - [Prerequisites](#prerequisites)
-  - [Build Instructions](#build-instructions)
+  - [Quick Start](#quick-start)
+    - [Clone the repository](#clone-the-repository)
+    - [Build the project](#build-the-project)
+    - [Run the demo](#run-the-demo)
+    - [Run tests](#run-tests)
   - [Build Options](#build-options)
 - [🎯 Usage](#-usage)
   - [Running the Demo](#running-the-demo)
   - [Using Individual Components](#using-individual-components)
 - [📁 Project Structure](#-project-structure)
 - [🧩 Components](#-components)
-  - [🔷 Shapes Module](#-shapes-module)
-  - [🔷 Containers Module](#-containers-module)
-  - [🔷 Concepts Module](#-concepts-module)
-  - [🔷 Memory Module](#-memory-module)
   - [🔷 Algorithms Module](#-algorithms-module)
+  - [🔷 Concepts Module](#-concepts-module)
+  - [🔷 Containers Module](#-containers-module)
+  - [🔷 Memory Module](#-memory-module)
 - [🧪 Testing](#-testing)
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
-- [📚 Learning Resources](#-learning-resources)
 - [📄 License](#-license)
-- [🙏 Acknowledgments](#-acknowledgments)
-
-## 🏃‍♂️ Quick Start
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd cpp-test-env
-
-# Build the project
-mkdir build && cd build
-cmake ..
-make -j4
-
-# Run the demo
-./src/demo
-
-# Run tests
-ctest --verbose
-```
 
 ## 🛠️ Installation
 
 ### Prerequisites
 
-- **C++23 compatible compiler** (GCC 13+, Clang 16+, or MSVC 2022+)
+- **C++23 compatible compiler** (GCC 13+ / Clang 16+)
 - **CMake 3.23** or higher
-- **Git** for cloning the repository
 
-### Build Instructions
+### Quick Start
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd cpp-test-env
-   ```
+#### Clone the repository
 
-2. **Create build directory**:
-   ```bash
-   mkdir build && cd build
-   ```
+```bash
+git clone https://github.com/hakula139/cpp-demo-project
+cd cpp-demo-project
+```
 
-3. **Configure with CMake**:
-   ```bash
-   cmake ..
-   ```
+#### Build the project
 
-4. **Build the project**:
-   ```bash
-   make -j$(nproc)
-   ```
+```bash
+cmake -B build
+cmake --build build --parallel $(nproc)
+```
+
+#### Run the demo
+
+```bash
+./build/src/demo
+```
+
+#### Run tests
+
+```bash
+ctest --test-dir build --verbose
+```
 
 ### Build Options
 
-The project supports several build configuration options:
-
-```bash
-# Build with tests (default)
-cmake .. -DDEMO_BUILD_TESTS=ON
-
-# Build with examples
-cmake .. -DDEMO_BUILD_EXAMPLES=ON
-
-# Enable static analysis
-cmake .. -DENABLE_CLANG_TIDY=ON -DENABLE_CPPCHECK=ON
-
-# Enable all warnings as errors
-cmake .. -DWARNINGS_AS_ERRORS=ON
-
-# Debug build
-cmake .. -DCMAKE_BUILD_TYPE=Debug
-
-# Release build with optimizations
-cmake .. -DCMAKE_BUILD_TYPE=Release
-```
+See [`cmake/README.md`](cmake/README.md#options) for available build options.
 
 ## 🎯 Usage
 
@@ -125,11 +91,12 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 The main executable demonstrates various C++23 features:
 
 ```bash
-./src/demo
+./build/src/demo
 ```
 
-**Sample Output:**
-```
+Sample Output:
+
+```text
 === C++23 Feature Demonstration Program ===
 Testing various modern C++ features and libraries.
 
@@ -154,21 +121,22 @@ Program completed successfully!
 Each component can be used independently:
 
 ```cpp
-#include "shapes/circle.hpp"
 #include "containers/container.hpp"
+#include "shapes/circle.hpp"
 
-using namespace cpp_features;
+using cpp_features::containers;
+using cpp_features::shapes;
 
 int main() {
+    // Use modern containers
+    containers::Container<int> numbers{1, 2, 3, 4, 5};
+    numbers.Display();
+
     // Create and use shapes
     auto circle = shapes::CreateCircle(5.0);
     if (auto area = circle->GetArea(); area) {
         std::cout << "Area: " << area.value() << std::endl;
     }
-
-    // Use modern containers
-    containers::Container<int> numbers{1, 2, 3, 4, 5};
-    numbers.Display();
 
     return 0;
 }
@@ -176,12 +144,11 @@ int main() {
 
 ## 📁 Project Structure
 
-```
-cpp-test-env/
+```text
+cpp-demo-project/
 ├── CMakeLists.txt              # Main project configuration
 ├── README.md                   # This file
 ├── LICENSE                     # MIT License
-├── PROJECT_STRUCTURE.md        # Detailed architecture documentation
 ├── cmake/                      # CMake modules and utilities
 │   ├── CompilerWarnings.cmake  # Compiler warning configuration
 │   ├── StaticAnalysis.cmake    # Static analysis tools
@@ -200,49 +167,50 @@ cpp-test-env/
 │   ├── [mirrors include structure]
 │   └── main.cpp                # Main demonstration program
 ├── tests/                      # Test suite using Catch2
-│   ├── test_shapes.cpp
-│   ├── test_containers.cpp
 │   ├── test_concepts.cpp
+│   ├── test_containers.cpp
+│   ├── test_shapes.cpp
 │   └── test_main.cpp
 └── examples/                   # Usage examples (optional)
 ```
 
 ## 🧩 Components
 
-### 🔷 Shapes Module
-Demonstrates object-oriented programming with modern C++ features:
-- **Polymorphic base class** with virtual methods
-- **Factory functions** using concepts and perfect forwarding
-- **Error handling** with `std::expected<T, E>`
-- **RAII principles** and smart pointer usage
+### 🔷 Algorithms Module
 
-### 🔷 Containers Module
-Modern container implementations showcasing:
-- **Template metaprogramming** with concepts
-- **Range-based algorithms** and views
-- **Perfect forwarding** and move semantics
-- **Custom iterators** and STL compatibility
+STL algorithms and ranges:
+
+- **Modern algorithms** with execution policies
+- **Range adaptors** and views
+- **Custom algorithms** with concepts
+- **Functional programming** patterns
 
 ### 🔷 Concepts Module
+
 C++20/23 concepts demonstrations:
+
 - **Arithmetic concepts** for type constraints
 - **Custom concepts** for domain-specific requirements
 - **Template specialization** with concept requirements
 - **Type trait concepts** for advanced metaprogramming
 
+### 🔷 Containers Module
+
+Modern container implementations showcasing:
+
+- **Template metaprogramming** with concepts
+- **Range-based algorithms** and views
+- **Perfect forwarding** and move semantics
+- **Custom iterators** and STL compatibility
+
 ### 🔷 Memory Module
+
 Smart pointer and memory management:
+
 - **RAII principles** implementation
 - **Custom deleters** and specialized smart pointers
 - **Memory safety** best practices
 - **Resource management** patterns
-
-### 🔷 Algorithms Module
-STL algorithms and ranges:
-- **Modern algorithms** with execution policies
-- **Range adaptors** and views
-- **Custom algorithms** with concepts
-- **Functional programming** patterns
 
 ## 🧪 Testing
 
@@ -263,6 +231,7 @@ make coverage
 ```
 
 **Test Coverage:**
+
 - ✅ Shape operations and polymorphism
 - ✅ Container functionality and edge cases
 - ✅ Concept validation and constraints
@@ -272,35 +241,15 @@ make coverage
 
 ## 💻 Development Notes
 
-This is a personal learning and demonstration project. Key development practices:
-
 ### Code Style
 
 This project follows the **Google C++ Style Guide** with some modifications:
+
 - Use `.clang-format` for automatic formatting
 - Enable `.clang-tidy` for static analysis
 - Follow modern C++ best practices (Core Guidelines)
 - Use meaningful names and comprehensive documentation
 
-## 📚 Learning Resources
-
-This project demonstrates concepts from:
-- [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/)
-- [Modern C++ Features](https://github.com/AnthonyCalandra/modern-cpp-features)
-- [Effective Modern C++](https://www.oreilly.com/library/view/effective-modern-c/9781491908419/)
-- [C++23 Standard Features](https://en.cppreference.com/w/cpp/23)
-
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **C++ Standards Committee** for continuous language evolution
-- **Catch2 Framework** for excellent testing capabilities
-- **CMake Community** for modern build system practices
-- **Open Source Contributors** who inspire better software development
-
----
-
-**This is a personal demonstration project for learning modern C++ features.**
