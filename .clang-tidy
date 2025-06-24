@@ -1,0 +1,30 @@
+---
+Checks: >
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  google-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  readability-*
+
+CheckOptions:
+  readability-identifier-naming.NamespaceCase: lower_case
+  readability-identifier-naming.ClassCase: CamelCase
+  readability-identifier-naming.StructCase: CamelCase
+  readability-identifier-naming.FunctionCase: CamelCase
+  readability-identifier-naming.VariableCase: lower_case
+  readability-identifier-naming.ParameterCase: lower_case
+  readability-identifier-naming.MemberCase: lower_case
+  readability-identifier-naming.MemberSuffix: _
+  readability-identifier-naming.PublicMemberCase: lower_case
+  readability-identifier-naming.PublicMemberSuffix: ""
+  readability-identifier-naming.ConstantCase: UPPER_CASE
+  readability-identifier-naming.EnumConstantCase: CamelCase
+  readability-identifier-naming.EnumConstantPrefix: k
+  readability-function-cognitive-complexity.Threshold: 25
+
+HeaderFilterRegex: '.*/include/.*'
+WarningsAsErrors: ''
+FormatStyle: Google

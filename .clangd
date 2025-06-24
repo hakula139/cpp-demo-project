@@ -1,0 +1,60 @@
+CompileFlags:
+  Add:
+    - -std=c++23
+    - -stdlib=libc++
+    - -Wall
+    - -Wextra
+    - -Wpedantic
+    - -Wno-unused-parameter
+    - -I/usr/local/include
+    - -I/opt/homebrew/include
+  Remove:
+    - -std=*
+    - -W*
+  CompilationDatabase: build/
+
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+InlayHints:
+  Enabled: true
+  ParameterNames: true
+  DeducedTypes: true
+  Designators: true
+  BlockEnd: true
+
+Hover:
+  ShowAKA: true
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+  ClangTidy:
+    Add:
+      - bugprone-*
+      - cert-*
+      - clang-analyzer-*
+      - google-*
+      - misc-*
+      - modernize-*
+      - performance-*
+      - readability-*
+    CheckOptions:
+      readability-identifier-naming.NamespaceCase: lower_case
+      readability-identifier-naming.ClassCase: PascalCase
+      readability-identifier-naming.StructCase: PascalCase
+      readability-identifier-naming.FunctionCase: PascalCase
+      readability-identifier-naming.VariableCase: lower_case
+      readability-identifier-naming.ParameterCase: lower_case
+      readability-identifier-naming.MemberCase: lower_case
+      readability-identifier-naming.MemberSuffix: _
+      readability-identifier-naming.PublicMemberCase: lower_case
+      readability-identifier-naming.PublicMemberSuffix: ""
+      readability-identifier-naming.ConstantCase: UPPER_CASE
+      readability-identifier-naming.EnumConstantCase: PascalCase
+      readability-identifier-naming.EnumConstantPrefix: k
+      readability-function-cognitive-complexity.Threshold: 25
+
+Completion:
+  AllScopes: true
