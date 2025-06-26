@@ -8,6 +8,8 @@ Checks: >
   modernize-*,
   performance-*,
   readability-*
+  -readability-identifier-length
+  -readability-magic-numbers
 
 CheckOptions:
   readability-identifier-naming.NamespaceCase: lower_case
@@ -19,7 +21,7 @@ CheckOptions:
   readability-identifier-naming.MemberCase: lower_case
   readability-identifier-naming.MemberSuffix: _
   readability-identifier-naming.PublicMemberCase: lower_case
-  readability-identifier-naming.PublicMemberSuffix: ""
+  readability-identifier-naming.PublicMemberSuffix: ''
   readability-identifier-naming.ConstantCase: UPPER_CASE
   readability-identifier-naming.EnumConstantCase: CamelCase
   readability-identifier-naming.EnumConstantPrefix: k
