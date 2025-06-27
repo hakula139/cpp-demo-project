@@ -23,6 +23,27 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# macOS-specific fixes for Mach-O linker errors
+if(APPLE)
+    # Ensure we use the system's default archive tools to prevent corrupted static libraries
+    # This fixes "archive member '/' not a mach-o file" errors
+    set(CMAKE_AR "/usr/bin/ar" CACHE FILEPATH "Path to ar archiver" FORCE)
+    set(CMAKE_RANLIB "/usr/bin/ranlib" CACHE FILEPATH "Path to ranlib" FORCE)
+
+    # Additional macOS linker settings to prevent archive corruption
+    set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_C_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
+    set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
+
+    # Ensure proper handling of static libraries
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".dylib" ".so")
+
+    # Set proper flags for static library creation (ranlib handled by ARCHIVE_FINISH)
+    set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
+    set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
+endif()
+
 # Include cmake utilities
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -34,11 +55,11 @@ option(DEMO_ENABLE_WARNINGS "Enable compiler warnings" ON)
 # Add custom CMake modules
 include(CompilerWarnings)
 include(StaticAnalysis)
+include(Dependencies)
 
 # Create interface target for project options
 add_library(demo_project_options INTERFACE)
 add_library(demo::project_options ALIAS demo_project_options)
-
 target_compile_features(demo_project_options INTERFACE cxx_std_23)
 
 # Create interface target for warnings
@@ -56,41 +77,8 @@ else()
     target_compile_options(demo_project_options INTERFACE -O3 -DNDEBUG)
 endif()
 
-# Find dependencies
-find_package(Catch2 3 QUIET)
-if(NOT Catch2_FOUND AND DEMO_BUILD_TESTS)
-    include(FetchContent)
-    FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v3.8.1
-        GIT_SHALLOW    TRUE
-    )
-
-    # Temporarily disable static analysis for dependencies
-    if(DEFINED CMAKE_CXX_CLANG_TIDY)
-        set(CMAKE_CXX_CLANG_TIDY_BACKUP ${CMAKE_CXX_CLANG_TIDY})
-        unset(CMAKE_CXX_CLANG_TIDY)
-    endif()
-    if(DEFINED CMAKE_CXX_CPPCHECK)
-        set(CMAKE_CXX_CPPCHECK_BACKUP ${CMAKE_CXX_CPPCHECK})
-        unset(CMAKE_CXX_CPPCHECK)
-    endif()
-
-    FetchContent_MakeAvailable(Catch2)
-
-    # Restore static analysis settings
-    if(DEFINED CMAKE_CXX_CLANG_TIDY_BACKUP)
-        set(CMAKE_CXX_CLANG_TIDY ${CMAKE_CXX_CLANG_TIDY_BACKUP})
-        unset(CMAKE_CXX_CLANG_TIDY_BACKUP)
-    endif()
-    if(DEFINED CMAKE_CXX_CPPCHECK_BACKUP)
-        set(CMAKE_CXX_CPPCHECK ${CMAKE_CXX_CPPCHECK_BACKUP})
-        unset(CMAKE_CXX_CPPCHECK_BACKUP)
-    endif()
-
-    list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-endif()
+# Setup project dependencies
+setup_project_dependencies()
 
 # Add subdirectories
 add_subdirectory(src)

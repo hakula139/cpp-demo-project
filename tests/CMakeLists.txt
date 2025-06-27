@@ -2,7 +2,11 @@
 
 # Include Catch2 CMake integration
 include(CTest)
-include(Catch)
+
+# Verify that Catch2 test discovery is available
+if(NOT COMMAND catch_discover_tests)
+    message(FATAL_ERROR "Catch2 test discovery functions not available. Make sure Dependencies.cmake is included before tests.")
+endif()
 
 # Test sources
 set(TEST_SOURCES
