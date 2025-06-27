@@ -1,6 +1,16 @@
+---
 Language: Cpp
 BasedOnStyle: Google
+ColumnLimit: 100
+Standard: Latest
 
-PenaltyBreakAssignment: 60
-PenaltyBreakBeforeFirstCallParameter: 0
-PenaltyIndentedWhitespace: 8
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeConceptDeclarations: Always
+
+IncludeBlocks: Regroup
+SortIncludes: CaseSensitive

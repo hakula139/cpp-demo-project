@@ -1,13 +1,6 @@
 CompileFlags:
   Add:
-    - -std=c++23
     - -stdlib=libc++
-    - -Wall
-    - -Wextra
-    - -Wpedantic
-    - -Wno-unused-parameter
-  Remove:
-    - -std=*
 
 Index:
   Background: Build
