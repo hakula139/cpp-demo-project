@@ -1,24 +1,24 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <memory>
-#include <random>
 #include <chrono>
-#include <thread>
-#include <ranges>
-#include <print>
 #include <expected>
 #include <format>
+#include <iostream>
+#include <memory>
+#include <print>
+#include <random>
+#include <ranges>
+#include <string>
+#include <thread>
+#include <vector>
 
-#include "shapes/shape.hpp"
+#include "concepts/concepts.hpp"
+#include "containers/container.hpp"
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
-#include "containers/container.hpp"
-#include "concepts/arithmetic_concepts.hpp"
+#include "shapes/shape.hpp"
 
 using namespace cpp_features;
 
-template<concepts::ArithmeticType T>
+template <concepts::ArithmeticType T>
 [[nodiscard]] constexpr auto Maximum(T a, T b) noexcept -> T {
   return (a > b) ? a : b;
 }
@@ -34,9 +34,8 @@ void DemonstrateRanges() {
   }
   std::print("\n");
 
-  auto even_squared = numbers
-    | std::views::filter([](int n) { return n % 2 == 0; })
-    | std::views::transform([](int n) { return n * n; });
+  auto even_squared = numbers | std::views::filter([](int n) { return n % 2 == 0; }) |
+                      std::views::transform([](int n) { return n * n; });
 
   std::print("Even numbers squared: ");
   for (const auto& n : even_squared) {
@@ -48,9 +47,7 @@ void DemonstrateRanges() {
   std::ranges::sort(sorted_numbers);
 
   std::print("Sorted numbers: ");
-  std::ranges::for_each(sorted_numbers, [](int n) {
-    std::print("{} ", n);
-  });
+  std::ranges::for_each(sorted_numbers, [](int n) { std::print("{} ", n); });
   std::print("\n");
 }
 
@@ -71,16 +68,14 @@ void DemonstrateExpected() {
     if (area_result) {
       std::print("Area: {:.2f}\n", area_result.value());
     } else {
-      std::print("Error calculating area: {}\n",
-                static_cast<int>(area_result.error()));
+      std::print("Error calculating area: {}\n", static_cast<int>(area_result.error()));
     }
 
     auto perimeter_result = shape->GetPerimeter();
     if (perimeter_result) {
       std::print("Perimeter: {:.2f}\n", perimeter_result.value());
     } else {
-      std::print("Error calculating perimeter: {}\n",
-                static_cast<int>(perimeter_result.error()));
+      std::print("Error calculating perimeter: {}\n", static_cast<int>(perimeter_result.error()));
     }
     std::print("\n");
   }
@@ -111,9 +106,9 @@ void DemonstrateSmartPointers() {
 void DemonstrateRandom() {
   std::print("\n=== Random Number Generation ===\n");
 
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> int_dist(1, 100);
+  std::random_device               rd;
+  std::mt19937                     gen(rd());
+  std::uniform_int_distribution<>  int_dist(1, 100);
   std::uniform_real_distribution<> real_dist(0.0, 10.0);
 
   std::print("Random integers: ");
@@ -133,17 +128,13 @@ void DemonstrateContainers() {
   std::print("\n=== Modern Container Demonstration ===\n");
 
   containers::Container<int> int_container{10, 20, 30, 40, 50};
-  int_container.Display();
 
   containers::Container<std::string> string_container;
   string_container.Add("Hello");
   string_container.Add("Modern");
   string_container.Add("C++23");
-  string_container.Display();
 
-  auto filtered_view = int_container.GetFilteredView([](int n) {
-    return n > 25;
-  });
+  auto filtered_view = int_container.GetFilteredView([](int n) { return n > 25; });
 
   std::print("Filtered view (> 25): ");
   for (const auto& item : filtered_view) {
@@ -151,9 +142,7 @@ void DemonstrateContainers() {
   }
   std::print("\n");
 
-  auto transformed_view = int_container.GetTransformedView([](int n) {
-    return n * 2;
-  });
+  auto transformed_view = int_container.GetTransformedView([](int n) { return n * 2; });
 
   std::print("Transformed view (* 2): ");
   for (const auto& item : transformed_view) {
@@ -162,12 +151,10 @@ void DemonstrateContainers() {
   std::print("\n");
 }
 
-template<concepts::NumericType T>
+template <concepts::NumericType T>
 auto CalculateStatistics(const std::vector<T>& data) {
   if (data.empty()) {
-    return std::expected<std::pair<T, T>, std::string>{
-      std::unexpected("Empty data set")
-    };
+    return std::expected<std::pair<T, T>, std::string>{std::unexpected("Empty data set")};
   }
 
   T sum = std::accumulate(data.begin(), data.end(), T{});
@@ -177,9 +164,7 @@ auto CalculateStatistics(const std::vector<T>& data) {
   std::ranges::sort(sorted_data);
   T median = sorted_data[sorted_data.size() / 2];
 
-  return std::expected<std::pair<T, T>, std::string>{
-    std::make_pair(mean, median)
-  };
+  return std::expected<std::pair<T, T>, std::string>{std::make_pair(mean, median)};
 }
 
 void DemonstrateConcepts() {
