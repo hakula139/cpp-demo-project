@@ -4,11 +4,6 @@ BasedOnStyle: Google
 ColumnLimit: 100
 Standard: Latest
 
-AlignConsecutiveDeclarations:
-  Enabled: true
-  AcrossEmptyLines: false
-  AcrossComments: false
-
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeConceptDeclarations: Always
 

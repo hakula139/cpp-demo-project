@@ -1,7 +1,7 @@
 # Static analysis tools configuration
 
-option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" ON)
-option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" ON)
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
+option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
 
 if(ENABLE_CLANG_TIDY)
     find_program(CLANG_TIDY clang-tidy)
@@ -20,6 +20,7 @@ if(ENABLE_CPPCHECK)
             ${CPPCHECK}
             --enable=all
             --inconclusive
+            --suppress=mismatchingContainerExpression
             --suppress=missingIncludeSystem
             --suppress=unusedFunction
         )

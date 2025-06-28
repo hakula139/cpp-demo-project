@@ -36,8 +36,8 @@ The project provides several configuration options:
 - `DEMO_BUILD_EXAMPLES`: Build example programs (default: ON for main project)
 - `DEMO_ENABLE_WARNINGS`: Enable compiler warnings (default: ON)
 - `WARNINGS_AS_ERRORS`: Treat warnings as errors (default: OFF)
-- `ENABLE_CLANG_TIDY`: Enable clang-tidy static analysis (default: ON)
-- `ENABLE_CPPCHECK`: Enable cppcheck static analysis (default: ON)
+- `ENABLE_CLANG_TIDY`: Enable clang-tidy static analysis (default: OFF)
+- `ENABLE_CPPCHECK`: Enable cppcheck static analysis (default: OFF)
 
 ## Modern CMake Practices
 
