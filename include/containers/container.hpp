@@ -166,7 +166,7 @@ class Container {
    *
    * @code
    * Container<int> numbers{1, 2, 3, 2, 4, 2};
-   * auto count = numbers.Remove(2);  // count == 3
+   * auto removed_count = numbers.Remove(2);  // removed_count == 3
    * @endcode
    */
   auto Remove(const T& item) -> size_type {
@@ -190,6 +190,7 @@ class Container {
    *
    * This method provides STL-compatible naming for concept compliance.
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto size() const noexcept -> size_type { return data_.size(); }
 
   /**
@@ -292,36 +293,42 @@ class Container {
    * @brief Get iterator to the beginning
    * @return Iterator pointing to the first element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto begin() noexcept -> iterator { return data_.begin(); }
 
   /**
    * @brief Get iterator to the end
    * @return Iterator pointing past the last element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto end() noexcept -> iterator { return data_.end(); }
 
   /**
    * @brief Get const iterator to the beginning
    * @return Const iterator pointing to the first element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto begin() const noexcept -> const_iterator { return data_.begin(); }
 
   /**
    * @brief Get const iterator to the end
    * @return Const iterator pointing past the last element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto end() const noexcept -> const_iterator { return data_.end(); }
 
   /**
    * @brief Get const iterator to the beginning
    * @return Const iterator pointing to the first element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto cbegin() const noexcept -> const_iterator { return data_.cbegin(); }
 
   /**
    * @brief Get const iterator to the end
    * @return Const iterator pointing past the last element
    */
+  // NOLINTNEXTLINE(readability-identifier-naming)
   [[nodiscard]] auto cend() const noexcept -> const_iterator { return data_.cend(); }
 
   /**

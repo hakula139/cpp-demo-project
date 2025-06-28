@@ -32,8 +32,8 @@ auto main() -> int {
 
   // Demonstrate removing elements
   auto value = 3;
-  auto count = numbers.Remove(value);
-  std::println("Removed {} elements of value {}", count, value);
+  auto removed_count = numbers.Remove(value);
+  std::println("Removed {} elements of value {}", removed_count, value);
   std::println("After removing elements: {}", numbers);
 
   // Demonstrate safe access to elements
