@@ -10,9 +10,9 @@ endif()
 
 # Test sources
 set(TEST_SOURCES
-    test_shapes.cpp
-    test_containers.cpp
     test_concepts.cpp
+    test_containers.cpp
+    test_shapes.cpp
     test_main.cpp
 )
 

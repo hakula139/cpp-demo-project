@@ -9,3 +9,29 @@ BreakBeforeConceptDeclarations: Always
 
 IncludeBlocks: Regroup
 SortIncludes: CaseSensitive
+IncludeCategories:
+  # C system headers (e.g., <unistd.h>, <stdlib.h>, <stdio.h>)
+  - Regex: '^<[a-z_][a-z0-9_]*\.h>'
+    Priority: 1
+    SortPriority: 1
+    CaseSensitive: true
+  # C system headers with subdirectories (e.g., <sys/types.h>, <linux/input.h>)
+  - Regex: '^<(sys|linux|netinet|arpa)/[a-z0-9_]+\.h>'
+    Priority: 1
+    SortPriority: 1
+    CaseSensitive: true
+  # C++ standard library headers (e.g., <algorithm>, <string>, <vector>)
+  - Regex: '^<[a-z_][a-z0-9_]*>$'
+    Priority: 2
+    SortPriority: 2
+    CaseSensitive: true
+  # Third-party libraries (catch-all for remaining angle bracket includes)
+  - Regex: '^<[^"]*>'
+    Priority: 3
+    SortPriority: 3
+    CaseSensitive: true
+  # Project headers (quoted includes)
+  - Regex: '^".*"'
+    Priority: 4
+    SortPriority: 4
+    CaseSensitive: true

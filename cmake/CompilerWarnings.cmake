@@ -5,11 +5,52 @@ function(set_project_warnings project_name)
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" FALSE)
 
     set(CLANG_WARNINGS
-        -Weverything # Enable all warnings for strict rules
-        -Wno-c++98-compat # Disable C++98 compatibility warnings (we want modern C++)
-        -Wno-c++98-compat-pedantic # Disable pedantic C++98 compatibility warnings
-        -Wno-padded # Disable padding warnings (usually not actionable)
-        -Wno-weak-vtables # Disable weak vtables warning (often not relevant)
+        -Wall
+        -Wextra # Reasonable and standard
+        -Wcast-align # Warn for potential performance problem casts
+        -Wcomma # Warn about suspicious uses of the comma operator
+        -Wconditional-uninitialized # Warn about uninitialized variables in conditionals
+        -Wconversion # Warn on type conversions that may lose data
+        -Wctad-maybe-unsupported # Warn about potentially unsupported CTAD
+        -Wdeprecated # Warn about deprecated features
+        -Wdeprecated-copy # Warn about deprecated copy operations
+        -Wdeprecated-copy-dtor # Warn about deprecated copy with destructor
+        -Wdouble-promotion # Warn if float is implicit promoted to double
+        -Wextra-semi # Warn about extra semicolons
+        -Wextra-semi-stmt # Warn about extra semicolons in statements
+        -Wformat=2 # Warn on security issues around functions that format output (i.e. printf)
+        -Wimplicit-fallthrough # Warn on statements that fallthrough without an explicit annotation
+        -Wloop-analysis # Warn about suspicious loop constructs
+        -Wmisleading-indentation # Warn if indentation implies blocks where blocks do not exist
+        -Wmost # Enable most warnings (Clang-specific, more comprehensive than -Wall)
+        -Wmove # Warn about suspicious std::move usage
+        -Wnon-virtual-dtor # Warn the user if a class with virtual functions has a non-virtual destructor
+        -Wnull-dereference # Warn if a null dereference is detected
+        -Wold-style-cast # Warn for C-style casts
+        -Woverloaded-virtual # Warn if you overload (not override) a virtual function
+        -Wpedantic # Warn if non-standard C++ is used
+        -Wrange-loop-analysis # Warn about range-based for loop analysis
+        -Wredundant-move # Warn about redundant std::move calls
+        -Wself-assign # Warn about self-assignment
+        -Wself-move # Warn about self-move
+        -Wshadow # Warn the user if a variable declaration shadows one from a parent context
+        -Wshift-sign-overflow # Warn about shift operations that overflow
+        -Wsign-conversion # Warn on sign conversions
+        -Wsizeof-array-argument # Warn about sizeof on array function parameters
+        -Wstring-conversion # Warn about string literal to bool conversion
+        -Wstring-plus-int # Warn about string + int operations
+        -Wtautological-compare # Warn about tautological comparisons
+        -Wthread-safety # Enable thread safety analysis
+        -Wthread-safety-beta # Enable beta thread safety analysis
+        -Wundefined-reinterpret-cast # Warn about undefined reinterpret_cast
+        -Wuninitialized # Warn about uninitialized variables
+        -Wunreachable-code # Warn about unreachable code
+        -Wunreachable-code-break # Warn about unreachable break statements
+        -Wunreachable-code-return # Warn about unreachable return statements
+        -Wunused # Warn on anything being unused
+        -Wunused-lambda-capture # Warn about unused lambda captures
+        -Wuser-defined-literals # Warn about user-defined literals
+        -Wvla # Warn about variable length arrays
     )
 
     if(WARNINGS_AS_ERRORS)

@@ -8,8 +8,8 @@ Checks: >
   misc-*,
   modernize-*,
   performance-*,
-  readability-*
-  -readability-identifier-length
+  readability-*,
+  -readability-identifier-length,
   -readability-magic-numbers
 
 CheckOptions:

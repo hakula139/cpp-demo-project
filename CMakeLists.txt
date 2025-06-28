@@ -44,7 +44,7 @@ if(APPLE)
     set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
 endif()
 
-# Include cmake utilities
+# Include CMake utilities
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
