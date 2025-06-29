@@ -7,6 +7,11 @@ Standard: Latest
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeConceptDeclarations: Always
 
+# Reference and pointer alignment
+DerivePointerAlignment: false
+PointerAlignment: Right
+ReferenceAlignment: Right
+
 IncludeBlocks: Regroup
 SortIncludes: CaseSensitive
 IncludeCategories:
