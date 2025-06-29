@@ -1,5 +1,5 @@
 # Algorithms module
 
-add_demo_module(algorithms
+add_module(algorithms
   SOURCES stl_demos.cpp
 )

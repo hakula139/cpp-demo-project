@@ -1,3 +1,3 @@
 # Random module (header-only)
 
-add_demo_module(random)
+add_module(random)

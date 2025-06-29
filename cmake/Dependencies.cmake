@@ -13,7 +13,7 @@ Functions provided:
   setup_project_dependencies  - Setup all project dependencies
 
 Dependencies managed:
-  - Catch2 v3.8.1 - Modern C++ testing framework (only if DEMO_BUILD_TESTS is ON)
+  - Catch2 v3.8.1 - Modern C++ testing framework (only if BUILD_TESTS is ON)
 
 Example:
   include(Dependencies)
@@ -31,7 +31,7 @@ Find or fetch Catch2 testing framework.
   setup_catch2_dependency()
 
 This function:
-  - Checks if DEMO_BUILD_TESTS option is enabled
+  - Checks if BUILD_TESTS option is enabled
   - Attempts to find Catch2 v3 using find_package()
   - Falls back to FetchContent if not found
   - Sets up Catch2 CMake modules for test discovery
@@ -41,17 +41,17 @@ Dependencies:
   - Catch2 v3.8.1 from https://github.com/catchorg/Catch2.git
 
 Variables used:
-  DEMO_BUILD_TESTS - Must be ON to enable Catch2 setup
+  BUILD_TESTS - Must be ON to enable Catch2 setup
 
 Variables set:
   CMAKE_MODULE_PATH - Extended with Catch2's CMake modules
 
 Example:
-  set(DEMO_BUILD_TESTS ON)
+  set(BUILD_TESTS ON)
   setup_catch2_dependency()
 #]=======================================================================]
 function(setup_catch2_dependency)
-  if(NOT DEMO_BUILD_TESTS)
+  if(NOT BUILD_TESTS)
     return()
   endif()
 
@@ -113,7 +113,7 @@ This function calls all individual dependency setup functions
 to configure the complete dependency environment for the project.
 
 Currently sets up:
-  - Catch2 testing framework (if DEMO_BUILD_TESTS is enabled)
+  - Catch2 testing framework (if BUILD_TESTS is enabled)
 
 This function can be extended to handle additional dependencies
 as the project grows.

@@ -1,5 +1,5 @@
 # Timing module
 
-add_demo_module(timing
+add_module(timing
   SOURCES timer.cpp
 )

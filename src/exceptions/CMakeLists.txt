@@ -1,5 +1,5 @@
 # Exceptions module
 
-add_demo_module(exceptions
+add_module(exceptions
   SOURCES custom_exception.cpp
 )

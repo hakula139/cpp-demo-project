@@ -48,9 +48,9 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Options
-option(DEMO_BUILD_TESTS "Build tests" ${IS_MAIN_PROJECT})
-option(DEMO_BUILD_EXAMPLES "Build examples" ${IS_MAIN_PROJECT})
-option(DEMO_ENABLE_WARNINGS "Enable compiler warnings" ON)
+option(BUILD_TESTS "Build tests" ${IS_MAIN_PROJECT})
+option(BUILD_EXAMPLES "Build examples" ${IS_MAIN_PROJECT})
+option(ENABLE_WARNINGS "Enable compiler warnings" ON)
 
 # Add custom CMake modules
 include(CompilerWarnings)
@@ -67,7 +67,7 @@ target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_23)
 add_library(${PROJECT_NAME}_project_warnings INTERFACE)
 add_library(${PROJECT_NAME}::project_warnings ALIAS ${PROJECT_NAME}_project_warnings)
 
-if(DEMO_ENABLE_WARNINGS)
+if(ENABLE_WARNINGS)
   set_project_warnings(${PROJECT_NAME}_project_warnings)
 endif()
 
@@ -85,13 +85,13 @@ setup_project_dependencies()
 add_subdirectory(src)
 
 # Build tests if enabled
-if(DEMO_BUILD_TESTS)
+if(BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 endif()
 
 # Build examples if enabled
-if(DEMO_BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 

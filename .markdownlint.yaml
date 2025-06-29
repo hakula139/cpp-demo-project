@@ -1,0 +1,12 @@
+# markdownlint configuration
+# See: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+MD003:
+  style: atx
+
+MD013:
+  line_length: 120
+  tables: false
+  code_blocks: false

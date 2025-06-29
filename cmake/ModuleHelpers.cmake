@@ -8,12 +8,12 @@ if(NOT DEFINED PROJECT_PREFIX)
 endif()
 
 #[=======================================================================[.rst:
-add_demo_module
+add_module
 ---------------
 
 Add a demo module (header-only or with source files).
 
-  add_demo_module(<name>
+  add_module(<name>
     [SOURCES <source1> [<source2> ...]]
     [DEPENDENCIES <dep1> [<dep2> ...]]
   )
@@ -31,12 +31,12 @@ This function creates:
   - Installation configuration
 
 Examples:
-  add_demo_module(concepts)                  # Header-only module
-  add_demo_module(shapes SOURCES shape.cpp)  # Regular module with sources
+  add_module(concepts)                  # Header-only module
+  add_module(shapes SOURCES shape.cpp)  # Regular module with sources
 
 Note: The actual prefix used is determined by PROJECT_PREFIX variable, which defaults to CMAKE_PROJECT_NAME.
 #]=======================================================================]
-function(add_demo_module MODULE_NAME)
+function(add_module MODULE_NAME)
   set(options "")
   set(oneValueArgs "")
   set(

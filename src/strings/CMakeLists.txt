@@ -1,5 +1,5 @@
 # Strings module
 
-add_demo_module(strings
+add_module(strings
   SOURCES string_ops.cpp
 )

@@ -21,3 +21,10 @@ repos:
     hooks:
       - id: gersemi
         files: \.(cmake|CMakeLists\.txt)$
+
+  # Markdown linting and formatting
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.18.1
+    hooks:
+      - id: markdownlint-cli2
+        args: ['--config', '.markdownlint.yaml']
