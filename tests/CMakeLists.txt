@@ -1,32 +1,25 @@
-# Tests configuration
+# Tests CMakeLists.txt
 
-# Include Catch2 CMake integration
-include(CTest)
-
-# Verify that Catch2 test discovery is available
-if(NOT COMMAND catch_discover_tests)
+# Check if Catch2 is available
+if(NOT TARGET Catch2::Catch2WithMain)
+  if(NOT COMMAND catch_discover_tests)
     message(FATAL_ERROR "Catch2 test discovery functions not available. Make sure Dependencies.cmake is included before tests.")
+  endif()
 endif()
 
-# Test sources
-set(TEST_SOURCES
-    test_concepts.cpp
-    test_containers.cpp
-    test_shapes.cpp
-    test_main.cpp
+add_executable(demo_tests
+  test_concepts.cpp
+  test_containers.cpp
+  test_shapes.cpp
+  test_main.cpp
 )
 
-# Create test executable
-add_executable(demo_tests ${TEST_SOURCES})
-add_executable(demo::tests ALIAS demo_tests)
-
-# Link against the demo library and test framework
+# Link against the demo library and Catch2
 target_link_libraries(demo_tests
-    PRIVATE
-        demo::lib
-        demo::project_warnings
-        Catch2::Catch2WithMain
+  PRIVATE
+  demo::lib
+  Catch2::Catch2WithMain
 )
 
-# Auto-discover tests
+# Discover and register tests with CTest
 catch_discover_tests(demo_tests)

@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.23)
 
 # Project configuration
 project(demo
-    VERSION 1.0.0
-    DESCRIPTION "Demo project for modern C++ features"
-    LANGUAGES CXX
+  VERSION 1.0.0
+  DESCRIPTION "Demo project for modern C++ features"
+  LANGUAGES CXX
 )
 
 # Only build tests if this is the main project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(IS_MAIN_PROJECT TRUE)
+  set(IS_MAIN_PROJECT TRUE)
 else()
-    set(IS_MAIN_PROJECT FALSE)
+  set(IS_MAIN_PROJECT FALSE)
 endif()
 
 # Standard C++ settings
@@ -25,23 +25,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # macOS-specific fixes for Mach-O linker errors
 if(APPLE)
-    # Ensure we use the system's default archive tools to prevent corrupted static libraries
-    # This fixes "archive member '/' not a mach-o file" errors
-    set(CMAKE_AR "/usr/bin/ar" CACHE FILEPATH "Path to ar archiver" FORCE)
-    set(CMAKE_RANLIB "/usr/bin/ranlib" CACHE FILEPATH "Path to ranlib" FORCE)
+  # Ensure we use the system's default archive tools to prevent corrupted static libraries
+  # This fixes "archive member '/' not a mach-o file" errors
+  set(CMAKE_AR "/usr/bin/ar" CACHE FILEPATH "Path to ar archiver" FORCE)
+  set(CMAKE_RANLIB "/usr/bin/ranlib" CACHE FILEPATH "Path to ranlib" FORCE)
 
-    # Additional macOS linker settings to prevent archive corruption
-    set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
-    set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
-    set(CMAKE_C_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
-    set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
+  # Additional macOS linker settings to prevent archive corruption
+  set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+  set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+  set(CMAKE_C_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
+  set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
-    # Ensure proper handling of static libraries
-    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".dylib" ".so")
+  # Ensure proper handling of static libraries
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".dylib" ".so")
 
-    # Set proper flags for static library creation (ranlib handled by ARCHIVE_FINISH)
-    set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
-    set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
+  # Set proper flags for static library creation (ranlib handled by ARCHIVE_FINISH)
+  set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
+  set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
 endif()
 
 # Include CMake utilities
@@ -56,6 +56,7 @@ option(DEMO_ENABLE_WARNINGS "Enable compiler warnings" ON)
 include(CompilerWarnings)
 include(StaticAnalysis)
 include(Dependencies)
+include(ModuleHelpers)
 
 # Create interface target for project options
 add_library(demo_project_options INTERFACE)
@@ -67,14 +68,14 @@ add_library(demo_project_warnings INTERFACE)
 add_library(demo::project_warnings ALIAS demo_project_warnings)
 
 if(DEMO_ENABLE_WARNINGS)
-    set_project_warnings(demo_project_warnings)
+  set_project_warnings(demo_project_warnings)
 endif()
 
 # Build type specific settings
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_options(demo_project_options INTERFACE -g -O0)
+  target_compile_options(demo_project_options INTERFACE -g -O0)
 else()
-    target_compile_options(demo_project_options INTERFACE -O3 -DNDEBUG)
+  target_compile_options(demo_project_options INTERFACE -O3 -DNDEBUG)
 endif()
 
 # Setup project dependencies
@@ -85,13 +86,13 @@ add_subdirectory(src)
 
 # Build tests if enabled
 if(DEMO_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
+  enable_testing()
+  add_subdirectory(tests)
 endif()
 
 # Build examples if enabled
 if(DEMO_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+  add_subdirectory(examples)
 endif()
 
 # Installation
@@ -99,32 +100,32 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(TARGETS demo_project_options demo_project_warnings
-    EXPORT demo-targets
+  EXPORT demo-targets
 )
 
 install(EXPORT demo-targets
-    FILE demo-targets.cmake
-    NAMESPACE demo::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+  FILE demo-targets.cmake
+  NAMESPACE demo::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
 )
 
 # Create package config files
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/demo-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/demo-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
 )
 
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY SameMajorVersion
+  ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+  ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
