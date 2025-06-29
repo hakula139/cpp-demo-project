@@ -55,7 +55,7 @@ Example:
   add_library(my_lib src.cpp)
   set_project_warnings(my_lib)
 #]=======================================================================]
-function(set_project_warnings project_name)
+function(set_project_warnings PROJECT_NAME)
   option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
   set(CLANG_WARNINGS
@@ -149,7 +149,7 @@ function(set_project_warnings project_name)
   # Use the same warning flags for C
   set(PROJECT_WARNINGS_C "${PROJECT_WARNINGS_CXX}")
 
-  target_compile_options(${project_name} INTERFACE
+  target_compile_options(${PROJECT_NAME} INTERFACE
     $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS_CXX}>
     $<$<COMPILE_LANGUAGE:C>:${PROJECT_WARNINGS_C}>
   )

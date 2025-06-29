@@ -7,7 +7,7 @@ if(NOT TARGET Catch2::Catch2WithMain)
   endif()
 endif()
 
-add_executable(demo_tests
+add_executable(${PROJECT_NAME}_tests
   test_concepts.cpp
   test_containers.cpp
   test_shapes.cpp
@@ -15,11 +15,11 @@ add_executable(demo_tests
 )
 
 # Link against the demo library and Catch2
-target_link_libraries(demo_tests
+target_link_libraries(${PROJECT_NAME}_tests
   PRIVATE
-  demo::lib
+  ${PROJECT_NAME}::lib
   Catch2::Catch2WithMain
 )
 
 # Discover and register tests with CTest
-catch_discover_tests(demo_tests)
+catch_discover_tests(${PROJECT_NAME}_tests)

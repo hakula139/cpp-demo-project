@@ -59,23 +59,23 @@ include(Dependencies)
 include(ModuleHelpers)
 
 # Create interface target for project options
-add_library(demo_project_options INTERFACE)
-add_library(demo::project_options ALIAS demo_project_options)
-target_compile_features(demo_project_options INTERFACE cxx_std_23)
+add_library(${PROJECT_NAME}_project_options INTERFACE)
+add_library(${PROJECT_NAME}::project_options ALIAS ${PROJECT_NAME}_project_options)
+target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_23)
 
 # Create interface target for warnings
-add_library(demo_project_warnings INTERFACE)
-add_library(demo::project_warnings ALIAS demo_project_warnings)
+add_library(${PROJECT_NAME}_project_warnings INTERFACE)
+add_library(${PROJECT_NAME}::project_warnings ALIAS ${PROJECT_NAME}_project_warnings)
 
 if(DEMO_ENABLE_WARNINGS)
-  set_project_warnings(demo_project_warnings)
+  set_project_warnings(${PROJECT_NAME}_project_warnings)
 endif()
 
 # Build type specific settings
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_compile_options(demo_project_options INTERFACE -g -O0)
+  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -g -O0)
 else()
-  target_compile_options(demo_project_options INTERFACE -O3 -DNDEBUG)
+  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -O3 -DNDEBUG)
 endif()
 
 # Setup project dependencies
@@ -99,33 +99,33 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-install(TARGETS demo_project_options demo_project_warnings
-  EXPORT demo-targets
+install(TARGETS ${PROJECT_NAME}_project_options ${PROJECT_NAME}_project_warnings
+  EXPORT ${PROJECT_NAME}-targets
 )
 
-install(EXPORT demo-targets
-  FILE demo-targets.cmake
-  NAMESPACE demo::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+install(EXPORT ${PROJECT_NAME}-targets
+  FILE ${PROJECT_NAME}-targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 # Create package config files
 configure_package_config_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/demo-config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/demo-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/demo-config-version.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/demo
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

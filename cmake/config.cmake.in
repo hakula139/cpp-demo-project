@@ -1,21 +1,21 @@
 #[=======================================================================[.rst:
-demo-config.cmake.in
+@PROJECT_NAME@-config.cmake.in
 --------------------
 
-CMake package configuration template for the demo project.
+CMake package configuration template for the @PROJECT_NAME@ project.
 
-This template file is processed by CMake to generate the demo-config.cmake
+This template file is processed by CMake to generate the @PROJECT_NAME@-config.cmake
 file that allows other projects to find and use this package via find_package().
 
 The generated config file:
   - Sets up package initialization with @PACKAGE_INIT@
   - Finds required dependencies
-  - Includes the demo-targets.cmake file with exported targets
+  - Includes the @PROJECT_NAME@-targets.cmake file with exported targets
   - Validates required components
 
 Usage by consuming projects:
-  find_package(demo REQUIRED)
-  target_link_libraries(my_target demo::some_component)
+  find_package(@PROJECT_NAME@ REQUIRED)
+  target_link_libraries(my_target @PROJECT_NAME@::some_component)
 #]=======================================================================]
 
 @PACKAGE_INIT@
@@ -27,6 +27,6 @@ include(CMakeFindDependencyMacro)
 # find_dependency(SomePackage REQUIRED)
 
 # Include targets
-include("${CMAKE_CURRENT_LIST_DIR}/demo-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
 
-check_required_components(demo)
+check_required_components(@PROJECT_NAME@)
