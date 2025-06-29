@@ -116,7 +116,7 @@ class Container {
     requires std::convertible_to<std::ranges::range_value_t<Range>, T> &&
              (!std::same_as<std::decay_t<Range>, std::initializer_list<T>>) &&
              (!std::convertible_to<Range, T>)
-  explicit Container(Range&& range) : data_(std::ranges::begin(range), std::ranges::end(range)) {}
+  explicit Container(Range &&range) : data_(std::ranges::begin(range), std::ranges::end(range)) {}
 
   /**
    * @brief Add an element to the container (copy)
@@ -125,7 +125,7 @@ class Container {
    *
    * Adds a copy of the specified element to the end of the container.
    */
-  void Add(const T& item) { data_.push_back(item); }
+  void Add(const T &item) { data_.push_back(item); }
 
   /**
    * @brief Add an element to the container (move)
@@ -134,7 +134,7 @@ class Container {
    *
    * Adds the specified element to the end of the container using move semantics.
    */
-  void Add(T&& item) { data_.push_back(std::move(item)); }
+  void Add(T &&item) { data_.push_back(std::move(item)); }
 
   /**
    * @brief Construct element in-place at the end of the container
@@ -151,7 +151,7 @@ class Container {
    * @endcode
    */
   template <typename... Args>
-  void Emplace(Args&&... args) {
+  void Emplace(Args &&...args) {
     data_.emplace_back(std::forward<Args>(args)...);
   }
 
@@ -169,7 +169,7 @@ class Container {
    * auto removed_count = numbers.Remove(2);  // removed_count == 3
    * @endcode
    */
-  auto Remove(const T& item) -> size_type {
+  auto Remove(const T &item) -> size_type {
     auto new_end = std::ranges::remove(data_, item);
     auto count = static_cast<size_type>(std::distance(new_end.begin(), data_.end()));
     data_.erase(new_end.begin(), data_.end());
@@ -265,7 +265,7 @@ class Container {
    * auto even_numbers = container.GetFilteredView([](int n) { return n % 2 == 0; });
    * @endcode
    */
-  [[nodiscard]] auto GetFilteredView(std::function<bool(const T&)> predicate) const
+  [[nodiscard]] auto GetFilteredView(std::function<bool(const T &)> predicate) const
       -> std::ranges::view auto {
     return data_ | std::views::filter(predicate);
   }
@@ -336,7 +336,7 @@ class Container {
    * @param other Container to compare with
    * @return Comparison result
    */
-  auto operator<=>(const Container& other) const = default;
+  auto operator<=>(const Container &other) const = default;
 
  private:
   std::vector<T> data_;  ///< Internal storage for container elements
@@ -401,15 +401,15 @@ struct std::formatter<cpp_features::containers::Container<T>> : std::formatter<s
    * @param ctx The format context
    * @return Iterator pointing past the formatted output
    */
-  auto format(const cpp_features::containers::Container<T>& container,
-              std::format_context& ctx) const {
+  auto format(const cpp_features::containers::Container<T> &container,
+              std::format_context &ctx) const {
     std::string temp;
     if (container.IsEmpty()) {
       temp = "[]";
     } else {
       temp = "[";
       auto first = true;
-      for (const auto& item : container) {
+      for (const auto &item : container) {
         if (!first) {
           temp += ", ";
         }

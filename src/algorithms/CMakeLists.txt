@@ -1,5 +1,3 @@
-# Algorithms module
+# Algorithms module (header-only)
 
-add_module(algorithms
-  SOURCES stl_demos.cpp
-)
+add_module(algorithms)

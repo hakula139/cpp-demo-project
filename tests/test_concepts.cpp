@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -138,6 +139,54 @@ TEST_CASE("RangeContainer concept", "[concepts][container][range]") {
     REQUIRE_FALSE(RangeContainer<double>);
     REQUIRE_FALSE(RangeContainer<void *>);
     REQUIRE_FALSE(RangeContainer<int *>);
+  }
+}
+
+template <SortableContainer T>
+auto TestSortableContainer(T container) -> bool {
+  std::ranges::sort(container);
+  return std::ranges::is_sorted(container);
+}
+
+TEST_CASE("SortableContainer concept", "[concepts][container][sortable]") {
+  SECTION("Valid sortable containers") {
+    // Random access containers that support sorting
+    REQUIRE(SortableContainer<std::vector<int>>);
+    REQUIRE(SortableContainer<std::array<int, 5>>);
+    REQUIRE(SortableContainer<std::deque<int>>);
+    REQUIRE(SortableContainer<std::string>);
+
+    REQUIRE(TestSortableContainer(std::vector<int>{3, 1, 4, 1, 5}));
+    REQUIRE(TestSortableContainer(std::array<int, 5>{9, 2, 6, 5, 3}));
+    REQUIRE(TestSortableContainer(std::deque<int>{8, 7, 6, 5, 4}));
+    REQUIRE(TestSortableContainer(std::string{"dcba"}));
+  }
+
+  SECTION("Invalid sortable containers") {
+    // Non-random access containers
+    REQUIRE_FALSE(SortableContainer<std::list<int>>);
+    REQUIRE_FALSE(SortableContainer<std::set<int>>);
+    REQUIRE_FALSE(SortableContainer<std::map<int, std::string>>);
+
+    // Non-container types
+    REQUIRE_FALSE(SortableContainer<int>);
+    REQUIRE_FALSE(SortableContainer<double>);
+    REQUIRE_FALSE(SortableContainer<void *>);
+    REQUIRE_FALSE(SortableContainer<int *>);
+
+    // Not sortable in-place
+    REQUIRE_FALSE(SortableContainer<std::string_view>);
+  }
+
+  SECTION("Edge cases") {
+    // Empty containers should still be sortable
+    REQUIRE(TestSortableContainer(std::vector<int>{}));
+    REQUIRE(TestSortableContainer(std::array<int, 0>{}));
+    REQUIRE(TestSortableContainer(std::string{}));
+
+    // Single element containers
+    REQUIRE(TestSortableContainer(std::vector<int>{42}));
+    REQUIRE(TestSortableContainer(std::string{"a"}));
   }
 }
 

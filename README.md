@@ -16,7 +16,6 @@ This project serves as both a learning resource and a reference implementation f
 - **Advanced CMake**: Modern CMake build system with modular configuration
 - **Memory Safety**: Smart pointer demonstrations and RAII principles
 - **Error Handling**: Modern error handling with `std::expected`
-- **STL Algorithms**: Advanced usage of standard library algorithms and ranges
 - **Design Patterns**: Implementation of common design patterns in modern C++
 
 ## 📋 Table of Contents
@@ -29,6 +28,7 @@ This project serves as both a learning resource and a reference implementation f
     - [Clone the repository](#clone-the-repository)
     - [Build the project](#build-the-project)
     - [Run the demo](#run-the-demo)
+    - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
   - [Pre-commit Setup (Recommended)](#pre-commit-setup-recommended)
     - [Install pre-commit](#install-pre-commit)
@@ -78,6 +78,18 @@ cmake --build build --parallel $(nproc)
 
 ```bash
 ./build/src/demo
+```
+
+#### Run individual examples
+
+```bash
+# Run specific component examples
+./build/examples/algorithms_example
+./build/examples/containers_example
+./build/examples/shapes_example
+
+# Run full feature demonstration
+./build/examples/full_example
 ```
 
 #### Run tests
@@ -212,19 +224,24 @@ cpp-demo-project/
 │   ├── test_containers.cpp
 │   ├── test_shapes.cpp
 │   └── test_main.cpp
-└── examples/                   # Usage examples (optional)
+└── examples/                   # Usage examples and demonstrations
+    ├── algorithms_example.cpp  # STL algorithms and ranges demo
+    ├── containers_example.cpp  # Modern containers demo
+    ├── shapes_example.cpp      # Geometric shapes demo
+    └── main.cpp               # Full feature demonstration
 ```
 
 ## 🧩 Components
 
 ### 🔷 Algorithms Module
 
-STL algorithms and ranges:
+Header-only STL algorithms and ranges library:
 
 - **Modern algorithms** with execution policies
 - **Range adaptors** and views
 - **Custom algorithms** with concepts
 - **Functional programming** patterns
+- **Template utilities** for algorithm composition
 
 ### 🔷 Concepts Module
 
@@ -320,6 +337,7 @@ repos:
 ```
 
 **Benefits:**
+
 - Consistent code formatting across the entire project
 - Automatic detection of common issues before commit
 - Enforced coding standards for all contributors

@@ -75,4 +75,30 @@ concept IterableContainer = requires(Container c) {
 template <typename Container>
 concept RangeContainer = std::ranges::range<Container>;
 
+/**
+ * @brief Concept for container types that can be sorted
+ *
+ * @tparam Container The container type to check for sortability
+ *
+ * This concept ensures that a container type supports sorting operations by
+ * requiring it to be a random access range with sortable iterators. This is
+ * necessary for efficient sorting algorithms that need to access elements
+ * at arbitrary positions and rearrange them.
+ *
+ * Requirements:
+ *
+ * - Must be a random access range (supports O(1) element access)
+ * - Iterator type must be sortable (supports comparison and swapping)
+ *
+ * @code
+ * template <SortableContainer Container>
+ * void SortContainer(Container &container) {
+ *   std::ranges::sort(container);
+ * }
+ * @endcode
+ */
+template <typename Container>
+concept SortableContainer = std::ranges::random_access_range<Container> &&
+                            std::sortable<std::ranges::iterator_t<Container>>;
+
 }  // namespace cpp_features::concepts

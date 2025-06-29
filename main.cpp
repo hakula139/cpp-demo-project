@@ -31,16 +31,21 @@ auto main() -> int {
   // Demonstrate modern containers
   std::cout << "\n=== Container Demonstrations ===\n";
   containers::Container<int> numbers{1, 2, 3, 4, 5};
-  numbers.Display();
+  std::cout << "Container contents: ";
+  for (const auto &n : numbers) {
+    std::cout << n << " ";
+  }
+  std::cout << "\n";
 
   // Demonstrate smart pointers
   std::cout << "\n=== Smart Pointer Demonstrations ===\n";
   memory::DemonstrateUniquePtr();
   memory::DemonstrateSharedPtr();
 
-  // Demonstrate STL algorithms
-  algorithms::DemonstrateStlAlgorithms();
-  algorithms::DemonstrateRangesAndViews();
+  // Note: STL algorithms demonstrations are now in examples/algorithms_example.cpp
+  std::cout << "\n=== STL Algorithms Module ===\n";
+  std::cout << "STL algorithms utilities are available for use.\n";
+  std::cout << "Run examples/algorithms_example for detailed demonstrations.\n";
 
   // Demonstrate string operations
   strings::DemonstrateBasicStringOps();

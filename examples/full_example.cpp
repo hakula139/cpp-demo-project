@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "algorithms/stl_demos.hpp"
+#include "algorithms/stl.hpp"
 #include "containers/container.hpp"
 #include "memory/smart_pointers.hpp"
 #include "shapes/circle.hpp"
@@ -28,9 +28,15 @@ int main() {
   std::cout << "\n2. Using modern containers:\n";
   containers::Container<double> measurements{1.1, 2.2, 3.3, 4.4, 5.5};
 
-  // Use algorithms module
-  std::cout << "\n3. STL algorithms demonstration:\n";
-  algorithms::DemonstrateStlAlgorithms();
+  // Use algorithms module utilities
+  std::cout << "\n3. STL algorithms utilities:\n";
+  std::vector<int> test_data = {5, 2, 8, 1, 9};
+  algorithms::SortContainer(test_data);
+  std::cout << "   Sorted data: ";
+  for (const auto &n : test_data) {
+    std::cout << n << " ";
+  }
+  std::cout << "\n   (See algorithms_example.cpp for full demonstrations)\n";
 
   // Use memory module
   std::cout << "\n4. Smart pointers demonstration:\n";
