@@ -8,6 +8,7 @@ if(NOT TARGET Catch2::Catch2WithMain)
 endif()
 
 add_executable(${PROJECT_NAME}_tests
+  test_algorithms.cpp
   test_concepts.cpp
   test_containers.cpp
   test_shapes.cpp
