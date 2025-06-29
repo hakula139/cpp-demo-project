@@ -8,9 +8,8 @@
 namespace cpp_features::algorithms {
 
 template <typename Container>
-concept SortableContainer =
-    std::ranges::random_access_range<Container> &&
-    std::sortable<std::ranges::iterator_t<Container>>;
+concept SortableContainer = std::ranges::random_access_range<Container> &&
+                            std::sortable<std::ranges::iterator_t<Container>>;
 
 template <typename T>
 concept Comparable = std::totally_ordered<T>;
@@ -31,10 +30,9 @@ auto CountIf(Range&& range, Predicate predicate) -> std::size_t {
 }
 
 template <std::ranges::input_range Range, typename Transform>
-auto TransformToVector(Range&& range, Transform transform) -> std::vector<
-    std::invoke_result_t<Transform, std::ranges::range_value_t<Range>>> {
-  using result_type =
-      std::invoke_result_t<Transform, std::ranges::range_value_t<Range>>;
+auto TransformToVector(Range&& range, Transform transform)
+    -> std::vector<std::invoke_result_t<Transform, std::ranges::range_value_t<Range>>> {
+  using result_type = std::invoke_result_t<Transform, std::ranges::range_value_t<Range>>;
   std::vector<result_type> result;
   std::ranges::transform(range, std::back_inserter(result), transform);
   return result;

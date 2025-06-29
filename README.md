@@ -30,6 +30,11 @@ This project serves as both a learning resource and a reference implementation f
     - [Build the project](#build-the-project)
     - [Run the demo](#run-the-demo)
     - [Run tests](#run-tests)
+  - [Pre-commit Setup (Recommended)](#pre-commit-setup-recommended)
+    - [Install pre-commit](#install-pre-commit)
+    - [Install the git hooks](#install-the-git-hooks)
+    - [Run on all files (optional)](#run-on-all-files-optional)
+    - [What the hooks do](#what-the-hooks-do)
   - [Build Options](#build-options)
 - [🎯 Usage](#-usage)
   - [Running the Demo](#running-the-demo)
@@ -43,6 +48,7 @@ This project serves as both a learning resource and a reference implementation f
 - [🧪 Testing](#-testing)
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
+  - [Pre-commit Configuration](#pre-commit-configuration)
 - [📄 License](#-license)
 
 ## 🛠️ Installation
@@ -79,6 +85,41 @@ cmake --build build --parallel $(nproc)
 ```bash
 ctest --test-dir build --verbose
 ```
+
+### Pre-commit Setup (Recommended)
+
+This project uses [pre-commit](https://pre-commit.com/) to ensure code quality and consistent formatting.
+Set up pre-commit hooks to automatically format your code before each commit:
+
+#### Install pre-commit
+
+```bash
+pip3 install pre-commit
+```
+
+#### Install the git hooks
+
+```bash
+pre-commit install
+```
+
+#### Run on all files (optional)
+
+```bash
+pre-commit run --all-files
+```
+
+#### What the hooks do
+
+- **Standard checks**:
+  - Removes trailing whitespace
+  - Ensures proper file endings
+  - Validates YAML syntax
+  - Checks for added large files
+- **clang-format**: Formats C++ code according to the project style
+- **gersemi**: Formats CMake files with consistent indentation
+
+The hooks will run automatically on `git commit` and prevent commits with formatting issues.
 
 ### Build Options
 
@@ -245,10 +286,44 @@ make coverage
 
 This project follows the **Google C++ Style Guide** with some modifications:
 
-- Use `.clang-format` for automatic formatting
-- Enable `.clang-tidy` for static analysis
-- Follow modern C++ best practices (Core Guidelines)
-- Use meaningful names and comprehensive documentation
+- **Automatic formatting**: Uses `.clang-format` for C++ code and `gersemi` for CMake files
+- **Static analysis**: Enabled with `.clang-tidy` for code quality checks
+- **Modern C++ practices**: Follows Core Guidelines and C++23 best practices
+- **Documentation**: Comprehensive comments and meaningful naming conventions
+
+### Pre-commit Configuration
+
+The project includes a comprehensive pre-commit setup (`.pre-commit-config.yaml`):
+
+```yaml
+repos:
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # C++ formatting with clang-format
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v20.1.7
+    hooks:
+      - id: clang-format
+
+  # CMake formatting with gersemi
+  - repo: https://github.com/BlankSpruce/gersemi
+    rev: 0.19.3
+    hooks:
+      - id: gersemi
+```
+
+**Benefits:**
+- Consistent code formatting across the entire project
+- Automatic detection of common issues before commit
+- Enforced coding standards for all contributors
+- Integration with modern formatting tools
 
 ## 📄 License
 

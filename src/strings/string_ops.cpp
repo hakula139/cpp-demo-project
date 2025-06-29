@@ -1,11 +1,11 @@
-#include <string>
-#include <string_view>
-#include <print>
+#include "strings/string_ops.hpp"
+
 #include <algorithm>
 #include <cctype>
 #include <iterator>
-
-#include "strings/string_ops.hpp"
+#include <print>
+#include <string>
+#include <string_view>
 
 namespace cpp_features::strings {
 
@@ -35,7 +35,8 @@ auto StringProcessor::TrimRight(std::string_view input) -> std::string_view {
   return (end == std::string_view::npos) ? std::string_view{} : input.substr(0, end + 1);
 }
 
-auto StringProcessor::Split(std::string_view input, char delimiter) -> std::vector<std::string_view> {
+auto StringProcessor::Split(std::string_view input, char delimiter)
+    -> std::vector<std::string_view> {
   std::vector<std::string_view> result;
   std::size_t start = 0;
 
@@ -51,7 +52,8 @@ auto StringProcessor::Split(std::string_view input, char delimiter) -> std::vect
   return result;
 }
 
-auto StringProcessor::Split(std::string_view input, std::string_view delimiter) -> std::vector<std::string_view> {
+auto StringProcessor::Split(std::string_view input, std::string_view delimiter)
+    -> std::vector<std::string_view> {
   std::vector<std::string_view> result;
   std::size_t start = 0;
   std::size_t pos = 0;
@@ -70,7 +72,8 @@ auto StringProcessor::Split(std::string_view input, std::string_view delimiter) 
   return result;
 }
 
-auto StringProcessor::Join(const std::vector<std::string_view>& parts, std::string_view separator) -> std::string {
+auto StringProcessor::Join(const std::vector<std::string_view>& parts, std::string_view separator)
+    -> std::string {
   if (parts.empty()) {
     return {};
   }
@@ -86,7 +89,8 @@ auto StringProcessor::Join(const std::vector<std::string_view>& parts, std::stri
   return result;
 }
 
-auto StringProcessor::Replace(std::string_view input, std::string_view from, std::string_view to) -> std::string {
+auto StringProcessor::Replace(std::string_view input, std::string_view from, std::string_view to)
+    -> std::string {
   std::string result(input);
   auto pos = result.find(from);
   if (pos != std::string::npos) {
@@ -95,7 +99,8 @@ auto StringProcessor::Replace(std::string_view input, std::string_view from, std
   return result;
 }
 
-auto StringProcessor::ReplaceAll(std::string_view input, std::string_view from, std::string_view to) -> std::string {
+auto StringProcessor::ReplaceAll(std::string_view input, std::string_view from, std::string_view to)
+    -> std::string {
   std::string result(input);
   std::size_t pos = 0;
 
@@ -119,7 +124,8 @@ auto StringProcessor::CountOccurrences(std::string_view input, char target) -> s
   return std::count(input.begin(), input.end(), target);
 }
 
-auto StringProcessor::CountOccurrences(std::string_view input, std::string_view target) -> std::size_t {
+auto StringProcessor::CountOccurrences(std::string_view input, std::string_view target)
+    -> std::size_t {
   std::size_t count = 0;
   std::size_t pos = 0;
 
@@ -151,11 +157,12 @@ auto StringProcessor::Reverse(std::string_view input) -> std::string {
 auto StringProcessor::RemoveWhitespace(std::string_view input) -> std::string {
   std::string result;
   std::copy_if(input.begin(), input.end(), std::back_inserter(result),
-              [](char c) { return !IsWhitespace(c); });
+               [](char c) { return !IsWhitespace(c); });
   return result;
 }
 
-auto StringProcessor::FindRegex(std::string_view input, const std::regex& pattern) -> std::vector<std::string> {
+auto StringProcessor::FindRegex(std::string_view input, const std::regex& pattern)
+    -> std::vector<std::string> {
   std::vector<std::string> matches;
   std::string input_str(input);
   std::sregex_iterator iter(input_str.begin(), input_str.end(), pattern);
@@ -265,12 +272,8 @@ void DemonstrateRegexOperations() {
     std::print("    Valid: {}\n", StringProcessor::ValidateEmail(email));
   }
 
-  std::vector<std::string> test_urls = {
-    "https://www.example.com",
-    "http://test.org/path",
-    "invalid-url",
-    "ftp://not-http.com"
-  };
+  std::vector<std::string> test_urls = {"https://www.example.com", "http://test.org/path",
+                                        "invalid-url", "ftp://not-http.com"};
 
   std::print("URL validation:\n");
   for (const auto& url : test_urls) {

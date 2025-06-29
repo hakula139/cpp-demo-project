@@ -1,15 +1,14 @@
-#include <exception>
-#include <string>
-#include <print>
-
 #include "exceptions/custom_exception.hpp"
+
+#include <exception>
+#include <print>
+#include <string>
 
 namespace cpp_features::exceptions {
 
 void ExceptionHandler::LogException(const BaseException& exception) {
-  std::print("Custom Exception [{}]: {}\n",
-            SeverityToString(exception.GetSeverity()),
-            exception.GetFormattedMessage());
+  std::print("Custom Exception [{}]: {}\n", SeverityToString(exception.GetSeverity()),
+             exception.GetFormattedMessage());
 }
 
 void ExceptionHandler::LogStandardException(const std::exception& exception) {
@@ -22,11 +21,16 @@ void ExceptionHandler::LogUnknownException() {
 
 auto ExceptionHandler::SeverityToString(ErrorSeverity severity) -> std::string_view {
   switch (severity) {
-    case ErrorSeverity::kInfo: return "INFO";
-    case ErrorSeverity::kWarning: return "WARNING";
-    case ErrorSeverity::kError: return "ERROR";
-    case ErrorSeverity::kCritical: return "CRITICAL";
-    default: return "UNKNOWN";
+    case ErrorSeverity::kInfo:
+      return "INFO";
+    case ErrorSeverity::kWarning:
+      return "WARNING";
+    case ErrorSeverity::kError:
+      return "ERROR";
+    case ErrorSeverity::kCritical:
+      return "CRITICAL";
+    default:
+      return "UNKNOWN";
   }
 }
 
@@ -36,24 +40,20 @@ void DemonstrateCustomExceptions() {
   try {
     throw ValidationException("Invalid input value", "username");
   } catch (const ValidationException& e) {
-    std::print("Caught ValidationException for field '{}': {}\n",
-              e.GetFieldName(), e.what());
-    std::print("Location: {}:{}\n",
-              e.GetLocation().file_name(), e.GetLocation().line());
+    std::print("Caught ValidationException for field '{}': {}\n", e.GetFieldName(), e.what());
+    std::print("Location: {}:{}\n", e.GetLocation().file_name(), e.GetLocation().line());
   }
 
   try {
     throw ResourceException("Failed to open file", "config.txt");
   } catch (const ResourceException& e) {
-    std::print("Caught ResourceException for resource '{}': {}\n",
-              e.GetResourceName(), e.what());
+    std::print("Caught ResourceException for resource '{}': {}\n", e.GetResourceName(), e.what());
   }
 
   try {
     throw CalculationException("Division by zero", 42.0);
   } catch (const CalculationException& e) {
-    std::print("Caught CalculationException with input {}: {}\n",
-              e.GetInputValue(), e.what());
+    std::print("Caught CalculationException with input {}: {}\n", e.GetInputValue(), e.what());
   }
 }
 
@@ -79,9 +79,8 @@ void DemonstrateExceptionHandling() {
   });
   std::print("Safe execution with error success: {}\n", success);
 
-  auto default_result = ExceptionHandler::SafeExecuteWithDefault([&]() {
-    return safe_divide(10.0, 0.0);
-  }, -1.0);
+  auto default_result =
+      ExceptionHandler::SafeExecuteWithDefault([&]() { return safe_divide(10.0, 0.0); }, -1.0);
   std::print("Safe execution with default returned: {}\n", default_result);
 }
 

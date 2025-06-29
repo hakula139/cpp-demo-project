@@ -106,9 +106,9 @@ void DemonstrateSmartPointers() {
 void DemonstrateRandom() {
   std::print("\n=== Random Number Generation ===\n");
 
-  std::random_device               rd;
-  std::mt19937                     gen(rd());
-  std::uniform_int_distribution<>  int_dist(1, 100);
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> int_dist(1, 100);
   std::uniform_real_distribution<> real_dist(0.0, 10.0);
 
   std::print("Random integers: ");

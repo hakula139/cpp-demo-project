@@ -1,12 +1,12 @@
-#include <vector>
+#include "algorithms/stl_demos.hpp"
+
 #include <algorithm>
-#include <ranges>
-#include <print>
-#include <numeric>
 #include <chrono>
 #include <functional>
-
-#include "algorithms/stl_demos.hpp"
+#include <numeric>
+#include <print>
+#include <ranges>
+#include <vector>
 
 namespace cpp_features::algorithms {
 
@@ -48,9 +48,8 @@ void DemonstrateRangesAndViews() {
 
   std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-  auto even_squares = numbers
-    | std::views::filter([](int n) { return n % 2 == 0; })
-    | std::views::transform([](int n) { return n * n; });
+  auto even_squares = numbers | std::views::filter([](int n) { return n % 2 == 0; }) |
+                      std::views::transform([](int n) { return n * n; });
 
   std::print("Even squares: ");
   for (const auto& n : even_squares) {
@@ -58,9 +57,8 @@ void DemonstrateRangesAndViews() {
   }
   std::print("\n");
 
-  auto first_three_odds = numbers
-    | std::views::filter([](int n) { return n % 2 == 1; })
-    | std::views::take(3);
+  auto first_three_odds =
+      numbers | std::views::filter([](int n) { return n % 2 == 1; }) | std::views::take(3);
 
   std::print("First three odds: ");
   for (const auto& n : first_three_odds) {
@@ -98,9 +96,7 @@ void DemonstrateCustomAlgorithms() {
 
   std::vector<std::string> words = {"apple", "banana", "cherry", "date", "elderberry"};
 
-  auto long_words = CountIf(words, [](const std::string& word) {
-    return word.length() > 5;
-  });
+  auto long_words = CountIf(words, [](const std::string& word) { return word.length() > 5; });
   std::print("Words longer than 5 characters: {}\n", long_words);
 
   auto uppercased = TransformToVector(words, [](const std::string& word) {

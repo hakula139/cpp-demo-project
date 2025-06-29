@@ -39,7 +39,11 @@ Note: The actual prefix used is determined by PROJECT_PREFIX variable, which def
 function(add_demo_module MODULE_NAME)
   set(options "")
   set(oneValueArgs "")
-  set(multiValueArgs SOURCES DEPENDENCIES)
+  set(
+    multiValueArgs
+    SOURCES
+    DEPENDENCIES
+  )
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   set(TARGET_NAME "${PROJECT_PREFIX}_${MODULE_NAME}")
@@ -51,27 +55,27 @@ function(add_demo_module MODULE_NAME)
     add_library(${PROJECT_PREFIX}::${MODULE_NAME} ALIAS ${TARGET_NAME})
 
     # Set include directories for regular library
-    target_include_directories(${TARGET_NAME}
+    target_include_directories(
+      ${TARGET_NAME}
       PUBLIC
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
       PRIVATE
-      ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
     # Link to common project targets for regular library
-    target_link_libraries(${TARGET_NAME}
+    target_link_libraries(
+      ${TARGET_NAME}
       PUBLIC
-      ${PROJECT_PREFIX}::project_options
+        ${PROJECT_PREFIX}::project_options
       PRIVATE
-      ${PROJECT_PREFIX}::project_warnings
+        ${PROJECT_PREFIX}::project_warnings
     )
 
     # Link additional dependencies if provided
     if(ARG_DEPENDENCIES)
-      target_link_libraries(${TARGET_NAME}
-        PUBLIC ${ARG_DEPENDENCIES}
-      )
+      target_link_libraries(${TARGET_NAME} PUBLIC ${ARG_DEPENDENCIES})
     endif()
   else()
     # Create header-only INTERFACE library
@@ -79,32 +83,37 @@ function(add_demo_module MODULE_NAME)
     add_library(${PROJECT_PREFIX}::${MODULE_NAME} ALIAS ${TARGET_NAME})
 
     # Set include directories for header-only library
-    target_include_directories(${TARGET_NAME}
+    target_include_directories(
+      ${TARGET_NAME}
       INTERFACE
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
-    # Link to common project targets as INTERFACE (for header-only libraries)
-    target_link_libraries(${TARGET_NAME}
+    # Link to common project targets as INTERFACE for header-only library
+    target_link_libraries(
+      ${TARGET_NAME}
       INTERFACE
-      ${PROJECT_PREFIX}::project_options
-      ${PROJECT_PREFIX}::project_warnings
+        ${PROJECT_PREFIX}::project_options
+        ${PROJECT_PREFIX}::project_warnings
     )
 
     # Link additional dependencies if provided
     if(ARG_DEPENDENCIES)
-      target_link_libraries(${TARGET_NAME}
-        INTERFACE ${ARG_DEPENDENCIES}
-      )
+      target_link_libraries(${TARGET_NAME} INTERFACE ${ARG_DEPENDENCIES})
     endif()
   endif()
 
   # Installation (same for both types)
-  install(TARGETS ${TARGET_NAME}
+  install(
+    TARGETS
+      ${TARGET_NAME}
     EXPORT ${PROJECT_PREFIX}-targets
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endfunction()

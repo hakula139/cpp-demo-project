@@ -1,14 +1,14 @@
 #pragma once
 
+#include <algorithm>
 #include <chrono>
+#include <format>
+#include <functional>
+#include <numeric>
+#include <print>
 #include <string>
 #include <string_view>
-#include <functional>
 #include <vector>
-#include <print>
-#include <format>
-#include <numeric>
-#include <algorithm>
 
 namespace cpp_features::timing {
 
@@ -16,28 +16,24 @@ using Clock = std::chrono::high_resolution_clock;
 using TimePoint = Clock::time_point;
 using Duration = Clock::duration;
 
-template<typename Rep, typename Period>
+template <typename Rep, typename Period>
 using TimeInterval = std::chrono::duration<Rep, Period>;
 
 class Timer {
  public:
   Timer() : start_time_(Clock::now()) {}
 
-  void Start() {
-    start_time_ = Clock::now();
-  }
+  void Start() { start_time_ = Clock::now(); }
 
-  void Stop() {
-    end_time_ = Clock::now();
-  }
+  void Stop() { end_time_ = Clock::now(); }
 
-  template<typename DurationType = std::chrono::milliseconds>
+  template <typename DurationType = std::chrono::milliseconds>
   [[nodiscard]] auto GetElapsed() const -> typename DurationType::rep {
     auto end = (end_time_ == TimePoint{}) ? Clock::now() : end_time_;
     return std::chrono::duration_cast<DurationType>(end - start_time_).count();
   }
 
-  template<typename DurationType = std::chrono::milliseconds>
+  template <typename DurationType = std::chrono::milliseconds>
   [[nodiscard]] auto GetElapsedDuration() const -> DurationType {
     auto end = (end_time_ == TimePoint{}) ? Clock::now() : end_time_;
     return std::chrono::duration_cast<DurationType>(end - start_time_);
@@ -71,9 +67,9 @@ class ScopedTimer {
  public:
   explicit ScopedTimer(std::string_view name) : name_(name), timer_() {}
 
-  template<typename Func>
+  template <typename Func>
   explicit ScopedTimer(std::string_view name, Func callback)
-    : name_(name), timer_(), callback_(callback) {}
+      : name_(name), timer_(), callback_(callback) {}
 
   ~ScopedTimer() {
     timer_.Stop();
@@ -102,9 +98,9 @@ class BenchmarkRunner {
     long long max_ns;
   };
 
-  template<typename Func>
+  template <typename Func>
   static auto Benchmark(std::string_view name, Func&& func, std::size_t iterations = 1000)
-    -> BenchmarkResult {
+      -> BenchmarkResult {
     std::vector<long long> times;
     times.reserve(iterations);
 
@@ -119,14 +115,7 @@ class BenchmarkRunner {
     auto avg = total / static_cast<long long>(iterations);
     auto min_max = std::minmax_element(times.begin(), times.end());
 
-    return {
-      std::string(name),
-      iterations,
-      total,
-      avg,
-      *min_max.first,
-      *min_max.second
-    };
+    return {std::string(name), iterations, total, avg, *min_max.first, *min_max.second};
   }
 
   static void PrintResult(const BenchmarkResult& result) {
@@ -137,8 +126,6 @@ class BenchmarkRunner {
     std::print("  Min: {:.2f}μs\n", result.min_ns / 1000.0);
     std::print("  Max: {:.2f}μs\n", result.max_ns / 1000.0);
   }
-
-
 };
 
 void DemonstrateTimerUsage();
@@ -149,7 +136,7 @@ void DemonstrateBenchmarking();
 
 void DemonstrateChronoFeatures();
 
-template<typename Func>
+template <typename Func>
 [[nodiscard]] auto TimeFunction(Func&& func) -> long long {
   Timer timer;
   func();
@@ -157,7 +144,7 @@ template<typename Func>
   return timer.GetElapsed<std::chrono::nanoseconds>();
 }
 
-template<typename Func>
+template <typename Func>
 void ProfileFunction(std::string_view name, Func&& func, std::size_t iterations = 1) {
   if (iterations == 1) {
     ScopedTimer timer(name);

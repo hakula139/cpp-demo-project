@@ -58,7 +58,8 @@ Example:
 function(set_project_warnings PROJECT_NAME)
   option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
-  set(CLANG_WARNINGS
+  set(
+    CLANG_WARNINGS
     -Wall
     -Wextra # Reasonable and standard
     -Wcast-align # Warn for potential performance problem casts
@@ -111,7 +112,8 @@ function(set_project_warnings PROJECT_NAME)
     list(APPEND CLANG_WARNINGS -Werror)
   endif()
 
-  set(GCC_WARNINGS
+  set(
+    GCC_WARNINGS
     -Wall
     -Wextra # Reasonable and standard
     -Wcast-align # Warn for potential performance problem casts
@@ -149,8 +151,10 @@ function(set_project_warnings PROJECT_NAME)
   # Use the same warning flags for C
   set(PROJECT_WARNINGS_C "${PROJECT_WARNINGS_CXX}")
 
-  target_compile_options(${PROJECT_NAME} INTERFACE
-    $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS_CXX}>
-    $<$<COMPILE_LANGUAGE:C>:${PROJECT_WARNINGS_C}>
+  target_compile_options(
+    ${PROJECT_NAME}
+    INTERFACE
+      $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS_CXX}>
+      $<$<COMPILE_LANGUAGE:C>:${PROJECT_WARNINGS_C}>
   )
 endfunction()

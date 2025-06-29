@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "shapes/circle.hpp"
-#include "shapes/rectangle.hpp"
+#include "algorithms/stl_demos.hpp"
 #include "containers/container.hpp"
 #include "memory/smart_pointers.hpp"
-#include "algorithms/stl_demos.hpp"
+#include "shapes/circle.hpp"
+#include "shapes/rectangle.hpp"
 #include "strings/string_ops.hpp"
 
 using namespace cpp_features;

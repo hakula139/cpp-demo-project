@@ -88,7 +88,7 @@ void DemonstrateRandomRanges();
 template <std::ranges::random_access_range Range>
 void ShuffleContainer(Range&& range) {
   thread_local std::random_device rd;
-  thread_local std::mt19937       gen(rd());
+  thread_local std::mt19937 gen(rd());
   std::shuffle(std::ranges::begin(range), std::ranges::end(range), gen);
 }
 
@@ -96,8 +96,8 @@ template <std::ranges::input_range Range>
 [[nodiscard]] auto SampleFromRange(Range&& range, std::size_t count)
     -> std::vector<std::ranges::range_value_t<Range>> {
   std::vector<std::ranges::range_value_t<Range>> result;
-  thread_local std::random_device                rd;
-  thread_local std::mt19937                      gen(rd());
+  thread_local std::random_device rd;
+  thread_local std::mt19937 gen(rd());
   std::sample(std::ranges::begin(range), std::ranges::end(range), std::back_inserter(result), count,
               gen);
   return result;

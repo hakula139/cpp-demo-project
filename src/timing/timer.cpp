@@ -1,12 +1,12 @@
+#include "timing/timer.hpp"
+
+#include <algorithm>
 #include <chrono>
+#include <cmath>
+#include <numeric>
 #include <print>
 #include <thread>
 #include <vector>
-#include <numeric>
-#include <algorithm>
-#include <cmath>
-
-#include "timing/timer.hpp"
 
 namespace cpp_features::timing {
 
@@ -42,9 +42,8 @@ void DemonstrateScopedTimer() {
   }
 
   {
-    ScopedTimer timer("With callback", [](long long ns) {
-      std::print("Callback received: {}ns\n", ns);
-    });
+    ScopedTimer timer("With callback",
+                      [](long long ns) { std::print("Callback received: {}ns\n", ns); });
 
     std::this_thread::sleep_for(std::chrono::milliseconds(20));
     std::print("Work with callback...\n");
@@ -86,11 +85,10 @@ void DemonstrateChronoFeatures() {
 
   auto duration = end - start;
   std::print("Duration type measurement: {}ns\n",
-            std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count());
+             std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count());
 
-  auto time_func_result = TimeFunction([]() {
-    std::this_thread::sleep_for(std::chrono::microseconds(500));
-  });
+  auto time_func_result =
+      TimeFunction([]() { std::this_thread::sleep_for(std::chrono::microseconds(500)); });
   std::print("TimeFunction result: {}ns\n", time_func_result);
 
   ProfileFunction("Profile test", []() {
@@ -100,11 +98,14 @@ void DemonstrateChronoFeatures() {
     }
   });
 
-  ProfileFunction("Profile benchmark", []() {
-    std::vector<int> data(1000);
-    std::iota(data.begin(), data.end(), 1);
-    std::reverse(data.begin(), data.end());
-  }, 100);
+  ProfileFunction(
+      "Profile benchmark",
+      []() {
+        std::vector<int> data(1000);
+        std::iota(data.begin(), data.end(), 1);
+        std::reverse(data.begin(), data.end());
+      },
+      100);
 }
 
 }  // namespace cpp_features::timing

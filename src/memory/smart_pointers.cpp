@@ -1,7 +1,8 @@
-#include <memory>
-#include <iostream>
-
 #include "memory/smart_pointers.hpp"
+
+#include <iostream>
+#include <memory>
+
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
 
@@ -80,14 +81,16 @@ void DemonstrateWeakPtr() {
     std::cout << "Shared pointer exists, weak_ptr expired: " << weak_rect.expired() << "\n";
 
     if (auto locked = weak_rect.lock()) {
-      std::cout << "Successfully locked weak_ptr, area: " << locked->GetArea().value_or(0.0) << "\n";
+      std::cout << "Successfully locked weak_ptr, area: " << locked->GetArea().value_or(0.0)
+                << "\n";
     }
   }
 
   std::cout << "Shared pointer destroyed, weak_ptr expired: " << weak_rect.expired() << "\n";
 
   if (auto locked = weak_rect.lock()) {
-    std::cout << "Unexpectedly locked expired weak_ptr with area: " << locked->GetArea().value_or(0.0) << "\n";
+    std::cout << "Unexpectedly locked expired weak_ptr with area: "
+              << locked->GetArea().value_or(0.0) << "\n";
   } else {
     std::cout << "Cannot lock expired weak_ptr as expected\n";
   }
@@ -116,8 +119,8 @@ void DemonstrateCustomDeleter() {
   };
 
   {
-    std::unique_ptr<shapes::Rectangle, decltype(logging_deleter)>
-      rect_ptr(new shapes::Rectangle(5.0, 8.0), logging_deleter);
+    std::unique_ptr<shapes::Rectangle, decltype(logging_deleter)> rect_ptr(
+        new shapes::Rectangle(5.0, 8.0), logging_deleter);
     std::cout << "Created Rectangle with logging deleter\n";
   }
 }
@@ -136,22 +139,16 @@ void DemonstrateResourceManagement() {
 
   std::cout << "Created resources through ResourceManager\n";
 
-  manager.RegisterCleanup<int>([]() {
-    std::cout << "Cleanup function 1 executed\n";
-  });
+  manager.RegisterCleanup<int>([]() { std::cout << "Cleanup function 1 executed\n"; });
 
-  manager.RegisterCleanup<int>([]() {
-    std::cout << "Cleanup function 2 executed\n";
-  });
+  manager.RegisterCleanup<int>([]() { std::cout << "Cleanup function 2 executed\n"; });
 
   circle->Draw();
   rectangle->Draw();
 
   manager.ExecuteCleanup();
 
-  UniqueResource<shapes::Circle> wrapped_circle(
-    std::make_unique<shapes::Circle>(6.0)
-  );
+  UniqueResource<shapes::Circle> wrapped_circle(std::make_unique<shapes::Circle>(6.0));
 
   std::cout << "Wrapped circle radius: " << wrapped_circle->GetRadius() << "\n";
 

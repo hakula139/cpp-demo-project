@@ -39,7 +39,8 @@ endif()
 if(ENABLE_CPPCHECK)
   find_program(CPPCHECK cppcheck)
   if(CPPCHECK)
-    set(CMAKE_CXX_CPPCHECK
+    set(
+      CMAKE_CXX_CPPCHECK
       ${CPPCHECK}
       --enable=all
       --inconclusive

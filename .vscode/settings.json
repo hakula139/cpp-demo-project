@@ -28,19 +28,15 @@
     "source.organizeImports": "explicit"
   },
   "editor.detectIndentation": false,
-  "editor.formatOnSave": true,
-  "editor.formatOnType": true,
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
   },
   "editor.suggest.insertMode": "replace",
   "editor.tabSize": 2,
   "files.associations": {
-    "*.cc": "cpp",
     "*.cpp": "cpp",
-    "*.cxx": "cpp",
-    "*.h": "cpp",
-    "*.hpp": "cpp"
+    "*.hpp": "cpp",
+    "*.h": "cpp"
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
