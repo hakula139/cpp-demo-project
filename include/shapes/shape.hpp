@@ -32,18 +32,18 @@ class Shape {
 
   [[nodiscard]] constexpr auto GetName() const noexcept -> std::string_view { return name_; }
 
-  auto operator<=>(const Shape& other) const = default;
+  auto operator<=>(const Shape &other) const = default;
 
-  Shape(Shape&&) noexcept = default;
-  auto operator=(Shape&&) noexcept -> Shape& = default;
+  Shape(Shape &&) noexcept = default;
+  auto operator=(Shape &&) noexcept -> Shape & = default;
 
-  Shape(const Shape&) = default;
-  auto operator=(const Shape&) -> Shape& = default;
+  Shape(const Shape &) = default;
+  auto operator=(const Shape &) -> Shape & = default;
 };
 
 template <typename ShapeType, cpp_features::concepts::ArithmeticType... Args>
   requires std::derived_from<ShapeType, Shape>
-[[nodiscard]] auto CreateShape(Args&&... args) -> std::unique_ptr<ShapeType> {
+[[nodiscard]] auto CreateShape(Args &&...args) -> std::unique_ptr<ShapeType> {
   return std::make_unique<ShapeType>(std::forward<Args>(args)...);
 }
 

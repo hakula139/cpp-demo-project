@@ -150,7 +150,7 @@ TEST_CASE("Polymorphic behavior", "[shapes][polymorphism]") {
     shapes.push_back(std::move(circle));
     shapes.push_back(std::move(rectangle));
 
-    for (const auto& shape : shapes) {
+    for (const auto &shape : shapes) {
       auto area = shape->GetArea();
       REQUIRE(area.has_value());
       REQUIRE(area.value() > 0.0);

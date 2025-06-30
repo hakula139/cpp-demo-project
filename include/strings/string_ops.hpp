@@ -31,11 +31,11 @@ class StringProcessor {
   static auto Split(std::string_view input, std::string_view delimiter)
       -> std::vector<std::string_view>;
 
-  static auto Join(const std::vector<std::string_view>& parts, std::string_view separator)
+  static auto Join(const std::vector<std::string_view> &parts, std::string_view separator)
       -> std::string;
 
   template <StringLike T>
-  static auto Contains(std::string_view haystack, T&& needle) -> bool {
+  static auto Contains(std::string_view haystack, T &&needle) -> bool {
     return haystack.find(std::string_view(needle)) != std::string_view::npos;
   }
 
@@ -92,7 +92,7 @@ class StringProcessor {
 
   static auto RemoveWhitespace(std::string_view input) -> std::string;
 
-  static auto FindRegex(std::string_view input, const std::regex& pattern)
+  static auto FindRegex(std::string_view input, const std::regex &pattern)
       -> std::vector<std::string>;
 
   static auto ValidateEmail(std::string_view email) -> bool;
@@ -111,7 +111,7 @@ void DemonstrateRegexOperations();
 
 template <std::ranges::input_range Range>
   requires StringLike<std::ranges::range_value_t<Range>>
-auto ConcatenateStrings(Range&& strings, std::string_view separator = "") -> std::string {
+auto ConcatenateStrings(Range &&strings, std::string_view separator = "") -> std::string {
   if (std::ranges::empty(strings)) {
     return {};
   }
@@ -130,7 +130,7 @@ auto ConcatenateStrings(Range&& strings, std::string_view separator = "") -> std
 }
 
 template <typename Predicate>
-auto FilterStrings(const std::vector<std::string>& strings, Predicate predicate)
+auto FilterStrings(const std::vector<std::string> &strings, Predicate predicate)
     -> std::vector<std::string> {
   std::vector<std::string> result;
   std::ranges::copy_if(strings, std::back_inserter(result), predicate);

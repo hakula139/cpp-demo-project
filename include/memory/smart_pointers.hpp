@@ -19,18 +19,18 @@ class ResourceManager {
   ResourceManager() = default;
   ~ResourceManager() = default;
 
-  ResourceManager(const ResourceManager&) = delete;
-  auto operator=(const ResourceManager&) -> ResourceManager& = delete;
-  ResourceManager(ResourceManager&&) noexcept = default;
-  auto operator=(ResourceManager&&) noexcept -> ResourceManager& = default;
+  ResourceManager(const ResourceManager &) = delete;
+  auto operator=(const ResourceManager &) -> ResourceManager & = delete;
+  ResourceManager(ResourceManager &&) noexcept = default;
+  auto operator=(ResourceManager &&) noexcept -> ResourceManager & = default;
 
   template <Destructible T, typename... Args>
-  [[nodiscard]] auto CreateUnique(Args&&... args) -> std::unique_ptr<T> {
+  [[nodiscard]] auto CreateUnique(Args &&...args) -> std::unique_ptr<T> {
     return std::make_unique<T>(std::forward<Args>(args)...);
   }
 
   template <Destructible T, typename... Args>
-  [[nodiscard]] auto CreateShared(Args&&... args) -> std::shared_ptr<T> {
+  [[nodiscard]] auto CreateShared(Args &&...args) -> std::shared_ptr<T> {
     return std::make_shared<T>(std::forward<Args>(args)...);
   }
 
@@ -50,13 +50,13 @@ class UniqueResource {
  public:
   explicit UniqueResource(std::unique_ptr<T> resource) : resource_(std::move(resource)) {}
 
-  [[nodiscard]] auto Get() const noexcept -> T* { return resource_.get(); }
+  [[nodiscard]] auto Get() const noexcept -> T * { return resource_.get(); }
 
   [[nodiscard]] auto Release() noexcept -> std::unique_ptr<T> { return std::move(resource_); }
 
-  auto operator->() const noexcept -> T* { return resource_.get(); }
+  auto operator->() const noexcept -> T * { return resource_.get(); }
 
-  auto operator*() const noexcept -> T& { return *resource_; }
+  auto operator*() const noexcept -> T & { return *resource_; }
 
  private:
   std::unique_ptr<T> resource_;
@@ -73,7 +73,7 @@ void DemonstrateCustomDeleter();
 void DemonstrateResourceManagement();
 
 template <typename T, typename Deleter = std::default_delete<T>>
-[[nodiscard]] auto MakeUniqueWithDeleter(T* ptr, Deleter deleter = Deleter{})
+[[nodiscard]] auto MakeUniqueWithDeleter(T *ptr, Deleter deleter = Deleter{})
     -> std::unique_ptr<T, Deleter> {
   return std::unique_ptr<T, Deleter>(ptr, deleter);
 }

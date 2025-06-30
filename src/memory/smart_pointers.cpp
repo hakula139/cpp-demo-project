@@ -10,7 +10,7 @@ namespace cpp_features::memory {
 
 void ResourceManager::ExecuteCleanup() {
   std::cout << "Executing " << cleanup_functions_.size() << " cleanup functions\n";
-  for (auto& cleanup_func : cleanup_functions_) {
+  for (auto &cleanup_func : cleanup_functions_) {
     cleanup_func();
   }
   cleanup_functions_.clear();
@@ -99,7 +99,7 @@ void DemonstrateWeakPtr() {
 void DemonstrateCustomDeleter() {
   std::cout << "\n=== Custom Deleter Demonstration ===\n";
 
-  auto custom_deleter = [](shapes::Circle* ptr) {
+  auto custom_deleter = [](shapes::Circle *ptr) {
     std::cout << "Custom deleter called for Circle with radius " << ptr->GetRadius() << "\n";
     delete ptr;
   };
@@ -112,7 +112,7 @@ void DemonstrateCustomDeleter() {
   }
   std::cout << "unique_ptr went out of scope\n";
 
-  auto logging_deleter = [](shapes::Rectangle* ptr) {
+  auto logging_deleter = [](shapes::Rectangle *ptr) {
     auto area = ptr->GetArea();
     std::cout << "Destroying Rectangle with area " << area.value_or(0.0) << "\n";
     delete ptr;

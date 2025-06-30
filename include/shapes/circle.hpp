@@ -38,9 +38,9 @@ class Circle final : public Shape {
 
   [[nodiscard]] constexpr auto GetRadius() const noexcept -> double { return radius_; }
 
-  auto operator<=>(const Circle& other) const noexcept { return radius_ <=> other.radius_; }
+  auto operator<=>(const Circle &other) const noexcept { return radius_ <=> other.radius_; }
 
-  auto operator==(const Circle& other) const noexcept -> bool { return radius_ == other.radius_; }
+  auto operator==(const Circle &other) const noexcept -> bool { return radius_ == other.radius_; }
 
  private:
   double radius_;

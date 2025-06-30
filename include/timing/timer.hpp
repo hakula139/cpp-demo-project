@@ -99,7 +99,7 @@ class BenchmarkRunner {
   };
 
   template <typename Func>
-  static auto Benchmark(std::string_view name, Func&& func, std::size_t iterations = 1000)
+  static auto Benchmark(std::string_view name, Func &&func, std::size_t iterations = 1000)
       -> BenchmarkResult {
     std::vector<long long> times;
     times.reserve(iterations);
@@ -118,7 +118,7 @@ class BenchmarkRunner {
     return {std::string(name), iterations, total, avg, *min_max.first, *min_max.second};
   }
 
-  static void PrintResult(const BenchmarkResult& result) {
+  static void PrintResult(const BenchmarkResult &result) {
     std::print("Benchmark: {}\n", result.name);
     std::print("  Iterations: {}\n", result.iterations);
     std::print("  Total time: {:.2f}ms\n", result.total_ns / 1000000.0);
@@ -137,7 +137,7 @@ void DemonstrateBenchmarking();
 void DemonstrateChronoFeatures();
 
 template <typename Func>
-[[nodiscard]] auto TimeFunction(Func&& func) -> long long {
+[[nodiscard]] auto TimeFunction(Func &&func) -> long long {
   Timer timer;
   func();
   timer.Stop();
@@ -145,7 +145,7 @@ template <typename Func>
 }
 
 template <typename Func>
-void ProfileFunction(std::string_view name, Func&& func, std::size_t iterations = 1) {
+void ProfileFunction(std::string_view name, Func &&func, std::size_t iterations = 1) {
   if (iterations == 1) {
     ScopedTimer timer(name);
     func();

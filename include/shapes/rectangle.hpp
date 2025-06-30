@@ -15,7 +15,7 @@ class Rectangle final : public Shape {
     double height;
   };
 
-  explicit Rectangle(const Dimensions& dims)
+  explicit Rectangle(const Dimensions &dims)
       : Shape("Rectangle"), width_(dims.width), height_(dims.height) {}
 
   Rectangle(double width_value,
@@ -59,7 +59,7 @@ class Rectangle final : public Shape {
 
   [[nodiscard]] auto IsSquare() const noexcept -> bool { return width_ == height_; }
 
-  auto operator<=>(const Rectangle& other) const noexcept {
+  auto operator<=>(const Rectangle &other) const noexcept {
     auto area_comparison = (width_ * height_) <=> (other.width_ * other.height_);
     if (area_comparison != std::strong_ordering::equal) {
       return area_comparison;
@@ -71,7 +71,7 @@ class Rectangle final : public Shape {
     return height_ <=> other.height_;
   }
 
-  auto operator==(const Rectangle& other) const noexcept -> bool {
+  auto operator==(const Rectangle &other) const noexcept -> bool {
     return width_ == other.width_ && height_ == other.height_;
   }
 

@@ -72,7 +72,7 @@ auto StringProcessor::Split(std::string_view input, std::string_view delimiter)
   return result;
 }
 
-auto StringProcessor::Join(const std::vector<std::string_view>& parts, std::string_view separator)
+auto StringProcessor::Join(const std::vector<std::string_view> &parts, std::string_view separator)
     -> std::string {
   if (parts.empty()) {
     return {};
@@ -161,7 +161,7 @@ auto StringProcessor::RemoveWhitespace(std::string_view input) -> std::string {
   return result;
 }
 
-auto StringProcessor::FindRegex(std::string_view input, const std::regex& pattern)
+auto StringProcessor::FindRegex(std::string_view input, const std::regex &pattern)
     -> std::vector<std::string> {
   std::vector<std::string> matches;
   std::string input_str(input);
@@ -200,7 +200,7 @@ void DemonstrateBasicStringOps() {
   std::string sentence = "The quick brown fox jumps over the lazy dog";
   auto words = StringProcessor::Split(sentence, ' ');
   std::print("Split into {} words: ", words.size());
-  for (const auto& word : words) {
+  for (const auto &word : words) {
     std::print("'{}' ", word);
   }
   std::print("\n");
@@ -267,7 +267,7 @@ void DemonstrateRegexOperations() {
 
   auto emails = StringProcessor::FindRegex(text, email_regex);
   std::print("Found {} email addresses:\n", emails.size());
-  for (const auto& email : emails) {
+  for (const auto &email : emails) {
     std::print("  - {}\n", email);
     std::print("    Valid: {}\n", StringProcessor::ValidateEmail(email));
   }
@@ -276,7 +276,7 @@ void DemonstrateRegexOperations() {
                                         "invalid-url", "ftp://not-http.com"};
 
   std::print("URL validation:\n");
-  for (const auto& url : test_urls) {
+  for (const auto &url : test_urls) {
     std::print("  {} -> {}\n", url, StringProcessor::ValidateUrl(url) ? "Valid" : "Invalid");
   }
 }

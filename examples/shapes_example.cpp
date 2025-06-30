@@ -26,7 +26,7 @@ int main() {
 
   // Demonstrate polymorphic behavior
   std::cout << "Processing shapes polymorphically:\n";
-  for (const auto& shape : shapes) {
+  for (const auto &shape : shapes) {
     shape->Draw();
 
     if (auto area = shape->GetArea(); area) {
