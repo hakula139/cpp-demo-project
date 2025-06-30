@@ -39,20 +39,3 @@ target_link_libraries(${PROJECT_NAME}_lib
   ${PROJECT_NAME}::project_options
   ${PROJECT_NAME}::project_warnings
 )
-
-# Create main executable
-add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-  ${PROJECT_NAME}::lib
-)
-
-# Installation
-install(TARGETS ${PROJECT_NAME}_lib ${PROJECT_NAME}
-  EXPORT ${PROJECT_NAME}-targets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)

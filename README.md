@@ -86,6 +86,7 @@ cmake --build build --parallel $(nproc)
 # Run specific component examples
 ./build/examples/algorithms_example
 ./build/examples/containers_example
+./build/examples/exceptions_example
 ./build/examples/shapes_example
 
 # Run full feature demonstration
@@ -203,9 +204,12 @@ cpp-demo-project/
 ├── README.md                   # This file
 ├── LICENSE                     # MIT License
 ├── cmake/                      # CMake modules and utilities
+│   ├── ModuleHelpers.cmake     # Module helper functions
+│   ├── Dependencies.cmake      # External dependencies configuration
 │   ├── CompilerWarnings.cmake  # Compiler warning configuration
 │   ├── StaticAnalysis.cmake    # Static analysis tools
-│   └── demo-config.cmake.in    # Package configuration
+│   ├── config.cmake.in         # Package configuration
+│   └── README.md               # CMake modules documentation
 ├── include/                    # Public header files
 │   ├── algorithms/             # STL algorithms and ranges
 │   ├── concepts/               # C++20/23 concepts
@@ -217,9 +221,9 @@ cpp-demo-project/
 │   ├── strings/                # String manipulation utilities
 │   └── timing/                 # Performance timing utilities
 ├── src/                        # Source implementation files
-│   ├── [mirrors include structure]
-│   └── main.cpp                # Main demonstration program
+│   └── [mirrors include structure]
 ├── tests/                      # Test suite using Catch2
+│   ├── test_algorithms.cpp
 │   ├── test_concepts.cpp
 │   ├── test_containers.cpp
 │   ├── test_shapes.cpp
@@ -227,8 +231,9 @@ cpp-demo-project/
 └── examples/                   # Usage examples and demonstrations
     ├── algorithms_example.cpp  # STL algorithms and ranges demo
     ├── containers_example.cpp  # Modern containers demo
+    ├── exceptions_example.cpp  # Custom exceptions demo
     ├── shapes_example.cpp      # Geometric shapes demo
-    └── main.cpp               # Full feature demonstration
+    └── full_example.cpp        # Full feature demonstration
 ```
 
 ## 🧩 Components

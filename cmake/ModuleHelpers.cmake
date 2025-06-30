@@ -1,4 +1,4 @@
-# Module helper functions for demo project
+# Module helper functions for project
 
 include(GNUInstallDirs)
 
@@ -11,7 +11,7 @@ endif()
 add_module
 ---------------
 
-Add a demo module (header-only or with source files).
+Add a module (header-only or with source files).
 
   add_module(<name>
     [SOURCES <source1> [<source2> ...]]
