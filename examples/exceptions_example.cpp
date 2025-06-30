@@ -110,7 +110,9 @@ auto main() -> int {
   // Demonstrate Result::Then (chaining operations that can fail)
   auto safe_sqrt = [](double x) -> Result<double> {
     if (x < 0.0) {
-      return Result<double>{CalculationException{"Negative square root", x}};
+      return Result<double>{
+          CalculationException{"Cannot calculate square root of negative number", x},
+      };
     }
     return Result<double>{std::sqrt(x)};
   };
