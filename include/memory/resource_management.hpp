@@ -1,10 +1,10 @@
 /**
- * @file smart_pointers.hpp
- * @brief Modern C++ smart pointer utilities and resource management
+ * @file resource_management.hpp
+ * @brief Modern C++ resource management utilities and RAII patterns
  *
- * This module provides enhanced smart pointer utilities, resource management patterns, and memory
- * safety demonstrations. It showcases RAII principles, custom deleters, and modern C++ memory
- * management best practices.
+ * This module provides resource management utilities, RAII patterns, and memory
+ * safety demonstrations. It showcases resource lifecycle management, automatic cleanup,
+ * and modern C++ memory management best practices.
  *
  * The module includes:
  *

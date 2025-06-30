@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include "memory/smart_pointers.hpp"
+#include "memory/resource_management.hpp"
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
 

@@ -1,4 +1,4 @@
-#include "memory/smart_pointers.hpp"
+#include "memory/resource_management.hpp"
 
 #include <exception>
 #include <print>

@@ -23,9 +23,9 @@ Usage:
 
 ```cmake
 include(ModuleHelpers)
-add_module(concepts)                           # Header-only module
-add_module(memory SOURCES smart_pointers.cpp)  # Regular module with sources
-add_module(network DEPENDENCIES OpenSSL::SSL)  # With dependencies
+add_module(concepts)                                # Header-only module
+add_module(memory SOURCES resource_management.cpp)  # Regular module with sources
+add_module(network DEPENDENCIES OpenSSL::SSL)       # Module with dependencies
 ```
 
 Features:
