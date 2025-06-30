@@ -16,7 +16,7 @@ namespace {
 
 using namespace cpp_features::exceptions;
 
-// Helper functions for testing exception scenarios
+// Helper functions for testing exceptions module
 namespace test_helpers {
 
 /**

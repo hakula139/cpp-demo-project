@@ -16,6 +16,7 @@ add_executable(
   test_concepts.cpp
   test_containers.cpp
   test_exceptions.cpp
+  test_memory.cpp
   test_shapes.cpp
   test_main.cpp
 )
