@@ -325,6 +325,38 @@ TEST_CASE("Type trait concepts", "[concepts][traits]") {
     };
     REQUIRE_FALSE(MovableType<NonMovable>);
   }
+
+  SECTION("DestructibleType") {
+    REQUIRE(DestructibleType<int>);
+    REQUIRE(DestructibleType<double>);
+    REQUIRE(DestructibleType<std::string>);
+    REQUIRE(DestructibleType<std::vector<int>>);
+    REQUIRE(DestructibleType<std::unique_ptr<int>>);
+    REQUIRE(DestructibleType<std::shared_ptr<int>>);
+
+    struct DestructibleClass {
+      ~DestructibleClass() = default;
+    };
+    REQUIRE(DestructibleType<DestructibleClass>);
+
+    struct VirtualDestructor {
+      virtual ~VirtualDestructor() = default;
+    };
+    REQUIRE(DestructibleType<VirtualDestructor>);
+  }
+
+  SECTION("NonDestructibleType") {
+    struct NonDestructible {
+      ~NonDestructible() = delete;
+    };
+    REQUIRE_FALSE(DestructibleType<NonDestructible>);
+
+    struct PrivateDestructor {
+     private:
+      ~PrivateDestructor() = default;
+    };
+    REQUIRE_FALSE(DestructibleType<PrivateDestructor>);
+  }
 }
 
 }  // namespace

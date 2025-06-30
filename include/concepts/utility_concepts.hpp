@@ -118,4 +118,24 @@ concept CopyableType = std::copyable<T>;
 template <typename T>
 concept MovableType = std::movable<T>;
 
+/**
+ * @brief Concept for types that can be destroyed
+ *
+ * @tparam T The type to check for destructibility
+ *
+ * This concept ensures that a type can be properly destroyed, which is essential
+ * for resource management and smart pointer operations. It leverages the standard
+ * library's std::destructible concept, which requires that the destructor is
+ * accessible and non-deleted.
+ *
+ * @code
+ * template <DestructibleType T>
+ * auto CreateManagedResource(Args &&...args) -> std::unique_ptr<T> {
+ *   return std::make_unique<T>(std::forward<Args>(args)...);
+ * }
+ * @endcode
+ */
+template <typename T>
+concept DestructibleType = std::destructible<T>;
+
 }  // namespace cpp_features::concepts

@@ -83,14 +83,11 @@ cmake --build build --parallel $(nproc)
 #### Run individual examples
 
 ```bash
-# Run specific component examples
 ./build/examples/algorithms_example
 ./build/examples/containers_example
 ./build/examples/exceptions_example
+./build/examples/memory_example
 ./build/examples/shapes_example
-
-# Run full feature demonstration
-./build/examples/full_example
 ```
 
 #### Run tests
@@ -175,24 +172,26 @@ Program completed successfully!
 Each component can be used independently:
 
 ```cpp
+#include <print>
+
 #include "containers/container.hpp"
 #include "shapes/circle.hpp"
 
-using cpp_features::containers;
-using cpp_features::shapes;
+using cpp_features::containers::Container;
+using cpp_features::shapes::CreateCircle;
 
 int main() {
-    // Use modern containers
-    containers::Container<int> numbers{1, 2, 3, 4, 5};
-    numbers.Display();
+  // Use modern containers
+  Container<int> numbers{1, 2, 3, 4, 5};
+  numbers.Display();
 
-    // Create and use shapes
-    auto circle = shapes::CreateCircle(5.0);
-    if (auto area = circle->GetArea(); area) {
-        std::cout << "Area: " << area.value() << std::endl;
-    }
+  // Create and use shapes
+  auto circle = CreateCircle(5.0);
+  if (auto area = circle->GetArea(); area) {
+    std::println("Area: {}", area.value());
+  }
 
-    return 0;
+  return 0;
 }
 ```
 
@@ -232,8 +231,8 @@ cpp-demo-project/
     ├── algorithms_example.cpp  # STL algorithms and ranges demo
     ├── containers_example.cpp  # Modern containers demo
     ├── exceptions_example.cpp  # Custom exceptions demo
-    ├── shapes_example.cpp      # Geometric shapes demo
-    └── full_example.cpp        # Full feature demonstration
+    ├── memory_example.cpp      # Smart pointers and memory management demo
+    └── shapes_example.cpp      # Geometric shapes demo
 ```
 
 ## 🧩 Components
@@ -268,12 +267,14 @@ Modern container implementations showcasing:
 
 ### 🔷 Memory Module
 
-Smart pointer and memory management:
+Smart pointer and memory management utilities:
 
-- **RAII principles** implementation
-- **Custom deleters** and specialized smart pointers
-- **Memory safety** best practices
-- **Resource management** patterns
+- **RAII principles** implementation and resource lifecycle management
+- **Custom deleters** and specialized smart pointer wrappers
+- **Memory safety** best practices with concept-based constraints
+- **Resource management** patterns with automatic cleanup registration
+- **Type-safe** resource creation and destruction with concepts
+- **Enhanced smart pointer wrappers** with additional functionality
 
 ## 🧪 Testing
 
