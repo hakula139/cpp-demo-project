@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 # Project configuration
-project(demo
-  VERSION 1.0.0
-  DESCRIPTION "Demo project for modern C++ features"
-  LANGUAGES CXX
-)
+project(demo VERSION 1.0.0 DESCRIPTION "Demo project for modern C++ features" LANGUAGES CXX)
 
 # Only build tests if this is the main project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -37,7 +33,12 @@ if(APPLE)
   set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
   # Ensure proper handling of static libraries
-  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".dylib" ".so")
+  set(
+    CMAKE_FIND_LIBRARY_SUFFIXES
+    ".a"
+    ".dylib"
+    ".so"
+  )
 
   # Set proper flags for static library creation (ranlib handled by ARCHIVE_FINISH)
   set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
@@ -73,9 +74,19 @@ endif()
 
 # Build type specific settings
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -g -O0)
+  target_compile_options(
+    ${PROJECT_NAME}_project_options
+    INTERFACE
+      -g
+      -O0
+  )
 else()
-  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -O3 -DNDEBUG)
+  target_compile_options(
+    ${PROJECT_NAME}_project_options
+    INTERFACE
+      -O3
+      -DNDEBUG
+  )
 endif()
 
 # Setup project dependencies
@@ -99,11 +110,15 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-install(TARGETS ${PROJECT_NAME}_project_options ${PROJECT_NAME}_project_warnings
+install(
+  TARGETS
+    ${PROJECT_NAME}_project_options
+    ${PROJECT_NAME}_project_warnings
   EXPORT ${PROJECT_NAME}-targets
 )
 
-install(EXPORT ${PROJECT_NAME}-targets
+install(
+  EXPORT ${PROJECT_NAME}-targets
   FILE ${PROJECT_NAME}-targets.cmake
   NAMESPACE ${PROJECT_NAME}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
@@ -122,9 +137,10 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 

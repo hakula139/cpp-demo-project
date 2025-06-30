@@ -1,5 +1,3 @@
 # Timing module
 
-add_module(timing
-  SOURCES timer.cpp
-)
+add_module(timing SOURCES timer.cpp)
