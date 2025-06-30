@@ -98,6 +98,7 @@ add_subdirectory(src)
 # Build tests if enabled
 if(BUILD_TESTS)
   enable_testing()
+  include(CTest)
   add_subdirectory(tests)
 endif()
 
