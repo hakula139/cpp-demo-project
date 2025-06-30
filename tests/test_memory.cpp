@@ -30,21 +30,25 @@ class TestResource {
 
 class CustomDeleterTestResource {
  public:
-  explicit CustomDeleterTestResource(int value) : value_{value} { ++instance_count; }
+  explicit CustomDeleterTestResource(int value, int *counter = nullptr)
+      : value_{value}, counter_{counter} {
+    if (counter_ != nullptr) {
+      ++(*counter_);
+    }
+  }
 
-  ~CustomDeleterTestResource() { --instance_count; }
+  ~CustomDeleterTestResource() {
+    if (counter_ != nullptr) {
+      --(*counter_);
+    }
+  }
 
   [[nodiscard]] auto GetValue() const noexcept -> int { return value_; }
 
-  static auto GetInstanceCount() noexcept -> int { return instance_count; }
-  static void ResetInstanceCount() noexcept { instance_count = 0; }
-
  private:
-  static int instance_count;
   int value_;
+  int *counter_;  // Optional counter for tracking instances
 };
-
-int CustomDeleterTestResource::instance_count = 0;
 
 // Helper functions for testing memory module
 namespace test_helpers {
@@ -344,20 +348,20 @@ TEST_CASE("UniqueResource basic operations", "[memory][unique_resource]") {
 
 TEST_CASE("MakeUniqueWithDeleter functionality", "[memory][custom_deleter]") {
   SECTION("Default deleter behavior") {
-    CustomDeleterTestResource::ResetInstanceCount();
+    auto instance_count = 0;
 
     {
       auto value = 42;
-      auto ptr = MakeUniqueWithDeleter(new CustomDeleterTestResource(value));
-      REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 1);
+      auto ptr = MakeUniqueWithDeleter(new CustomDeleterTestResource(value, &instance_count));
+      REQUIRE(instance_count == 1);
       REQUIRE(ptr->GetValue() == value);
     }  // Default deleter called here
 
-    REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 0);
+    REQUIRE(instance_count == 0);
   }
 
   SECTION("Custom deleter behavior") {
-    CustomDeleterTestResource::ResetInstanceCount();
+    auto instance_count = 0;
     auto custom_deleter_called = false;
 
     auto custom_deleter = [&custom_deleter_called](CustomDeleterTestResource *ptr) {
@@ -367,18 +371,19 @@ TEST_CASE("MakeUniqueWithDeleter functionality", "[memory][custom_deleter]") {
 
     {
       auto value = 100;
-      auto ptr = MakeUniqueWithDeleter(new CustomDeleterTestResource(value), custom_deleter);
-      REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 1);
+      auto ptr = MakeUniqueWithDeleter(new CustomDeleterTestResource(value, &instance_count),
+                                       custom_deleter);
+      REQUIRE(instance_count == 1);
       REQUIRE(ptr->GetValue() == value);
       REQUIRE_FALSE(custom_deleter_called);
     }  // Custom deleter called here
 
     REQUIRE(custom_deleter_called);
-    REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 0);
+    REQUIRE(instance_count == 0);
   }
 
   SECTION("Custom deleter with lambda capturing state") {
-    CustomDeleterTestResource::ResetInstanceCount();
+    auto instance_count = 0;
     auto deletion_count = 0;
 
     auto counting_deleter = [&deletion_count](CustomDeleterTestResource *ptr) {
@@ -387,13 +392,15 @@ TEST_CASE("MakeUniqueWithDeleter functionality", "[memory][custom_deleter]") {
     };
 
     {
-      auto ptr1 = MakeUniqueWithDeleter(new CustomDeleterTestResource(1), counting_deleter);
-      auto ptr2 = MakeUniqueWithDeleter(new CustomDeleterTestResource(2), counting_deleter);
-      REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 2);
+      auto ptr1 = MakeUniqueWithDeleter(new CustomDeleterTestResource(1, &instance_count),
+                                        counting_deleter);
+      auto ptr2 = MakeUniqueWithDeleter(new CustomDeleterTestResource(2, &instance_count),
+                                        counting_deleter);
+      REQUIRE(instance_count == 2);
     }  // Both custom deleters called here
 
     REQUIRE(deletion_count == 2);
-    REQUIRE(CustomDeleterTestResource::GetInstanceCount() == 0);
+    REQUIRE(instance_count == 0);
   }
 }
 
