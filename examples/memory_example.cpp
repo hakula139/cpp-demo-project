@@ -19,10 +19,12 @@ using cpp_features::memory::UniqueResource;
 using cpp_features::shapes::Circle;
 using cpp_features::shapes::Rectangle;
 
-auto main() -> int {
-  std::println("=== Memory Module Example ===");
+namespace {
 
-  // Demonstrate smart pointers basics
+/**
+ * @brief Demonstrate basic smart pointer usage
+ */
+void DemonstrateSmartPointerBasics() {
   std::println("\n1. Smart Pointer Basics:");
   auto unique_circle = std::make_unique<Circle>(5.0);
   std::println("   Created unique_ptr<Circle> with radius {}", unique_circle->GetRadius());
@@ -32,8 +34,12 @@ auto main() -> int {
 
   std::weak_ptr<Rectangle> weak_rect = shared_rect;
   std::println("   Created weak_ptr, expired: {}", weak_rect.expired());
+}
 
-  // Demonstrate custom deleters
+/**
+ * @brief Demonstrate custom deleter functionality
+ */
+void DemonstrateCustomDeleters() {
   std::println("\n2. Custom Deleters:");
   auto custom_deleter = [](Circle *ptr) {
     std::println("   Custom deleter: cleaning up Circle with radius {}", ptr->GetRadius());
@@ -45,8 +51,12 @@ auto main() -> int {
     std::println("   Created unique_ptr<Circle> with radius {} and custom deleter",
                  circle_with_deleter->GetRadius());
   }  // Custom deleter called here
+}
 
-  // Demonstrate resource manager
+/**
+ * @brief Demonstrate ResourceManager automatic cleanup
+ */
+void DemonstrateResourceManager() {
   std::println("\n3. ResourceManager:");
   {
     ResourceManager manager;
@@ -63,8 +73,12 @@ auto main() -> int {
 
     std::println("   Registered cleanup functions");
   }  // Automatic cleanup happens here
+}
 
-  // Demonstrate manual cleanup with exception handling
+/**
+ * @brief Demonstrate manual cleanup with exception handling
+ */
+void DemonstrateManualCleanup() {
   std::println("\n4. Manual Cleanup:");
   {
     ResourceManager manager;
@@ -86,9 +100,13 @@ auto main() -> int {
     manager.RegisterCleanup<int>([]() { std::println("   Cleanup 3: NoExcept cleanup"); });
     manager.ExecuteCleanupNoexcept();
   }
+}
 
-  // Demonstrate unique resource wrapper
-  std::println("\n5. UniqueResource Wrapper:");
+/**
+ * @brief Demonstrate UniqueResource wrapper functionality
+ */
+void DemonstrateUniqueResource() {
+  std::println("\n5. UniqueResource:");
   {
     auto raw_unique = std::make_unique<Circle>(4.5);
     UniqueResource<Circle> wrapped_circle(std::move(raw_unique));
@@ -99,6 +117,18 @@ auto main() -> int {
     auto released = wrapped_circle.Release();
     std::println("   Released wrapped resource");
   }
+}
+
+}  // namespace
+
+auto main() -> int {
+  std::println("=== Memory Module Example ===");
+
+  DemonstrateSmartPointerBasics();
+  DemonstrateCustomDeleters();
+  DemonstrateResourceManager();
+  DemonstrateManualCleanup();
+  DemonstrateUniqueResource();
 
   std::println("\n=== Memory Module Example Completed ===");
   return 0;

@@ -5,12 +5,16 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
+#include "shapes/shape.hpp"
 
-using namespace cpp_features::shapes;
+using cpp_features::shapes::CreateCircle;
+using cpp_features::shapes::CreateRectangle;
+using cpp_features::shapes::Shape;
 
 int main() {
   std::cout << "=== Shapes Module Example ===\n\n";

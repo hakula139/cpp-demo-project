@@ -37,8 +37,6 @@ This project serves as both a learning resource and a reference implementation f
     - [What the hooks do](#what-the-hooks-do)
   - [Build Options](#build-options)
 - [🎯 Usage](#-usage)
-  - [Running the Demo](#running-the-demo)
-  - [Using Individual Components](#using-individual-components)
 - [📁 Project Structure](#-project-structure)
 - [🧩 Components](#-components)
   - [🔷 Algorithms Module](#-algorithms-module)
@@ -98,7 +96,7 @@ ctest --test-dir build --verbose
 
 ### Pre-commit Setup (Recommended)
 
-This project uses [pre-commit](https://pre-commit.com/) to ensure code quality and consistent formatting.
+This project uses [pre-commit](https://pre-commit.com) to ensure code quality and consistent formatting.
 Set up pre-commit hooks to automatically format your code before each commit:
 
 #### Install pre-commit
@@ -137,40 +135,6 @@ See [`cmake/README.md`](cmake/README.md#options) for available build options.
 
 ## 🎯 Usage
 
-### Running the Demo
-
-The main executable demonstrates various C++23 features:
-
-```bash
-./build/src/demo
-```
-
-Sample Output:
-
-```text
-=== C++23 Feature Demonstration Program ===
-Testing various modern C++ features and libraries.
-
-=== Shape Demonstrations ===
-Drawing Circle
-Circle area: 78.54
-
-Drawing Rectangle
-Rectangle area: 24.00
-
-=== Container Demonstrations ===
-Container contents: 1 2 3 4 5
-
-=== Smart Pointer Demonstrations ===
-[Smart pointer examples...]
-
-Program completed successfully!
-```
-
-### Using Individual Components
-
-Each component can be used independently:
-
 ```cpp
 #include <print>
 
@@ -183,13 +147,11 @@ using cpp_features::shapes::CreateCircle;
 int main() {
   // Use modern containers
   Container<int> numbers{1, 2, 3, 4, 5};
-  numbers.Display();
+  std::println("Container contents: {}", numbers);
 
   // Create and use shapes
   auto circle = CreateCircle(5.0);
-  if (auto area = circle->GetArea(); area) {
-    std::println("Area: {}", area.value());
-  }
+  std::println("Area: {}", circle->GetArea());
 
   return 0;
 }
@@ -226,6 +188,7 @@ cpp-demo-project/
 │   ├── test_concepts.cpp
 │   ├── test_containers.cpp
 │   ├── test_exceptions.cpp
+│   ├── test_random.cpp
 │   ├── test_memory.cpp
 │   ├── test_shapes.cpp
 │   └── test_main.cpp
@@ -234,6 +197,7 @@ cpp-demo-project/
     ├── containers_example.cpp  # Modern containers demo
     ├── exceptions_example.cpp  # Custom exceptions demo
     ├── memory_example.cpp      # Smart pointers and memory management demo
+    ├── random_example.cpp      # Random number generation demo
     └── shapes_example.cpp      # Geometric shapes demo
 ```
 
