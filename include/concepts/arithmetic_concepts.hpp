@@ -2,9 +2,8 @@
  * @file arithmetic_concepts.hpp
  * @brief Arithmetic type concepts for C++ template constraints
  *
- * This file contains concept definitions for arithmetic operations and types,
- * providing compile-time constraints for template parameters that need to
- * support arithmetic operations.
+ * This file contains concept definitions for arithmetic operations and types, providing
+ * compile-time constraints for template parameters that need to support arithmetic operations.
  */
 
 #pragma once

@@ -2,9 +2,9 @@
  * @file string_concepts.hpp
  * @brief String-related concepts for C++ template constraints
  *
- * This file contains concept definitions for string-like types, providing
- * compile-time constraints for template parameters that need to work with
- * string-like objects that can be converted to string views.
+ * This file contains concept definitions for string-like types, providing compile-time constraints
+ * for template parameters that need to work with string-like objects that can be converted to
+ * string views.
  */
 
 #pragma once

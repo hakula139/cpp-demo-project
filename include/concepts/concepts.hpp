@@ -2,9 +2,9 @@
  * @file concepts.hpp
  * @brief Main header for C++ concepts library
  *
- * This file serves as the main entry point for the concepts library, providing
- * a convenient way to include all concept definitions in a single header.
- * It exports all concepts from the individual concept header files.
+ * This file serves as the main entry point for the concepts library, providing a convenient way to
+ * include all concept definitions in a single header. It exports all concepts from the individual
+ * concept header files.
  */
 
 #pragma once

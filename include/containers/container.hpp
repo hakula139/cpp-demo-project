@@ -60,7 +60,7 @@ enum class ContainerError : std::uint8_t {
  * numbers.Add(6);
  * @endcode
  */
-template <cpp_features::concepts::CopyableType T>
+template <concepts::CopyableType T>
 class Container {
  public:
   using value_type = T;                                ///< Type of elements stored
@@ -206,9 +206,9 @@ class Container {
    * @param index The index of the element to access
    * @return Expected containing reference wrapper to the element, or ContainerError on failure
    *
-   * Provides safe access to elements with bounds checking. Returns an std::expected that contains
-   * either a reference wrapper to the requested element or an error code if the index is out of
-   * bounds.
+   * Provides safe access to elements with bounds checking.
+   * Returns an std::expected that contains either a reference wrapper to the requested element,
+   * or an error code if the index is out of bounds.
    *
    * @code
    * Container<int> numbers{1, 2, 3};
@@ -232,9 +232,9 @@ class Container {
    * @param index The index of the element to access
    * @return Expected containing reference wrapper to the element, or ContainerError on failure
    *
-   * Provides safe access to elements with bounds checking. Returns an std::expected that contains
-   * either a reference wrapper to the requested element or an error code if the index is out of
-   * bounds.
+   * Provides safe access to elements with bounds checking.
+   * Returns an std::expected that contains either a reference wrapper to the requested element,
+   * or an error code if the index is out of bounds.
    */
   [[nodiscard]] auto At(size_type index)
       -> std::expected<std::reference_wrapper<T>, ContainerError> {
@@ -277,8 +277,7 @@ class Container {
    * @param transform_func Function to apply to each element
    * @return A ranges view containing transformed elements
    *
-   * Returns a lazy-evaluated view where each element is transformed
-   * by the provided function.
+   * Returns a lazy-evaluated view where each element is transformed by the provided function.
    *
    * @code
    * auto doubled = container.GetTransformedView([](int n) { return n * 2; });
@@ -333,7 +332,7 @@ class Container {
 
   /**
    * @brief Three-way comparison operator
-   * @param other Container to compare with
+   * @param other The other container to compare with
    * @return Comparison result
    */
   auto operator<=>(const Container &other) const = default;

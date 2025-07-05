@@ -2,9 +2,8 @@
  * @file container_concepts.hpp
  * @brief Container-related concepts for C++ template constraints
  *
- * This file contains concept definitions for container types, providing
- * compile-time constraints for template parameters that need to work with
- * container-like objects and ranges.
+ * This file contains concept definitions for container types, providing compile-time constraints
+ * for template parameters that need to work with container-like objects and ranges.
  */
 
 #pragma once

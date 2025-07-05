@@ -22,9 +22,6 @@
 
 namespace cpp_features::algorithms {
 
-using cpp_features::concepts::ComparableType;
-using cpp_features::concepts::SortableContainer;
-
 /**
  * @brief Sort a container using std::ranges::sort
  *
@@ -41,7 +38,7 @@ using cpp_features::concepts::SortableContainer;
  * // numbers == {1, 1, 3, 4, 5, 9}
  * @endcode
  */
-template <SortableContainer Container>
+template <concepts::SortableContainer Container>
 void SortContainer(Container &container) {
   std::ranges::sort(container);
 }

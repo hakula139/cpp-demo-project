@@ -25,9 +25,6 @@
 
 namespace cpp_features::memory {
 
-using cpp_features::concepts::CopyableType;
-using cpp_features::concepts::DestructibleType;
-
 /**
  * @brief Resource manager class for automatic resource lifecycle management
  *
@@ -120,7 +117,7 @@ class ResourceManager {
    * auto rectangle = manager.CreateUnique<shapes::Rectangle>(3.0, 4.0);
    * @endcode
    */
-  template <DestructibleType T, typename... Args>
+  template <concepts::DestructibleType T, typename... Args>
   [[nodiscard]] auto CreateUnique(Args &&...args) -> std::unique_ptr<T> {
     return std::make_unique<T>(std::forward<Args>(args)...);
   }
@@ -141,7 +138,7 @@ class ResourceManager {
    * auto shared_rect = manager.CreateShared<shapes::Rectangle>(3.0, 4.0);
    * @endcode
    */
-  template <DestructibleType T, typename... Args>
+  template <concepts::DestructibleType T, typename... Args>
   [[nodiscard]] auto CreateShared(Args &&...args) -> std::shared_ptr<T> {
     return std::make_shared<T>(std::forward<Args>(args)...);
   }

@@ -17,11 +17,7 @@
 #include <ranges>
 #include <vector>
 
-#include "concepts/concepts.hpp"
-
 namespace cpp_features::random {
-
-using cpp_features::concepts::ArithmeticType;
 
 /**
  * @brief Modern random number generator with type-safe operations

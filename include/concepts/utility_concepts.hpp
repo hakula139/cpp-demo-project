@@ -2,9 +2,9 @@
  * @file utility_concepts.hpp
  * @brief Utility concepts for common C++ template constraints
  *
- * This file contains concept definitions for common utility operations and type
- * properties, providing compile-time constraints for template parameters that
- * need specific capabilities like printing, comparison, construction, and copying.
+ * This file contains concept definitions for common utility operations and type properties,
+ * providing compile-time constraints for template parameters that need specific capabilities like
+ * printing, comparison, construction, and copying.
  */
 
 #pragma once
