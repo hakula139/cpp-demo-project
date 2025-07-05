@@ -13,6 +13,6 @@ namespace cpp_features::shapes {
   return 2.0 * std::numbers::pi * GetRadius();
 }
 
-void Circle::Draw() const { std::println("Drawing a circle (r = {:.2f})", GetRadius()); }
+void Circle::Draw() const { std::println("Drawing {}", *this); }
 
 }  // namespace cpp_features::shapes

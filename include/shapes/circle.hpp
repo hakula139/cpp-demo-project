@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include <format>
 #include <memory>
+#include <string_view>
 
 #include "concepts/arithmetic_concepts.hpp"
 #include "exceptions/custom_exception.hpp"
@@ -88,7 +90,7 @@ class Circle final : public Shape {
    *
    * @code
    * Circle circle{3.5};
-   * circle.Draw();  // Output: "Drawing a circle (r = 3.50)"
+   * circle.Draw();  // Output: "Drawing Circle (r = 3.50)"
    * @endcode
    */
   void Draw() const override;
@@ -112,7 +114,9 @@ class Circle final : public Shape {
    * auto ordering = small <=> large;  // std::strong_ordering::less
    * @endcode
    */
-  auto operator<=>(const Circle &other) const noexcept { return GetRadius() <=> other.GetRadius(); }
+  [[nodiscard]] auto operator<=>(const Circle &other) const noexcept {
+    return GetRadius() <=> other.GetRadius();
+  }
 
   /**
    * @brief Equality comparison operator
@@ -126,7 +130,7 @@ class Circle final : public Shape {
    * bool equal = circle1 == circle2;  // true
    * @endcode
    */
-  auto operator==(const Circle &other) const noexcept -> bool {
+  [[nodiscard]] auto operator==(const Circle &other) const noexcept -> bool {
     return GetRadius() == other.GetRadius();
   }
 
@@ -154,3 +158,31 @@ template <concepts::ArithmeticType T>
 }
 
 }  // namespace cpp_features::shapes
+
+/**
+ * @brief Custom formatter for Circle to work with std::format and std::print
+ *
+ * Provides formatting support for Circle objects, allowing them to be used directly with
+ * std::format, std::print, and related formatting functions.
+ *
+ * The circle is formatted as a string in the format "Circle (r = radius)".
+ *
+ * @code
+ * Circle circle{5.0};
+ * std::print("{}", circle); // Prints: Circle (r = 5.00)
+ * @endcode
+ */
+template <>
+struct std::formatter<cpp_features::shapes::Circle> : std::formatter<std::string_view> {
+  /**
+   * @brief Format the circle for output
+   *
+   * @param circle The circle to format
+   * @param ctx The format context
+   * @return Iterator pointing past the formatted output
+   */
+  auto format(const cpp_features::shapes::Circle &circle, std::format_context &ctx) const {
+    auto formatted = std::format("{} (r = {:.2f})", circle.GetName(), circle.GetRadius());
+    return std::formatter<std::string_view>::format(formatted, ctx);
+  }
+};

@@ -335,7 +335,7 @@ class Container {
    * @param other The other container to compare with
    * @return Comparison result
    */
-  auto operator<=>(const Container &other) const = default;
+  [[nodiscard]] auto operator<=>(const Container &other) const = default;
 
  private:
   std::vector<T> data_;  ///< Internal storage for container elements

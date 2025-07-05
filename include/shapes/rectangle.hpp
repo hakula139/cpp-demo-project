@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include <compare>
+#include <format>
 #include <memory>
+#include <string_view>
 
 #include "concepts/concepts.hpp"
 #include "exceptions/custom_exception.hpp"
@@ -137,7 +140,7 @@ class Rectangle final : public Shape {
    *
    * @code
    * Rectangle rect{4.0, 3.0};
-   * rect.Draw();  // Output: "Drawing a rectangle (w = 4.00, h = 3.00)"
+   * rect.Draw();  // Output: "Drawing Rectangle (w = 4.00, h = 3.00)"
    * @endcode
    */
   void Draw() const override;
@@ -192,7 +195,12 @@ class Rectangle final : public Shape {
    * auto ordering = small <=> large;  // std::strong_ordering::less
    * @endcode
    */
-  auto operator<=>(const Rectangle &other) const noexcept;
+  [[nodiscard]] auto operator<=>(const Rectangle &other) const noexcept {
+    if (auto area_cmp = GetArea() <=> other.GetArea(); area_cmp != std::strong_ordering::equal) {
+      return area_cmp;
+    }
+    return GetWidth() <=> other.GetWidth();
+  }
 
   /**
    * @brief Equality comparison operator
@@ -220,20 +228,22 @@ class Rectangle final : public Shape {
 /**
  * @brief Factory function for creating Rectangle objects
  *
- * @tparam T Arithmetic type that can be converted to double
+ * @tparam T1 Arithmetic type that can be converted to double (width)
+ * @tparam T2 Arithmetic type that can be converted to double (height)
  * @param width Width of the rectangle
  * @param height Height of the rectangle
  * @return A unique pointer to the newly created rectangle
  * @throws ValidationException if width or height is not positive
  *
  * Creates a new Rectangle instance using type-safe construction.
+ * Supports mixed arithmetic types for width and height.
  *
  * @code
  * auto rect = CreateRectangle(4.0, 3.0);
  * @endcode
  */
-template <concepts::ArithmeticType T>
-[[nodiscard]] auto CreateRectangle(T width, T height) -> std::unique_ptr<Rectangle> {
+template <concepts::ArithmeticType T1, concepts::ArithmeticType T2>
+[[nodiscard]] auto CreateRectangle(T1 width, T2 height) -> std::unique_ptr<Rectangle> {
   return std::make_unique<Rectangle>(static_cast<double>(width), static_cast<double>(height));
 }
 
@@ -257,3 +267,35 @@ template <concepts::ArithmeticType T>
 }
 
 }  // namespace cpp_features::shapes
+
+/**
+ * @brief Custom formatter for Rectangle to work with std::format and std::print
+ *
+ * Provides formatting support for Rectangle objects, allowing them to be used directly with
+ * std::format, std::print, and related formatting functions.
+ *
+ * The rectangle is formatted as a string in the format "Rectangle (w = width, h = height)".
+ *
+ * @code
+ * Rectangle rect{4.0, 3.0};
+ * std::print("{}", rect);  // Prints: Rectangle (w = 4.00, h = 3.00)
+ *
+ * Rectangle square{5.0};
+ * std::print("{}", square);  // Prints: Rectangle (w = 5.00, h = 5.00)
+ * @endcode
+ */
+template <>
+struct std::formatter<cpp_features::shapes::Rectangle> : std::formatter<std::string_view> {
+  /**
+   * @brief Format the rectangle for output
+   *
+   * @param rect The rectangle to format
+   * @param ctx The format context
+   * @return Iterator pointing past the formatted output
+   */
+  auto format(const cpp_features::shapes::Rectangle &rect, std::format_context &ctx) const {
+    auto formatted = std::format("{} (w = {:.2f}, h = {:.2f})", rect.GetName(), rect.GetWidth(),
+                                 rect.GetHeight());
+    return std::formatter<std::string_view>::format(formatted, ctx);
+  }
+};

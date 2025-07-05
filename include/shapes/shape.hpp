@@ -116,7 +116,7 @@ class Shape {
    *
    * Provides lexicographic comparison based on shape names.
    */
-  auto operator<=>(const Shape &other) const = default;
+  [[nodiscard]] auto operator<=>(const Shape &other) const = default;
 
  protected:
   /**

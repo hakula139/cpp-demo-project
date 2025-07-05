@@ -27,7 +27,7 @@ namespace {
 void DemonstrateSmartPointerBasics() {
   std::println("\n1. Smart Pointer Basics:");
   auto unique_circle = std::make_unique<Circle>(5.0);
-  std::println("   Created unique_ptr<Circle> with radius {}", unique_circle->GetRadius());
+  std::println("   Created unique_ptr<Circle> (r = {})", unique_circle->GetRadius());
 
   auto shared_rect = std::make_shared<Rectangle>(3.0, 4.0);
   std::println("   Created shared_ptr<Rectangle>, use_count: {}", shared_rect.use_count());
@@ -42,13 +42,13 @@ void DemonstrateSmartPointerBasics() {
 void DemonstrateCustomDeleters() {
   std::println("\n2. Custom Deleters:");
   auto custom_deleter = [](Circle *ptr) {
-    std::println("   Custom deleter: cleaning up Circle with radius {}", ptr->GetRadius());
+    std::println("   Custom deleter: cleaning up Circle (r = {})", ptr->GetRadius());
     delete ptr;
   };
 
   {
     auto circle_with_deleter = MakeUniqueWithDeleter(new Circle(7.0), custom_deleter);
-    std::println("   Created unique_ptr<Circle> with radius {} and custom deleter",
+    std::println("   Created unique_ptr<Circle> (r = {}) and custom deleter",
                  circle_with_deleter->GetRadius());
   }  // Custom deleter called here
 }
@@ -111,7 +111,7 @@ void DemonstrateUniqueResource() {
     auto raw_unique = std::make_unique<Circle>(4.5);
     UniqueResource<Circle> wrapped_circle(std::move(raw_unique));
 
-    std::println("   Wrapped Circle radius: {}", wrapped_circle->GetRadius());
+    std::println("   Wrapped Circle (r = {})", wrapped_circle->GetRadius());
     std::println("   Raw pointer: {}", reinterpret_cast<const void *>(wrapped_circle.Get()));
 
     auto released = wrapped_circle.Release();
