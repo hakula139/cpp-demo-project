@@ -1,3 +1,8 @@
-# Shapes module (header-only)
+# Shapes module
 
-add_module(shapes)
+add_module(
+  shapes
+  SOURCES
+    circle.cpp
+    rectangle.cpp
+)

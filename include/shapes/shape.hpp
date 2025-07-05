@@ -1,9 +1,16 @@
+/**
+ * @file shape.hpp
+ * @brief Modern C++ shape hierarchy with concepts and type-safe factory functions
+ *
+ * This file contains the base Shape class and related utilities for a polymorphic shape hierarchy.
+ * The module demonstrates modern C++ features including concepts and type-safe factory functions.
+ */
+
 #pragma once
 
-#include <cstdint>
-#include <expected>
-#include <iostream>
+#include <concepts>
 #include <memory>
+#include <print>
 #include <string>
 #include <string_view>
 
@@ -11,37 +18,137 @@
 
 namespace cpp_features::shapes {
 
-enum class ShapeError : std::uint8_t {  // NOLINT(performance-enum-size)
-  kInvalidRadius,
-  kInvalidDimensions,
-  kNegativeValue
-};
-
+/**
+ * @brief Abstract base class for geometric shapes
+ *
+ * The Shape class provides a polymorphic interface for geometric shapes with constructor-based
+ * validation and modern C++ features. It serves as the foundation for a shape hierarchy that
+ * demonstrates object-oriented design principles and modern C++ best practices.
+ *
+ * All derived classes must implement GetArea() and GetPerimeter() methods.
+ *
+ * @code
+ * class Circle : public Shape {
+ *  public:
+ *   explicit Circle(double radius) : Shape{"Circle"}, radius_{radius} {}
+ *
+ *   [[nodiscard]] auto GetArea() const noexcept -> double override {
+ *     return std::numbers::pi * radius_ * radius_;
+ *   }
+ *
+ *   // ... other methods
+ *
+ *  private:
+ *   double radius_;  ///< The radius of the circle
+ * };
+ * @endcode
+ */
 class Shape {
- protected:
-  std::string name_;  // NOLINT(misc-non-private-member-variables-in-classes)
-
  public:
-  explicit Shape(std::string_view name) : name_(name) {}
+  /**
+   * @brief Virtual destructor for proper polymorphic cleanup
+   *
+   * Ensures proper cleanup of derived classes when destroyed through base class pointers.
+   * This is essential for polymorphic behavior and preventing resource leaks.
+   */
   virtual ~Shape() = default;
 
-  [[nodiscard]] virtual auto GetArea() const -> std::expected<double, ShapeError> = 0;
-  [[nodiscard]] virtual auto GetPerimeter() const -> std::expected<double, ShapeError> = 0;
+  /**
+   * @brief Copy constructor
+   */
+  Shape(const Shape &) = default;
 
-  virtual void Draw() const { std::cout << "Drawing " << name_ << "\n"; }
+  /**
+   * @brief Copy assignment operator
+   */
+  auto operator=(const Shape &) -> Shape & = default;
 
-  [[nodiscard]] constexpr auto GetName() const noexcept -> std::string_view { return name_; }
-
-  auto operator<=>(const Shape &other) const = default;
-
+  /**
+   * @brief Move constructor
+   */
   Shape(Shape &&) noexcept = default;
+
+  /**
+   * @brief Move assignment operator
+   */
   auto operator=(Shape &&) noexcept -> Shape & = default;
 
-  Shape(const Shape &) = default;
-  auto operator=(const Shape &) -> Shape & = default;
+  /**
+   * @brief Calculate the area of the shape
+   *
+   * @return Area of the shape
+   *
+   * Pure virtual function that must be implemented by all derived classes.
+   * Returns the area of the shape.
+   */
+  [[nodiscard]] virtual auto GetArea() const noexcept -> double = 0;
+
+  /**
+   * @brief Calculate the perimeter of the shape
+   *
+   * @return Perimeter of the shape
+   *
+   * Pure virtual function that must be implemented by all derived classes.
+   * Returns the perimeter of the shape.
+   */
+  [[nodiscard]] virtual auto GetPerimeter() const noexcept -> double = 0;
+
+  /**
+   * @brief Draw the shape (virtual method for polymorphic behavior)
+   *
+   * Virtual method that provides a default implementation for drawing the shape.
+   * Derived classes can override this method to provide specific drawing behavior.
+   * The default implementation prints a generic message.
+   */
+  virtual void Draw() const { std::println("Drawing {}", GetName()); }
+
+  /**
+   * @brief Get the name of the shape
+   *
+   * @return A view of the shape's name
+   */
+  [[nodiscard]] constexpr auto GetName() const noexcept -> std::string_view { return name_; }
+
+  /**
+   * @brief Three-way comparison operator
+   * @param other The other shape to compare with
+   * @return Comparison result
+   *
+   * Provides lexicographic comparison based on shape names.
+   */
+  auto operator<=>(const Shape &other) const = default;
+
+ protected:
+  /**
+   * @brief Construct a shape with the specified name
+   *
+   * @param name Name identifying the type of shape (e.g., "Circle", "Rectangle")
+   *
+   * Creates a shape with the given name. Protected constructor ensures this class can only be
+   * instantiated through derived classes.
+   */
+  explicit Shape(std::string_view name) : name_{name} {}
+
+ private:
+  std::string name_;  ///< Name of the shape for identification and display purposes
 };
 
-template <typename ShapeType, cpp_features::concepts::ArithmeticType... Args>
+/**
+ * @brief Type-safe factory function for creating shapes
+ *
+ * @tparam ShapeType The specific shape type to create (must derive from Shape)
+ * @tparam Args Types of constructor arguments
+ * @param args Arguments to forward to the shape constructor
+ * @return A unique pointer to the newly created shape
+ *
+ * Creates a new shape instance using perfect forwarding and type safety through concepts.
+ *
+ * @code
+ * auto circle = CreateShape<Circle>(5.0);
+ * auto rectangle = CreateShape<Rectangle>(3.0, 4.0);
+ * @endcode
+ */
+template <typename ShapeType, concepts::ArithmeticType... Args>
   requires std::derived_from<ShapeType, Shape>
 [[nodiscard]] auto CreateShape(Args &&...args) -> std::unique_ptr<ShapeType> {
   return std::make_unique<ShapeType>(std::forward<Args>(args)...);

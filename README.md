@@ -43,6 +43,7 @@ This project serves as both a learning resource and a reference implementation f
   - [🔷 Concepts Module](#-concepts-module)
   - [🔷 Containers Module](#-containers-module)
   - [🔷 Memory Module](#-memory-module)
+  - [🔷 Shapes Module](#-shapes-module)
 - [🧪 Testing](#-testing)
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
@@ -149,9 +150,10 @@ int main() {
   Container<int> numbers{1, 2, 3, 4, 5};
   std::println("Container contents: {}", numbers);
 
-  // Create and use shapes
+  // Create and use shapes with validation
   auto circle = CreateCircle(5.0);
-  std::println("Area: {}", circle->GetArea());
+  auto area = circle->GetArea();  // Always succeeds for valid shapes
+  std::println("Area: {:.2f}", area);
 
   return 0;
 }
@@ -241,6 +243,17 @@ Smart pointer and memory management utilities:
 - **Resource management** patterns with automatic cleanup registration
 - **Type-safe** resource creation and destruction with concepts
 - **Enhanced smart pointer wrappers** with additional functionality
+
+### 🔷 Shapes Module
+
+Polymorphic shape hierarchy with modern C++ features:
+
+- **Constructor validation** with custom exceptions for invalid inputs
+- **Polymorphic design** with virtual methods and proper inheritance
+- **Type-safe factory functions** with concept-based constraints
+- **Mathematical precision** using `std::numbers` constants
+- **Three-way comparison** support for ordering and equality
+- **Exception-based error handling** preventing invalid object creation
 
 ## 🧪 Testing
 
