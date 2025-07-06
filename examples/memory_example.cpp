@@ -9,7 +9,8 @@
 #include <stdexcept>
 #include <utility>
 
-#include "memory/resource_management.hpp"
+#include "memory/resource_manager.hpp"
+#include "memory/unique_resource.hpp"
 #include "shapes/circle.hpp"
 #include "shapes/rectangle.hpp"
 

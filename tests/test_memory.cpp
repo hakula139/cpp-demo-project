@@ -9,7 +9,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "memory/resource_management.hpp"
+#include "memory/resource_manager.hpp"
+#include "memory/unique_resource.hpp"
 
 namespace {
 

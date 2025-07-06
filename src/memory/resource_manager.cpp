@@ -1,4 +1,4 @@
-#include "memory/resource_management.hpp"
+#include "memory/resource_manager.hpp"
 
 #include <exception>
 #include <print>
