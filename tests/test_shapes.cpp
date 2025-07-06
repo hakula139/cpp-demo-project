@@ -1,10 +1,8 @@
-/**
- * @file test_shapes.cpp
- * @brief Comprehensive tests for the shapes module
- */
-
+#include <cstddef>
 #include <memory>
 #include <numbers>
+#include <string_view>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -23,11 +21,11 @@ using namespace cpp_features::shapes;
 using cpp_features::exceptions::ValidationException;
 
 TEST_CASE("Circle construction and basic properties", "[shapes][circle]") {
-  SECTION("Valid circle creation") {
-    Circle circle(5.0);
+  SECTION("Circle creation") {
+    Circle circle{5.0};
 
-    REQUIRE(circle.GetRadius() == 5.0);
     REQUIRE(circle.GetName() == "Circle");
+    REQUIRE(circle.GetRadius() == 5.0);
   }
 
   SECTION("Circle with zero radius throws exception") {
@@ -40,8 +38,8 @@ TEST_CASE("Circle construction and basic properties", "[shapes][circle]") {
 
   SECTION("ValidationException contains field information") {
     try {
-      Circle circle(-1.0);
-      FAIL("Expected ValidationException to be thrown");
+      Circle circle{-1.0};
+      FAIL("Should have thrown ValidationException");
     } catch (const ValidationException &e) {
       REQUIRE(e.GetFieldName().has_value());
       REQUIRE(e.GetFieldName().value() == "radius");
@@ -50,50 +48,36 @@ TEST_CASE("Circle construction and basic properties", "[shapes][circle]") {
 }
 
 TEST_CASE("Circle area calculations", "[shapes][circle][area]") {
-  SECTION("Valid area calculation") {
-    Circle circle(5.0);
-    double area = circle.GetArea();
+  SECTION("Area calculation") {
+    Circle circle{5.0};
+    auto area = circle.GetArea();
 
     REQUIRE(area == Catch::Approx(std::numbers::pi * 25.0));
-  }
-
-  SECTION("Area with unit radius") {
-    Circle unit_circle(1.0);
-    double area = unit_circle.GetArea();
-
-    REQUIRE(area == Catch::Approx(std::numbers::pi));
   }
 }
 
 TEST_CASE("Circle perimeter calculations", "[shapes][circle][perimeter]") {
-  SECTION("Valid perimeter calculation") {
-    Circle circle(5.0);
-    double perimeter = circle.GetPerimeter();
+  SECTION("Perimeter calculation") {
+    Circle circle{5.0};
+    auto perimeter = circle.GetPerimeter();
 
-    REQUIRE(perimeter == Catch::Approx(2.0 * std::numbers::pi * 5.0));
-  }
-
-  SECTION("Perimeter with unit radius") {
-    Circle unit_circle(1.0);
-    double perimeter = unit_circle.GetPerimeter();
-
-    REQUIRE(perimeter == Catch::Approx(2.0 * std::numbers::pi));
+    REQUIRE(perimeter == Catch::Approx(std::numbers::pi * 10.0));
   }
 }
 
 TEST_CASE("Circle comparison operations", "[shapes][circle][comparison]") {
   SECTION("Equality comparison") {
-    Circle circle1(5.0);
-    Circle circle2(5.0);
-    Circle circle3(3.0);
+    Circle circle1{5.0};
+    Circle circle2{5.0};
+    Circle circle3{3.0};
 
     REQUIRE(circle1 == circle2);
     REQUIRE_FALSE(circle1 == circle3);
   }
 
   SECTION("Three-way comparison") {
-    Circle small_circle(3.0);
-    Circle large_circle(5.0);
+    Circle small_circle{3.0};
+    Circle large_circle{5.0};
 
     REQUIRE(small_circle < large_circle);
     REQUIRE(large_circle > small_circle);
@@ -101,8 +85,8 @@ TEST_CASE("Circle comparison operations", "[shapes][circle][comparison]") {
   }
 
   SECTION("Comparison with same radius") {
-    Circle circle1(4.0);
-    Circle circle2(4.0);
+    Circle circle1{4.0};
+    Circle circle2{4.0};
 
     REQUIRE(circle1 == circle2);
     REQUIRE_FALSE(circle1 < circle2);
@@ -111,18 +95,18 @@ TEST_CASE("Circle comparison operations", "[shapes][circle][comparison]") {
 }
 
 TEST_CASE("Rectangle construction and basic properties", "[shapes][rectangle]") {
-  SECTION("Valid rectangle creation with separate dimensions") {
-    Rectangle rect(4.0, 6.0);
+  SECTION("Rectangle creation with separate dimensions") {
+    Rectangle rect{4.0, 6.0};
 
+    REQUIRE(rect.GetName() == "Rectangle");
     REQUIRE(rect.GetWidth() == 4.0);
     REQUIRE(rect.GetHeight() == 6.0);
-    REQUIRE(rect.GetName() == "Rectangle");
     REQUIRE_FALSE(rect.IsSquare());
   }
 
   SECTION("Rectangle creation with Dimensions struct") {
-    Rectangle::Dimensions dims{3.0, 5.0};
-    Rectangle rect(dims);
+    Rectangle::Dimensions dims{.width = 3.0, .height = 5.0};
+    Rectangle rect{dims};
 
     REQUIRE(rect.GetWidth() == 3.0);
     REQUIRE(rect.GetHeight() == 5.0);
@@ -130,7 +114,7 @@ TEST_CASE("Rectangle construction and basic properties", "[shapes][rectangle]") 
   }
 
   SECTION("Square creation with single value") {
-    Rectangle square(5.0);
+    Rectangle square{5.0};
 
     REQUIRE(square.GetWidth() == 5.0);
     REQUIRE(square.GetHeight() == 5.0);
@@ -155,8 +139,8 @@ TEST_CASE("Rectangle construction and basic properties", "[shapes][rectangle]") 
 
   SECTION("ValidationException contains field information for width") {
     try {
-      Rectangle rect(-1.0, 5.0);
-      FAIL("Expected ValidationException to be thrown");
+      Rectangle rect{-1.0, 5.0};
+      FAIL("Should have thrown ValidationException");
     } catch (const ValidationException &e) {
       REQUIRE(e.GetFieldName().has_value());
       REQUIRE(e.GetFieldName().value() == "width");
@@ -165,8 +149,8 @@ TEST_CASE("Rectangle construction and basic properties", "[shapes][rectangle]") 
 
   SECTION("ValidationException contains field information for height") {
     try {
-      Rectangle rect(5.0, -1.0);
-      FAIL("Expected ValidationException to be thrown");
+      Rectangle rect{5.0, -1.0};
+      FAIL("Should have thrown ValidationException");
     } catch (const ValidationException &e) {
       REQUIRE(e.GetFieldName().has_value());
       REQUIRE(e.GetFieldName().value() == "height");
@@ -175,49 +159,42 @@ TEST_CASE("Rectangle construction and basic properties", "[shapes][rectangle]") 
 }
 
 TEST_CASE("Rectangle area calculations", "[shapes][rectangle][area]") {
-  SECTION("Valid area calculation") {
-    Rectangle rect(4.0, 6.0);
-    double area = rect.GetArea();
+  SECTION("Area calculation") {
+    Rectangle rect{4.0, 6.0};
+    auto area = rect.GetArea();
 
     REQUIRE(area == 24.0);
   }
 
   SECTION("Square area calculation") {
-    Rectangle square(5.0, 5.0);
-    double area = square.GetArea();
+    Rectangle square{5.0, 5.0};
+    auto area = square.GetArea();
 
     REQUIRE(area == 25.0);
-  }
-
-  SECTION("Unit rectangle area") {
-    Rectangle unit_rect(1.0, 1.0);
-    double area = unit_rect.GetArea();
-
-    REQUIRE(area == 1.0);
   }
 }
 
 TEST_CASE("Rectangle perimeter calculations", "[shapes][rectangle][perimeter]") {
-  SECTION("Valid perimeter calculation") {
-    Rectangle rect(4.0, 6.0);
-    double perimeter = rect.GetPerimeter();
+  SECTION("Perimeter calculation") {
+    Rectangle rect{4.0, 6.0};
+    auto perimeter = rect.GetPerimeter();
 
     REQUIRE(perimeter == 20.0);
   }
 
   SECTION("Square perimeter calculation") {
-    Rectangle square(5.0, 5.0);
-    double perimeter = square.GetPerimeter();
+    Rectangle square{3.0};
+    auto perimeter = square.GetPerimeter();
 
-    REQUIRE(perimeter == 20.0);
+    REQUIRE(perimeter == 12.0);
   }
 }
 
 TEST_CASE("Rectangle square detection", "[shapes][rectangle][square]") {
   SECTION("Square detection positive") {
-    Rectangle square1(5.0, 5.0);
-    Rectangle square2(1.0, 1.0);
-    Rectangle square3(10.0, 10.0);
+    Rectangle square1{5.0};
+    Rectangle square2{1.0};
+    Rectangle square3{10.0, 10.0};
 
     REQUIRE(square1.IsSquare());
     REQUIRE(square2.IsSquare());
@@ -225,9 +202,9 @@ TEST_CASE("Rectangle square detection", "[shapes][rectangle][square]") {
   }
 
   SECTION("Square detection negative") {
-    Rectangle rect1(4.0, 6.0);
-    Rectangle rect2(1.0, 2.0);
-    Rectangle rect3(10.0, 5.0);
+    Rectangle rect1{4.0, 6.0};
+    Rectangle rect2{1.0, 2.0};
+    Rectangle rect3{10.0, 5.0};
 
     REQUIRE_FALSE(rect1.IsSquare());
     REQUIRE_FALSE(rect2.IsSquare());
@@ -237,35 +214,39 @@ TEST_CASE("Rectangle square detection", "[shapes][rectangle][square]") {
 
 TEST_CASE("Rectangle comparison operations", "[shapes][rectangle][comparison]") {
   SECTION("Equality comparison") {
-    Rectangle rect1(4.0, 3.0);
-    Rectangle rect2(4.0, 3.0);
-    Rectangle rect3(3.0, 4.0);
+    Rectangle rect1{4.0, 3.0};
+    Rectangle rect2{4.0, 3.0};
+    Rectangle rect3{3.0, 4.0};
 
     REQUIRE(rect1 == rect2);
     REQUIRE_FALSE(rect1 == rect3);
   }
 
   SECTION("Three-way comparison by area") {
-    Rectangle small_rect(2.0, 3.0);  // area = 6.0
-    Rectangle large_rect(4.0, 5.0);  // area = 20.0
+    Rectangle small_rect{2.0, 3.0};  // area = 6.0
+    Rectangle large_rect{4.0, 5.0};  // area = 20.0
 
     REQUIRE(small_rect < large_rect);
     REQUIRE(large_rect > small_rect);
+    REQUIRE_FALSE(small_rect > large_rect);
   }
 
   SECTION("Three-way comparison with same area") {
-    Rectangle rect1(2.0, 6.0);  // area = 12.0
-    Rectangle rect2(3.0, 4.0);  // area = 12.0
+    Rectangle rect1{2.0, 6.0};  // area = 12.0
+    Rectangle rect2{3.0, 4.0};  // area = 12.0
 
     // Should compare by width when areas are equal
-    REQUIRE(rect1 < rect2);  // 2.0 < 3.0
+    REQUIRE(rect1 < rect2);
+    REQUIRE_FALSE(rect1 == rect2);
   }
 
-  SECTION("Three-way comparison with same area and width") {
-    Rectangle rect1(3.0, 4.0);  // area = 12.0, width = 3.0
-    Rectangle rect2(3.0, 5.0);  // area = 15.0, width = 3.0
+  SECTION("Three-way comparison with same width") {
+    Rectangle rect1{3.0, 4.0};  // area = 12.0
+    Rectangle rect2{3.0, 5.0};  // area = 15.0
 
-    REQUIRE(rect1 < rect2);  // Compare by area first
+    // Should compare by area first
+    REQUIRE(rect1 < rect2);
+    REQUIRE_FALSE(rect1 == rect2);
   }
 }
 
@@ -274,8 +255,8 @@ TEST_CASE("Shape factory functions", "[shapes][factory]") {
     auto circle = CreateCircle(7.5);
 
     REQUIRE(circle != nullptr);
-    REQUIRE(circle->GetRadius() == 7.5);
     REQUIRE(circle->GetName() == "Circle");
+    REQUIRE(circle->GetRadius() == 7.5);
   }
 
   SECTION("CreateCircle with integer") {
@@ -301,17 +282,19 @@ TEST_CASE("Shape factory functions", "[shapes][factory]") {
     auto rect = CreateRectangle(3.0, 4.0);
 
     REQUIRE(rect != nullptr);
+    REQUIRE(rect->GetName() == "Rectangle");
     REQUIRE(rect->GetWidth() == 3.0);
     REQUIRE(rect->GetHeight() == 4.0);
-    REQUIRE(rect->GetName() == "Rectangle");
+    REQUIRE_FALSE(rect->IsSquare());
   }
 
   SECTION("CreateRectangle with mixed types") {
-    auto rect = CreateRectangle(5, 7.5);
+    auto rect = CreateRectangle(5, 7.5F);
 
     REQUIRE(rect != nullptr);
     REQUIRE(rect->GetWidth() == 5.0);
     REQUIRE(rect->GetHeight() == 7.5);
+    REQUIRE_FALSE(rect->IsSquare());
   }
 
   SECTION("CreateRectangle with invalid dimensions throws exception") {
@@ -323,6 +306,7 @@ TEST_CASE("Shape factory functions", "[shapes][factory]") {
     auto square = CreateSquare(6.0);
 
     REQUIRE(square != nullptr);
+    REQUIRE(square->GetName() == "Rectangle");
     REQUIRE(square->GetWidth() == 6.0);
     REQUIRE(square->GetHeight() == 6.0);
     REQUIRE(square->IsSquare());
@@ -341,6 +325,34 @@ TEST_CASE("Shape factory functions", "[shapes][factory]") {
     REQUIRE_THROWS_AS(CreateSquare(0.0), ValidationException);
     REQUIRE_THROWS_AS(CreateSquare(-2.0), ValidationException);
   }
+
+  SECTION("CreateShape with Circle") {
+    auto circle = CreateShape<Circle>(5.0);
+
+    REQUIRE(circle != nullptr);
+    REQUIRE(circle->GetName() == "Circle");
+    REQUIRE(circle->GetRadius() == 5.0);
+  }
+
+  SECTION("CreateShape with Rectangle") {
+    auto rect = CreateShape<Rectangle>(4.0, 5.0);
+
+    REQUIRE(rect != nullptr);
+    REQUIRE(rect->GetName() == "Rectangle");
+    REQUIRE(rect->GetWidth() == 4.0);
+    REQUIRE(rect->GetHeight() == 5.0);
+    REQUIRE_FALSE(rect->IsSquare());
+  }
+
+  SECTION("CreateShape with Square") {
+    auto square = CreateShape<Rectangle>(6.0);
+
+    REQUIRE(square != nullptr);
+    REQUIRE(square->GetName() == "Rectangle");
+    REQUIRE(square->GetWidth() == 6.0);
+    REQUIRE(square->GetHeight() == 6.0);
+    REQUIRE(square->IsSquare());
+  }
 }
 
 TEST_CASE("Shape polymorphism", "[shapes][polymorphism]") {
@@ -350,28 +362,27 @@ TEST_CASE("Shape polymorphism", "[shapes][polymorphism]") {
     auto square = CreateSquare(2.0);
 
     std::vector<std::unique_ptr<Shape>> shapes;
-    shapes.push_back(std::move(circle));
-    shapes.push_back(std::move(rectangle));
-    shapes.push_back(std::move(square));
+    shapes.emplace_back(std::move(circle));
+    shapes.emplace_back(std::move(rectangle));
+    shapes.emplace_back(std::move(square));
 
     REQUIRE(shapes.size() == 3);
 
-    for (const auto &shape : shapes) {
+    std::vector<std::tuple<std::string_view, double, double>> expected_results{
+        {"Circle", std::numbers::pi * 9.0, std::numbers::pi * 6.0},
+        {"Rectangle", 20.0, 18.0},
+        {"Rectangle", 4.0, 8.0},
+    };
+
+    for (std::size_t i = 0; i < shapes.size(); ++i) {
+      const auto &shape = shapes[i];
+      auto [name, area, perimeter] = expected_results[i];
+
       REQUIRE(shape != nullptr);
-      REQUIRE_FALSE(shape->GetName().empty());
-
-      double area = shape->GetArea();
-      REQUIRE(area > 0.0);
-
-      double perimeter = shape->GetPerimeter();
-      REQUIRE(perimeter > 0.0);
+      REQUIRE(shape->GetName() == name);
+      REQUIRE(shape->GetArea() == Catch::Approx(area));
+      REQUIRE(shape->GetPerimeter() == Catch::Approx(perimeter));
     }
-  }
-
-  SECTION("Polymorphic error handling with exceptions") {
-    // Test that invalid shapes cannot be created
-    REQUIRE_THROWS_AS(CreateCircle(0.0), ValidationException);
-    REQUIRE_THROWS_AS(CreateRectangle(-1.0, 5.0), ValidationException);
   }
 }
 
@@ -383,18 +394,18 @@ TEST_CASE("Shape type traits and concepts", "[shapes][concepts]") {
     static_assert(std::is_final_v<Rectangle>);
   }
 
-  SECTION("Move semantics") {
-    static_assert(std::is_move_constructible_v<Circle>);
-    static_assert(std::is_move_assignable_v<Circle>);
-    static_assert(std::is_move_constructible_v<Rectangle>);
-    static_assert(std::is_move_assignable_v<Rectangle>);
-  }
-
   SECTION("Copy semantics") {
     static_assert(std::is_copy_constructible_v<Circle>);
     static_assert(std::is_copy_assignable_v<Circle>);
     static_assert(std::is_copy_constructible_v<Rectangle>);
     static_assert(std::is_copy_assignable_v<Rectangle>);
+  }
+
+  SECTION("Move semantics") {
+    static_assert(std::is_move_constructible_v<Circle>);
+    static_assert(std::is_move_assignable_v<Circle>);
+    static_assert(std::is_move_constructible_v<Rectangle>);
+    static_assert(std::is_move_assignable_v<Rectangle>);
   }
 }
 
