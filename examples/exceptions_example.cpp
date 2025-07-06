@@ -8,6 +8,8 @@
 #include <type_traits>
 
 #include "exceptions/custom_exception.hpp"
+#include "exceptions/exception_handler.hpp"
+#include "exceptions/result.hpp"
 
 using cpp_features::exceptions::BaseException;
 using cpp_features::exceptions::CalculationException;

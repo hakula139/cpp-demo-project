@@ -11,6 +11,8 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "exceptions/custom_exception.hpp"
+#include "exceptions/exception_handler.hpp"
+#include "exceptions/result.hpp"
 
 namespace {
 
