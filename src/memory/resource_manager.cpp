@@ -1,3 +1,8 @@
+/**
+ * @file resource_manager.cpp
+ * @brief Implementation of resource manager utility class
+ */
+
 #include "memory/resource_manager.hpp"
 
 #include <exception>

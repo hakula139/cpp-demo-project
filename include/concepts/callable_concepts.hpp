@@ -1,0 +1,97 @@
+/**
+ * @file callable_concepts.hpp
+ * @brief Callable-related concepts for C++ template constraints
+ *
+ * This file contains concept definitions for callable types, providing compile-time constraints
+ * for template parameters that need to work with functions, lambdas, functors, and other
+ * callable objects.
+ */
+
+#pragma once
+
+#include <concepts>
+#include <cstdint>
+#include <functional>
+#include <type_traits>
+
+namespace cpp_features::concepts {
+
+/**
+ * @brief Concept for types that can be called without arguments
+ *
+ * @tparam Func The callable type to check
+ *
+ * This concept ensures that a type can be invoked without any arguments.
+ * It accepts functions, lambdas, functors, and any other callable objects that can be called with
+ * no parameters. The return type is not constrained, allowing for flexible usage in various
+ * contexts.
+ *
+ * Types that satisfy this concept include:
+ *
+ * - Function pointers: void (*)()
+ * - Lambda expressions: []() { ... }
+ * - Function objects with operator()
+ * - std::function<void()> and similar
+ * - Member function pointers (when properly bound)
+ *
+ * @code
+ * template <NullaryCallable Func>
+ * void ExecuteCallback(Func &&callback) {
+ *   callback();
+ * }
+ *
+ * ExecuteCallback([]() { std::println("Hello, World!"); });
+ * ExecuteCallback(std::function<void()>{[]() { return 42; }});
+ * @endcode
+ */
+template <typename Func>
+concept NullaryCallable = std::invocable<Func>;
+
+/**
+ * @brief Concept for types that can be called without arguments and return void
+ *
+ * @tparam Func The callable type to check
+ *
+ * This concept is more restrictive than NullaryCallable, requiring that the callable returns void.
+ * This is useful for contexts where side effects are expected but return values are not needed or
+ * should be discarded.
+ *
+ * @code
+ * template <VoidNullaryCallable Func>
+ * void ExecuteAction(Func &&action) {
+ *   action();  // Guaranteed to return void
+ * }
+ *
+ * ExecuteAction([]() { std::println("Action executed"); });
+ * @endcode
+ */
+template <typename Func>
+concept VoidNullaryCallable =
+    NullaryCallable<Func> && std::same_as<std::invoke_result_t<Func>, void>;
+
+/**
+ * @brief Concept for timer callback functions
+ *
+ * @tparam Func The callable type to check for timer callback suitability
+ *
+ * This concept ensures that a type can be used as a timer callback function, which should accept a
+ * single std::int64_t parameter (elapsed time in nanoseconds) and return void. This is specifically
+ * designed for use with ScopedTimer callbacks.
+ *
+ * @code
+ * template <TimerCallback Func>
+ * void RegisterTimerCallback(Func &&callback) {
+ *   // Store callback to be called with elapsed time
+ *   stored_callback_ = std::forward<Func>(callback);
+ * }
+ *
+ * RegisterTimerCallback([](std::int64_t ns) {
+ *   std::println("Operation took {}ns", ns);
+ * });
+ * @endcode
+ */
+template <typename Func>
+concept TimerCallback = std::invocable<Func, std::int64_t> &&
+                        std::same_as<std::invoke_result_t<Func, std::int64_t>, void>;
+
+}  // namespace cpp_features::concepts

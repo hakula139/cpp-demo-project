@@ -1,3 +1,8 @@
+/**
+ * @file random_gen.cpp
+ * @brief Implementation of random number generator utility class
+ */
+
 #include "random/random_gen.hpp"
 
 #include <cstdint>
