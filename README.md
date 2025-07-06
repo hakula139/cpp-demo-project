@@ -10,24 +10,47 @@ This project serves as both a learning resource and a reference implementation f
 
 ## 🚀 Features
 
-- **Modern C++23 Standards**: Demonstrates the latest C++ features including concepts, ranges, expected, and more
-- **Modular Architecture**: Clean, scalable project structure with separate components
-- **Comprehensive Testing**: Full test coverage using Catch2 v3 framework
-- **Advanced CMake**: Modern CMake build system with modular configuration
-- **Memory Safety**: Smart pointer demonstrations and RAII principles
-- **Error Handling**: Modern error handling with `std::expected`
-- **Design Patterns**: Implementation of common design patterns in modern C++
+### Core C++23 Features
+
+- **std::print**: Modern formatted output with type safety
+- **std::format**: Powerful string formatting with custom formatters
+- **std::expected**: Railway-oriented error handling (via `Result` type)
+- **std::ranges**: Algorithms and views for functional programming
+- **std::numbers**: Mathematical constants (`π`, `e`) with precision
+- **std::source_location**: Enhanced exception context and debugging
+- **Concepts**: Compile-time type constraints and validation
+- **Three-way comparison (`<=>`)**: Spaceship operator for robust comparisons
+
+### Advanced Features
+
+- **Modular Architecture**: Clean, scalable project structure with 8 separate components
+- **Comprehensive Testing**: Full test coverage using Catch2 v3 with benchmarking
+- **Advanced CMake**: Modern CMake build system with modular configuration and packaging
+- **Memory Safety**: RAII patterns, smart pointers, and resource management utilities
+- **Type Safety**: Concept-based constraints preventing common programming errors
+- **Performance Tools**: Built-in timing utilities and benchmark framework
+- **Error Handling**: Multiple error handling strategies (exceptions, `Result` type, `std::expected`)
+
+### Code Quality & Development
+
+- **Static Analysis**: Integrated `clang-tidy` and `cppcheck` for code quality
+- **Automatic Formatting**: Pre-commit hooks with `clang-format` and `gersemi`
+- **Documentation**: Comprehensive Doxygen-style documentation
+- **CI/CD Ready**: Modern CMake configuration for easy integration
 
 ## 📋 Table of Contents
 
 - [🚀 Features](#-features)
+  - [Core C++23 Features](#core-c23-features)
+  - [Advanced Features](#advanced-features)
+  - [Code Quality \& Development](#code-quality--development)
 - [📋 Table of Contents](#-table-of-contents)
+- [🎓 What You'll Learn](#-what-youll-learn)
 - [🛠️ Installation](#️-installation)
   - [Prerequisites](#prerequisites)
   - [Quick Start](#quick-start)
     - [Clone the repository](#clone-the-repository)
     - [Build the project](#build-the-project)
-    - [Run the demo](#run-the-demo)
     - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
   - [Pre-commit Setup (Recommended)](#pre-commit-setup-recommended)
@@ -38,24 +61,31 @@ This project serves as both a learning resource and a reference implementation f
   - [Build Options](#build-options)
 - [🎯 Usage](#-usage)
 - [📁 Project Structure](#-project-structure)
-- [🧩 Components](#-components)
-  - [🔷 Algorithms Module](#-algorithms-module)
-  - [🔷 Concepts Module](#-concepts-module)
-  - [🔷 Containers Module](#-containers-module)
-  - [🔷 Memory Module](#-memory-module)
-  - [🔷 Shapes Module](#-shapes-module)
-- [🧪 Testing](#-testing)
+- [🔧 Components Overview](#-components-overview)
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
   - [Pre-commit Configuration](#pre-commit-configuration)
 - [📄 License](#-license)
+
+## 🎓 What You'll Learn
+
+This project demonstrates practical applications of:
+
+- **Modern C++ Concepts**: Type-safe template constraints and compile-time validation
+- **Ranges & Views**: Functional programming patterns with lazy evaluation
+- **Error Handling**: Multiple strategies from exceptions to functional error types
+- **Memory Management**: RAII, smart pointers, and resource lifecycle management
+- **Performance**: Timing utilities, benchmarking, and optimization techniques
+- **Testing**: Comprehensive test suites with Catch2 v3 and template testing
+- **Build Systems**: Modern CMake with modular design and package management
+- **Code Quality**: Static analysis, formatting, and development workflows
 
 ## 🛠️ Installation
 
 ### Prerequisites
 
 - **C++23 compatible compiler** (GCC 13+ / Clang 16+)
-- **CMake 3.23** or higher
+- **CMake 3.23+**
 
 ### Quick Start
 
@@ -73,12 +103,6 @@ cmake -B build
 cmake --build build --parallel $(nproc)
 ```
 
-#### Run the demo
-
-```bash
-./build/src/demo
-```
-
 #### Run individual examples
 
 ```bash
@@ -86,6 +110,7 @@ cmake --build build --parallel $(nproc)
 ./build/examples/containers_example
 ./build/examples/exceptions_example
 ./build/examples/memory_example
+./build/examples/random_example
 ./build/examples/shapes_example
 ```
 
@@ -139,21 +164,25 @@ See [`cmake/README.md`](cmake/README.md#options) for available build options.
 ```cpp
 #include <print>
 
+#include "algorithms/stl.hpp"
 #include "containers/container.hpp"
 #include "shapes/circle.hpp"
 
+using cpp_features::algorithms::SortContainer;
 using cpp_features::containers::Container;
 using cpp_features::shapes::CreateCircle;
 
-int main() {
-  // Use modern containers
-  Container<int> numbers{1, 2, 3, 4, 5};
-  std::println("Container contents: {}", numbers);
+auto main() -> int {
+  // Modern container with concept constraints
+  Container<int> numbers{42, 17, 89, 3, 56};
+  std::println("Original: {}", numbers);
 
-  // Create and use shapes with validation
+  SortContainer(numbers);
+  std::println("Sorted: {}", numbers);
+
+  // Type-safe factory functions with validation
   auto circle = CreateCircle(5.0);
-  auto area = circle->GetArea();  // Always succeeds for valid shapes
-  std::println("Area: {:.2f}", area);
+  std::println("Area: {:.2f}, Perimeter: {:.2f}", circle->GetArea(), circle->GetPerimeter());
 
   return 0;
 }
@@ -166,6 +195,11 @@ cpp-demo-project/
 ├── CMakeLists.txt              # Main project configuration
 ├── README.md                   # This file
 ├── LICENSE                     # MIT License
+├── .clang-format               # clang-format configuration (for C++ code formatting)
+├── .clang-tidy                 # clang-tidy configuration (for static analysis)
+├── .gersemirc                  # gersemi configuration (for CMake code formatting)
+├── .markdownlint.yaml          # markdownlint configuration (for Markdown formatting)
+├── .pre-commit-config.yaml     # pre-commit hooks configuration
 ├── cmake/                      # CMake modules and utilities
 │   ├── ModuleHelpers.cmake     # Module helper functions
 │   ├── Dependencies.cmake      # External dependencies configuration
@@ -174,113 +208,33 @@ cpp-demo-project/
 │   ├── config.cmake.in         # Package configuration
 │   └── README.md               # CMake modules documentation
 ├── include/                    # Public header files
-│   ├── algorithms/             # STL algorithms and ranges
-│   ├── concepts/               # C++20/23 concepts
-│   ├── containers/             # Modern container implementations
-│   ├── exceptions/             # Custom exception classes
-│   ├── memory/                 # Smart pointer utilities
-│   ├── random/                 # Random number generation
-│   ├── shapes/                 # Geometric shapes with polymorphism
-│   ├── strings/                # String manipulation utilities
-│   └── timing/                 # Performance timing utilities
+│   ├── algorithms/             # STL algorithm wrappers with concepts
+│   ├── concepts/               # Custom concepts and type traits
+│   ├── containers/             # Modern container wrapper with ranges support
+│   ├── exceptions/             # Custom exception hierarchy and Result type
+│   ├── memory/                 # Resource management and RAII utilities
+│   ├── random/                 # Type-safe random number generation
+│   ├── shapes/                 # Polymorphic shapes with factory functions
+│   └── timing/                 # Performance measurement and benchmarking
 ├── src/                        # Source implementation files
+│   ├── CMakeLists.txt          # Components configuration
 │   └── [mirrors include structure]
-├── tests/                      # Test suite using Catch2
-│   ├── test_algorithms.cpp
-│   ├── test_concepts.cpp
-│   ├── test_containers.cpp
-│   ├── test_exceptions.cpp
-│   ├── test_random.cpp
-│   ├── test_memory.cpp
-│   ├── test_shapes.cpp
-│   └── test_main.cpp
-└── examples/                   # Usage examples and demonstrations
-    ├── algorithms_example.cpp  # STL algorithms and ranges demo
-    ├── containers_example.cpp  # Modern containers demo
-    ├── exceptions_example.cpp  # Custom exceptions demo
-    ├── memory_example.cpp      # Smart pointers and memory management demo
-    ├── random_example.cpp      # Random number generation demo
-    └── shapes_example.cpp      # Geometric shapes demo
+├── examples/                   # Usage examples and demonstrations
+└── tests/                      # Test suite using Catch2 v3
 ```
 
-## 🧩 Components
+## 🔧 Components Overview
 
-### 🔷 Algorithms Module
-
-Header-only STL algorithms and ranges library:
-
-- **Modern algorithms** with execution policies
-- **Range adaptors** and views
-- **Custom algorithms** with concepts
-- **Functional programming** patterns
-- **Template utilities** for algorithm composition
-
-### 🔷 Concepts Module
-
-C++20/23 concepts demonstrations:
-
-- **Arithmetic concepts** for type constraints
-- **Custom concepts** for domain-specific requirements
-- **Template specialization** with concept requirements
-- **Type trait concepts** for advanced metaprogramming
-
-### 🔷 Containers Module
-
-Modern container implementations showcasing:
-
-- **Template metaprogramming** with concepts
-- **Range-based algorithms** and views
-- **Perfect forwarding** and move semantics
-- **Custom iterators** and STL compatibility
-
-### 🔷 Memory Module
-
-Smart pointer and memory management utilities:
-
-- **RAII principles** implementation and resource lifecycle management
-- **Custom deleters** and specialized smart pointer wrappers
-- **Memory safety** best practices with concept-based constraints
-- **Resource management** patterns with automatic cleanup registration
-- **Type-safe** resource creation and destruction with concepts
-- **Enhanced smart pointer wrappers** with additional functionality
-
-### 🔷 Shapes Module
-
-Polymorphic shape hierarchy with modern C++ features:
-
-- **Constructor validation** with custom exceptions for invalid inputs
-- **Polymorphic design** with virtual methods and proper inheritance
-- **Type-safe factory functions** with concept-based constraints
-- **Mathematical precision** using `std::numbers` constants
-- **Three-way comparison** support for ordering and equality
-- **Exception-based error handling** preventing invalid object creation
-
-## 🧪 Testing
-
-The project includes comprehensive tests using **Catch2 v3**:
-
-```bash
-# Run all tests
-ctest
-
-# Run tests with verbose output
-ctest --verbose
-
-# Run specific test suite
-ctest -R "Shape tests"
-
-# Generate test coverage report (if configured)
-make coverage
-```
-
-**Test Coverage:**
-
-- ✅ Shape operations and polymorphism
-- ✅ Container functionality and edge cases
-- ✅ Concept validation and constraints
-- ✅ Memory management and smart pointers
-- ✅ Algorithm correctness and performance
-- ✅ Error handling and exception safety
+| Component      | Purpose                | Key Features                                     |
+| -------------- | ---------------------- | ------------------------------------------------ |
+| **Algorithms** | STL algorithm wrappers | Concepts, ranges, type safety                    |
+| **Concepts**   | Type constraints       | Arithmetic, container, utility concepts          |
+| **Containers** | Enhanced containers    | Modern wrapper, ranges, `std::expected`          |
+| **Exceptions** | Error handling         | Custom hierarchy, `Result` type, source location |
+| **Memory**     | Resource management    | RAII, smart pointers, automatic cleanup          |
+| **Random**     | Random generation      | Type-safe, multiple distributions, ranges        |
+| **Shapes**     | OOP demonstration      | Polymorphism, factory functions, comparisons     |
+| **Timing**     | Performance tools      | Benchmarking, scoped timing, statistics          |
 
 ## 💻 Development Notes
 
@@ -291,7 +245,7 @@ This project follows the **Google C++ Style Guide** with some modifications:
 - **Automatic formatting**: Uses `.clang-format` for C++ code and `gersemi` for CMake files
 - **Static analysis**: Enabled with `.clang-tidy` for code quality checks
 - **Modern C++ practices**: Follows Core Guidelines and C++23 best practices
-- **Documentation**: Comprehensive comments and meaningful naming conventions
+- **Documentation**: Comprehensive Doxygen-style documentation
 
 ### Pre-commit Configuration
 
@@ -313,12 +267,21 @@ repos:
     rev: v20.1.7
     hooks:
       - id: clang-format
+        files: \.(cpp|hpp|h)$
 
   # CMake formatting with gersemi
   - repo: https://github.com/BlankSpruce/gersemi
     rev: 0.19.3
     hooks:
       - id: gersemi
+        files: (\.cmake|CMakeLists\.txt)$
+
+  # Markdown linting and formatting
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.18.1
+    hooks:
+      - id: markdownlint-cli2
+        args: ['--config', '.markdownlint.yaml']
 ```
 
 **Benefits:**
