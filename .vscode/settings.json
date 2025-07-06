@@ -16,7 +16,6 @@
   ],
   "clangd.detectExtensionConflicts": true,
   "clangd.onConfigChanged": "restart",
-  "clangd.path": "/opt/homebrew/opt/llvm/bin/clangd",
   "clangd.restartAfterCrash": true,
   "clangd.serverCompletionRanking": true,
   "cmake.automaticReconfigure": true,
