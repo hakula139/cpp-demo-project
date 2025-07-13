@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <deque>
+#include <functional>
 #include <list>
 #include <map>
 #include <memory>
@@ -74,6 +75,127 @@ TEST_CASE("NumericType concept", "[concepts][numeric]") {
   SECTION("Invalid numeric types") {
     REQUIRE_FALSE(NumericType<std::string>);
     REQUIRE_FALSE(NumericType<std::vector<int>>);
+  }
+}
+
+template <NullaryCallable T>
+auto TestNullaryCallable(const T &callable) -> bool {
+  callable();
+  return true;
+}
+
+TEST_CASE("NullaryCallable concept", "[concepts][callable]") {
+  SECTION("Valid nullary callables") {
+    REQUIRE(NullaryCallable<void (*)()>);
+    REQUIRE(NullaryCallable<decltype([]() {})>);
+    REQUIRE(NullaryCallable<decltype([]() { return 42; })>);
+    REQUIRE(NullaryCallable<std::function<void()>>);
+    REQUIRE(NullaryCallable<std::function<int()>>);
+
+    auto void_lambda = []() {};
+    auto int_lambda = []() { return 42; };
+    std::function<void()> void_func = []() {};
+    std::function<int()> int_func = []() { return 42; };
+
+    REQUIRE(TestNullaryCallable(void_lambda));
+    REQUIRE(TestNullaryCallable(int_lambda));
+    REQUIRE(TestNullaryCallable(void_func));
+    REQUIRE(TestNullaryCallable(int_func));
+  }
+
+  SECTION("Invalid nullary callables") {
+    // Requires parameters
+    REQUIRE_FALSE(NullaryCallable<void (*)(int)>);
+    REQUIRE_FALSE(NullaryCallable<decltype([](int x) { return x; })>);
+    REQUIRE_FALSE(NullaryCallable<std::function<void(int)>>);
+    REQUIRE_FALSE(NullaryCallable<std::function<int(int)>>);
+
+    // Not callable
+    REQUIRE_FALSE(NullaryCallable<int>);
+    REQUIRE_FALSE(NullaryCallable<std::string>);
+    REQUIRE_FALSE(NullaryCallable<void *>);
+  }
+}
+
+template <VoidNullaryCallable T>
+auto TestVoidNullaryCallable(const T &callable) -> bool {
+  callable();
+  return true;
+}
+
+TEST_CASE("VoidNullaryCallable concept", "[concepts][callable]") {
+  SECTION("Valid void nullary callables") {
+    REQUIRE(VoidNullaryCallable<void (*)()>);
+    REQUIRE(VoidNullaryCallable<decltype([]() {})>);
+    REQUIRE(VoidNullaryCallable<std::function<void()>>);
+
+    auto void_lambda = []() {};
+    std::function<void()> void_func = []() {};
+
+    REQUIRE(TestVoidNullaryCallable(void_lambda));
+    REQUIRE(TestVoidNullaryCallable(void_func));
+  }
+
+  SECTION("Invalid void nullary callables") {
+    // Non-void return types
+    REQUIRE_FALSE(VoidNullaryCallable<decltype([]() { return 42; })>);
+    REQUIRE_FALSE(VoidNullaryCallable<std::function<int()>>);
+    REQUIRE_FALSE(VoidNullaryCallable<int (*)()>);
+
+    // Requires parameters
+    REQUIRE_FALSE(VoidNullaryCallable<void (*)(int)>);
+    REQUIRE_FALSE(VoidNullaryCallable<decltype([](int) {})>);
+    REQUIRE_FALSE(VoidNullaryCallable<std::function<void(int)>>);
+
+    // Not callable
+    REQUIRE_FALSE(VoidNullaryCallable<int>);
+    REQUIRE_FALSE(VoidNullaryCallable<std::string>);
+    REQUIRE_FALSE(VoidNullaryCallable<void *>);
+  }
+}
+
+template <TimerCallback T>
+auto TestTimerCallback(const T &callback) -> bool {
+  callback(1000000);
+  return true;
+}
+
+TEST_CASE("TimerCallback concept", "[concepts][callable][timer]") {
+  SECTION("Valid timer callbacks") {
+    REQUIRE(TimerCallback<void (*)(std::int64_t)>);
+    REQUIRE(TimerCallback<decltype([](std::int64_t) {})>);
+    REQUIRE(TimerCallback<std::function<void(std::int64_t)>>);
+
+    auto lambda_callback = [](std::int64_t ns) {
+      // Do something with the time
+      static_cast<void>(ns);
+    };
+
+    std::function<void(std::int64_t)> func_callback = [](std::int64_t ns) {
+      // Do something with the time
+      static_cast<void>(ns);
+    };
+
+    REQUIRE(TestTimerCallback(lambda_callback));
+    REQUIRE(TestTimerCallback(func_callback));
+  }
+
+  SECTION("Invalid timer callbacks") {
+    // Wrong return type
+    REQUIRE_FALSE(TimerCallback<int (*)(std::int64_t)>);
+    REQUIRE_FALSE(TimerCallback<decltype([](std::int64_t) { return 42; })>);
+    REQUIRE_FALSE(TimerCallback<std::function<int(std::int64_t)>>);
+
+    // Wrong number of parameters
+    REQUIRE_FALSE(TimerCallback<void (*)()>);
+    REQUIRE_FALSE(TimerCallback<void (*)(std::int64_t, int)>);
+    REQUIRE_FALSE(TimerCallback<decltype([]() {})>);
+    REQUIRE_FALSE(TimerCallback<decltype([](std::int64_t, int) {})>);
+
+    // Not callable
+    REQUIRE_FALSE(TimerCallback<int>);
+    REQUIRE_FALSE(TimerCallback<std::string>);
+    REQUIRE_FALSE(TimerCallback<void *>);
   }
 }
 

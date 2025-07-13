@@ -38,7 +38,7 @@ namespace cpp_features::timing {
  * @code
  * auto result = BenchmarkRunner::Benchmark("Sorting algorithm", []() {
  *   std::vector<int> data = GenerateRandomData(1000);
- *   std::sort(data.begin(), data.end());
+ *   std::ranges::sort(data);
  * }, 1000);
  * BenchmarkRunner::PrintResult(result);
  * @endcode
@@ -76,7 +76,7 @@ class BenchmarkRunner {
    * auto result = BenchmarkRunner::Benchmark("Vector operations", []() {
    *   std::vector<int> vec(1000);
    *   std::iota(vec.begin(), vec.end(), 0);
-   *   std::sort(vec.begin(), vec.end());
+   *   std::ranges::sort(vec);
    * }, 500);
    * @endcode
    */
@@ -146,7 +146,7 @@ class BenchmarkRunner {
  * // Benchmarking with multiple iterations
  * ProfileFunction("Sorting algorithm", []() {
  *   std::vector<int> data = GenerateData(1000);
- *   std::sort(data.begin(), data.end());
+ *   std::ranges::sort(data);
  * }, 100);
  * @endcode
  */
