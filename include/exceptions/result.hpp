@@ -114,7 +114,7 @@ class Result {
     if (auto *value = std::get_if<T>(&data_)) {
       return *value;
     }
-    throw std::get<BaseException>(data_);
+    throw BaseException{std::get<BaseException>(data_)};
   }
 
   /**

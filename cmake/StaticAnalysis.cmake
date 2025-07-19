@@ -44,8 +44,9 @@ if(ENABLE_CPPCHECK)
       ${CPPCHECK}
       --enable=all
       --inconclusive
-      --suppress=mismatchingContainerExpression
+      --quiet
       --suppress=missingIncludeSystem
+      --suppress=unmatchedSuppression
       --suppress=unusedFunction
     )
     message(STATUS "cppcheck finished setting up")

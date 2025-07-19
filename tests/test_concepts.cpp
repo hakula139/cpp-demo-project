@@ -13,7 +13,6 @@
 #include <string_view>
 #include <vector>
 
-#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include "concepts/concepts.hpp"

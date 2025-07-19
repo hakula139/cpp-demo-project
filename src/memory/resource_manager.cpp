@@ -13,7 +13,7 @@ namespace cpp_features::memory {
 
 void ResourceManager::ExecuteCleanup() {
   std::println("Executing {} cleanup functions", cleanup_functions_.size());
-  for (auto &cleanup_function : std::ranges::reverse_view(cleanup_functions_)) {
+  for (const auto &cleanup_function : std::ranges::reverse_view(cleanup_functions_)) {
     cleanup_function();  // May throw - caller handles exceptions
   }
   cleanup_functions_.clear();
@@ -21,7 +21,7 @@ void ResourceManager::ExecuteCleanup() {
 
 void ResourceManager::ExecuteCleanupNoexcept() noexcept {
   std::println("Executing {} cleanup functions (noexcept)", cleanup_functions_.size());
-  for (auto &cleanup_function : std::ranges::reverse_view(cleanup_functions_)) {
+  for (const auto &cleanup_function : std::ranges::reverse_view(cleanup_functions_)) {
     try {
       cleanup_function();
     } catch (const std::exception &e) {

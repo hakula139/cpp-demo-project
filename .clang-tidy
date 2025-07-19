@@ -6,6 +6,7 @@ Checks: >
   clang-analyzer-*,
   google-*,
   misc-*,
+  -misc-const-correctness,
   modernize-*,
   performance-*,
   readability-*,

@@ -87,7 +87,7 @@ class BenchmarkRunner {
     times.reserve(iterations);
 
     for (std::size_t i = 0; i < iterations; ++i) {
-      times.push_back(TimeFunction(std::forward<Func>(func)));
+      times.push_back(TimeFunction(func));
     }
 
     auto total_ns = std::reduce(times.begin(), times.end(), 0LL);

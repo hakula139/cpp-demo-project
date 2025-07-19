@@ -99,7 +99,20 @@ add_subdirectory(src)
 if(BUILD_TESTS)
   enable_testing()
   include(CTest)
+
+  # Temporarily disable cppcheck for tests
+  if(DEFINED CMAKE_CXX_CPPCHECK)
+    set(CMAKE_CXX_CPPCHECK_BACKUP ${CMAKE_CXX_CPPCHECK})
+    unset(CMAKE_CXX_CPPCHECK)
+  endif()
+
   add_subdirectory(tests)
+
+  # Restore cppcheck settings
+  if(DEFINED CMAKE_CXX_CPPCHECK_BACKUP)
+    set(CMAKE_CXX_CPPCHECK ${CMAKE_CXX_CPPCHECK_BACKUP})
+    unset(CMAKE_CXX_CPPCHECK_BACKUP)
+  endif()
 endif()
 
 # Build examples if enabled

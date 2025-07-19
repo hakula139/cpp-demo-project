@@ -170,9 +170,9 @@ class Container {
    * @endcode
    */
   auto Remove(const T &item) -> size_type {
-    auto new_end = std::ranges::remove(data_, item);
-    auto count = static_cast<size_type>(std::distance(new_end.begin(), data_.end()));
-    data_.erase(new_end.begin(), data_.end());
+    auto ret = std::ranges::remove(data_, item);
+    auto count = static_cast<size_type>(std::distance(ret.begin(), ret.end()));
+    data_.erase(ret.begin(), ret.end());
     return count;
   }
 

@@ -20,6 +20,7 @@
   "clangd.serverCompletionRanking": true,
   "cmake.automaticReconfigure": true,
   "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.configureArgs": ["-DENABLE_CLANG_TIDY=ON", "-DENABLE_CPPCHECK=ON"],
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
   "editor.codeActionsOnSave": {
@@ -34,8 +35,8 @@
   "editor.tabSize": 2,
   "files.associations": {
     "*.cpp": "cpp",
-    "*.hpp": "cpp",
-    "*.h": "cpp"
+    "*.h": "cpp",
+    "*.hpp": "cpp"
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
