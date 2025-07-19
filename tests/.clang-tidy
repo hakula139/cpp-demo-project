@@ -8,6 +8,7 @@ Checks: >
   cert-*,
   -cert-err58-cpp,
   clang-analyzer-*,
+  -clang-analyzer-optin.core.EnumCastOutOfRange,
   google-*,
   -google-build-using-namespace,
   misc-*,

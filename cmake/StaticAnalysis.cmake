@@ -44,7 +44,8 @@ if(ENABLE_CPPCHECK)
       ${CPPCHECK}
       --enable=all
       --inconclusive
-      --quiet
+      --checkers-report=cppcheck.report
+      --suppress=checkersReport
       --suppress=missingIncludeSystem
       --suppress=unmatchedSuppression
       --suppress=unusedFunction

@@ -29,6 +29,4 @@ CheckOptions:
   readability-identifier-naming.EnumConstantPrefix: k
   readability-function-cognitive-complexity.Threshold: 25
 
-HeaderFilterRegex: '.*/include/.*'
-WarningsAsErrors: ''
 FormatStyle: Google

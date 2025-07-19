@@ -5,7 +5,7 @@
       "label": "configure",
       "type": "shell",
       "command": "cmake",
-      "args": ["-B", "build"],
+      "args": ["-B", "build", "-DENABLE_CLANG_TIDY=ON", "-DENABLE_CPPCHECK=ON"],
       "group": "build",
       "presentation": {
         "echo": true,

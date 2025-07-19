@@ -19,6 +19,7 @@
   "clangd.restartAfterCrash": true,
   "clangd.serverCompletionRanking": true,
   "cmake.automaticReconfigure": true,
+  "cmake.buildArgs": ["--parallel", "8"],
   "cmake.buildDirectory": "${workspaceFolder}/build",
   "cmake.configureArgs": ["-DENABLE_CLANG_TIDY=ON", "-DENABLE_CPPCHECK=ON"],
   "cmake.configureOnEdit": true,
