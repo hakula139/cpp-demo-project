@@ -1,0 +1,248 @@
+{
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default-base",
+      "displayName": "Base Configuration",
+      "description": "Base configuration with common settings",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {},
+      "condition": {
+        "type": "anyOf",
+        "conditions": [
+          {
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Linux"
+          },
+          {
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Darwin"
+          },
+          {
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Windows"
+          }
+        ]
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug Configuration",
+      "description": "Debug build with optimizations disabled and debug symbols",
+      "inherits": "default-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release Configuration",
+      "description": "Release build with optimizations enabled",
+      "inherits": "default-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "debug-no-tests",
+      "displayName": "Debug Configuration (No Tests & Examples)",
+      "description": "Debug build without tests and examples for faster configuration",
+      "inherits": "debug",
+      "cacheVariables": {
+        "BUILD_TESTS": "OFF",
+        "BUILD_EXAMPLES": "OFF"
+      }
+    },
+    {
+      "name": "release-no-tests",
+      "displayName": "Release Configuration (No Tests & Examples)",
+      "description": "Release build without tests and examples for faster configuration",
+      "inherits": "release",
+      "cacheVariables": {
+        "BUILD_TESTS": "OFF",
+        "BUILD_EXAMPLES": "OFF"
+      }
+    },
+    {
+      "name": "debug-strict",
+      "displayName": "Debug Configuration (Strict Warnings)",
+      "description": "Debug build with warnings treated as errors",
+      "inherits": "debug",
+      "cacheVariables": {
+        "WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "release-strict",
+      "displayName": "Release Configuration (Strict Warnings)",
+      "description": "Release build with warnings treated as errors",
+      "inherits": "release",
+      "cacheVariables": {
+        "WARNINGS_AS_ERRORS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "description": "Build debug configuration",
+      "configurePreset": "debug",
+      "jobs": 0
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "description": "Build release configuration",
+      "configurePreset": "release",
+      "jobs": 0
+    },
+    {
+      "name": "debug-no-tests",
+      "displayName": "Debug Build (No Tests & Examples)",
+      "description": "Build debug configuration without tests and examples",
+      "configurePreset": "debug-no-tests",
+      "jobs": 0
+    },
+    {
+      "name": "release-no-tests",
+      "displayName": "Release Build (No Tests & Examples)",
+      "description": "Build release configuration without tests and examples",
+      "configurePreset": "release-no-tests",
+      "jobs": 0
+    },
+    {
+      "name": "debug-strict",
+      "displayName": "Debug Build (Strict)",
+      "description": "Build debug configuration with strict warnings",
+      "configurePreset": "debug-strict",
+      "jobs": 0
+    },
+    {
+      "name": "release-strict",
+      "displayName": "Release Build (Strict)",
+      "description": "Build release configuration with strict warnings",
+      "configurePreset": "release-strict",
+      "jobs": 0
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Tests",
+      "description": "Run tests in debug configuration",
+      "configurePreset": "debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release Tests",
+      "description": "Run tests in release configuration",
+      "configurePreset": "release",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "debug-strict",
+      "displayName": "Debug Tests (Strict)",
+      "description": "Run tests in debug configuration with strict warnings",
+      "configurePreset": "debug-strict",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "release-strict",
+      "displayName": "Release Tests (Strict)",
+      "description": "Run tests in release configuration with strict warnings",
+      "configurePreset": "release-strict",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Package",
+      "description": "Create package from debug build",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "displayName": "Release Package",
+      "description": "Create package from release build",
+      "configurePreset": "release"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "debug-workflow",
+      "displayName": "Debug Workflow",
+      "description": "Complete debug workflow: configure, build, test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug"
+        },
+        {
+          "type": "test",
+          "name": "debug"
+        }
+      ]
+    },
+    {
+      "name": "release-workflow",
+      "displayName": "Release Workflow",
+      "description": "Complete release workflow: configure, build, test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "release"
+        },
+        {
+          "type": "build",
+          "name": "release"
+        },
+        {
+          "type": "test",
+          "name": "release"
+        }
+      ]
+    }
+  ]
+}
