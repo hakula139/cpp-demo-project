@@ -89,7 +89,7 @@ This project demonstrates practical applications of:
 
 ### Prerequisites
 
-- **C++23 compatible compiler** ([GCC] 14+ / [Clang] 17+)
+- **C++23 compatible compiler** ([GCC] 14+ / [Clang] 20+)
 - **[CMake] 3.23+**
 - **[Ninja] build system** (required for CMake - faster builds than Make)
 

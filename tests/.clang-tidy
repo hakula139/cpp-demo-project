@@ -3,6 +3,7 @@ InheritParentConfig: true
 Checks: >
   -*,
   bugprone-*,
+  -bugprone-chained-comparison,
   -bugprone-exception-escape,
   -bugprone-unchecked-optional-access,
   cert-*,

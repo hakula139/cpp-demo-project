@@ -62,12 +62,6 @@ add_library(${PROJECT_NAME}_project_options INTERFACE)
 add_library(${PROJECT_NAME}::project_options ALIAS ${PROJECT_NAME}_project_options)
 target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_23)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-  # Use libc++ for better C++23 support (std::expected, std::print, etc.)
-  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -stdlib=libc++)
-  target_link_options(${PROJECT_NAME}_project_options INTERFACE -stdlib=libc++)
-endif()
-
 # Create interface target for warnings
 add_library(${PROJECT_NAME}_project_warnings INTERFACE)
 add_library(${PROJECT_NAME}::project_warnings ALIAS ${PROJECT_NAME}_project_warnings)
@@ -93,7 +87,7 @@ else()
   )
 endif()
 
-# Setup project dependencies
+# Setup project dependencies (after project options are fully configured)
 setup_project_dependencies()
 
 # Add subdirectories
