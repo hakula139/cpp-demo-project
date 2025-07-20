@@ -137,14 +137,14 @@ This project uses CMake presets for streamlined build configuration.
 
 #### Configure Presets
 
-| Preset             | Description                                              |
-| ------------------ | -------------------------------------------------------- |
-| `debug`            | Debug build with symbols and no optimization             |
-| `release`          | Release build with full optimization                     |
-| `debug-no-tests`   | Debug build without tests and examples (faster config)   |
-| `release-no-tests` | Release build without tests and examples (faster config) |
-| `debug-strict`     | Debug build with warnings treated as errors              |
-| `release-strict`   | Release build with warnings treated as errors            |
+| Preset             | Description                                                       |
+| ------------------ | ----------------------------------------------------------------- |
+| `debug`            | Debug build with symbols and no optimization                      |
+| `release`          | Release build with full optimization                              |
+| `debug-no-tests`   | Debug build without tests and examples (faster config)            |
+| `release-no-tests` | Release build without tests and examples (faster config)          |
+| `debug-strict`     | Debug build with static analysis and warnings treated as errors   |
+| `release-strict`   | Release build with static analysis and warnings treated as errors |
 
 #### Build & Test Presets
 

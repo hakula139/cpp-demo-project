@@ -21,15 +21,17 @@ Example:
   include(StaticAnalysis)
 #]=======================================================================]
 
-# Static analysis tools configuration
-
 option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
 option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
 
 if(ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY clang-tidy)
   if(CLANG_TIDY)
-    set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY})
+    set(
+      CMAKE_CXX_CLANG_TIDY
+      ${CLANG_TIDY}
+      --extra-arg=-Wno-unknown-warning-option
+    )
     message(STATUS "clang-tidy finished setting up")
   else()
     message(WARNING "clang-tidy requested but executable not found")

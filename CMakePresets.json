@@ -76,19 +76,23 @@
     },
     {
       "name": "debug-strict",
-      "displayName": "Debug Configuration (Strict Warnings)",
-      "description": "Debug build with warnings treated as errors",
+      "displayName": "Debug Configuration (Static Analysis + Strict Warnings)",
+      "description": "Debug build with static analysis and warnings treated as errors",
       "inherits": "debug",
       "cacheVariables": {
+        "ENABLE_CLANG_TIDY": "ON",
+        "ENABLE_CPPCHECK": "ON",
         "WARNINGS_AS_ERRORS": "ON"
       }
     },
     {
       "name": "release-strict",
-      "displayName": "Release Configuration (Strict Warnings)",
-      "description": "Release build with warnings treated as errors",
+      "displayName": "Release Configuration (Static Analysis + Strict Warnings)",
+      "description": "Release build with static analysis and warnings treated as errors",
       "inherits": "release",
       "cacheVariables": {
+        "ENABLE_CLANG_TIDY": "ON",
+        "ENABLE_CPPCHECK": "ON",
         "WARNINGS_AS_ERRORS": "ON"
       }
     }
