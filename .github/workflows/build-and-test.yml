@@ -1,0 +1,108 @@
+name: Build & Test
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build and test'
+        required: true
+        default: 'master'
+
+permissions:
+  contents: read
+
+env:
+  # Enable colored output
+  CTEST_OUTPUT_ON_FAILURE: 1
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        compiler:
+          - g++
+          - clang++
+        preset:
+          - debug-strict
+          - release-strict
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || '' }}
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt-get update
+
+          sudo apt-get install -y \
+            build-essential \
+            catch2 \
+            clang \
+            clang-tidy \
+            cmake \
+            cppcheck \
+            gcc-14 \
+            libc++-dev \
+            ninja-build
+
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 1400
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 1400
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install \
+            catch2 \
+            cmake \
+            cppcheck \
+            gcc \
+            ninja \
+            llvm
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Configure with preset
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          cmake --preset ${{ matrix.preset }}
+
+      - name: Build with preset
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          cmake --build --preset ${{ matrix.preset }} --parallel
+
+      - name: Test with preset
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          ctest --preset ${{ matrix.preset }} --parallel
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.preset }}
+          path: |
+            build/${{ matrix.preset }}/
+          retention-days: 3

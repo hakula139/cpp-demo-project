@@ -10,14 +10,20 @@ else()
   set(IS_MAIN_PROJECT FALSE)
 endif()
 
-# Standard C++ settings
+# Global project settings
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Build settings
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Include CMake utilities
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# Options
+option(BUILD_TESTS "Build tests" ${IS_MAIN_PROJECT})
+option(BUILD_EXAMPLES "Build examples" ${IS_MAIN_PROJECT})
+option(ENABLE_WARNINGS "Enable compiler warnings" ON)
 
 # macOS-specific fixes for Mach-O linker errors
 if(APPLE)
@@ -45,14 +51,6 @@ if(APPLE)
   set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> cr <TARGET> <OBJECTS>")
 endif()
 
-# Include CMake utilities
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-# Options
-option(BUILD_TESTS "Build tests" ${IS_MAIN_PROJECT})
-option(BUILD_EXAMPLES "Build examples" ${IS_MAIN_PROJECT})
-option(ENABLE_WARNINGS "Enable compiler warnings" ON)
-
 # Add custom CMake modules
 include(CompilerWarnings)
 include(StaticAnalysis)
@@ -63,6 +61,12 @@ include(ModuleHelpers)
 add_library(${PROJECT_NAME}_project_options INTERFACE)
 add_library(${PROJECT_NAME}::project_options ALIAS ${PROJECT_NAME}_project_options)
 target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_23)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  # Use libc++ for better C++23 support (std::expected, std::print, etc.)
+  target_compile_options(${PROJECT_NAME}_project_options INTERFACE -stdlib=libc++)
+  target_link_options(${PROJECT_NAME}_project_options INTERFACE -stdlib=libc++)
+endif()
 
 # Create interface target for warnings
 add_library(${PROJECT_NAME}_project_warnings INTERFACE)
