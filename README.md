@@ -53,12 +53,17 @@ This project serves as both a learning resource and a reference implementation f
     - [Build the project](#build-the-project)
     - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
+  - [CMake Presets](#cmake-presets)
+    - [Configure Presets](#configure-presets)
+    - [Build \& Test Presets](#build--test-presets)
+    - [Workflow Presets](#workflow-presets)
+    - [Usage Examples](#usage-examples)
+  - [Build Options](#build-options)
   - [Pre-commit Setup (Recommended)](#pre-commit-setup-recommended)
     - [Install pre-commit](#install-pre-commit)
     - [Install the git hooks](#install-the-git-hooks)
     - [Run on all files (optional)](#run-on-all-files-optional)
     - [What the hooks do](#what-the-hooks-do)
-  - [Build Options](#build-options)
 - [🎯 Usage](#-usage)
 - [📁 Project Structure](#-project-structure)
 - [🔧 Components Overview](#-components-overview)
@@ -84,8 +89,14 @@ This project demonstrates practical applications of:
 
 ### Prerequisites
 
-- **C++23 compatible compiler** (GCC 13+ / Clang 16+)
-- **CMake 3.23+**
+- **C++23 compatible compiler** ([GCC] 13+ / [Clang] 16+)
+- **[CMake] 3.23+**
+- **[Ninja] build system** (required for CMake - faster builds than Make)
+
+[GCC]: https://gcc.gnu.org
+[Clang]: https://clang.llvm.org
+[CMake]: https://cmake.org
+[Ninja]: https://ninja-build.org
 
 ### Quick Start
 
@@ -99,26 +110,83 @@ cd cpp-demo-project
 #### Build the project
 
 ```bash
-cmake -B build
-cmake --build build --parallel $(nproc)
+cmake --preset release
+cmake --build --preset release
 ```
 
 #### Run individual examples
 
 ```bash
-./build/examples/algorithms_example
-./build/examples/containers_example
-./build/examples/exceptions_example
-./build/examples/memory_example
-./build/examples/random_example
-./build/examples/shapes_example
+./build/release/examples/algorithms_example
+./build/release/examples/containers_example
+./build/release/examples/exceptions_example
+./build/release/examples/memory_example
+./build/release/examples/random_example
+./build/release/examples/shapes_example
 ```
 
 #### Run tests
 
 ```bash
-ctest --test-dir build --verbose
+ctest --preset release
 ```
+
+### CMake Presets
+
+This project uses CMake presets for streamlined build configuration.
+
+#### Configure Presets
+
+| Preset             | Description                                              |
+| ------------------ | -------------------------------------------------------- |
+| `debug`            | Debug build with symbols and no optimization             |
+| `release`          | Release build with full optimization                     |
+| `debug-no-tests`   | Debug build without tests and examples (faster config)   |
+| `release-no-tests` | Release build without tests and examples (faster config) |
+| `debug-strict`     | Debug build with warnings treated as errors              |
+| `release-strict`   | Release build with warnings treated as errors            |
+
+#### Build & Test Presets
+
+Each configure preset has corresponding build and test presets with the same names.
+
+#### Workflow Presets
+
+| Preset             | Description                                         |
+| ------------------ | --------------------------------------------------- |
+| `debug-workflow`   | Complete debug workflow: configure + build + test   |
+| `release-workflow` | Complete release workflow: configure + build + test |
+
+#### Usage Examples
+
+```bash
+# List available presets
+cmake --list-presets=configure
+cmake --list-presets=build
+cmake --list-presets=test
+
+# Quick development cycle
+cmake --preset debug                        # Configure debug build
+cmake --build --preset debug                # Build debug targets
+ctest --preset debug                        # Run debug tests
+
+# Fast iteration (no tests and examples)
+cmake --preset debug-no-tests               # Configure without tests
+cmake --build --preset debug-no-tests       # Build main targets only
+
+# Production build
+cmake --preset release                      # Configure release build
+cmake --build --preset release              # Build release targets
+ctest --preset release                      # Run release tests
+
+# Automated workflows (configure + build + test)
+cmake --workflow --preset debug-workflow    # Complete debug cycle
+cmake --workflow --preset release-workflow  # Complete release cycle
+```
+
+### Build Options
+
+See [`cmake/README.md`](cmake/README.md#options) for available build options.
 
 ### Pre-commit Setup (Recommended)
 
@@ -152,12 +220,9 @@ pre-commit run --all-files
   - Checks for added large files
 - **clang-format**: Formats C++ code according to the project style
 - **gersemi**: Formats CMake files with consistent indentation
+- **markdownlint-cli2**: Lints Markdown files with consistent formatting
 
 The hooks will run automatically on `git commit` and prevent commits with formatting issues.
-
-### Build Options
-
-See [`cmake/README.md`](cmake/README.md#options) for available build options.
 
 ## 🎯 Usage
 
@@ -192,18 +257,20 @@ auto main() -> int {
 
 ```text
 cpp-demo-project/
-├── CMakeLists.txt              # Main project configuration
-├── README.md                   # This file
-├── LICENSE                     # MIT License
-├── .clang-format               # clang-format configuration (for C++ code formatting)
-├── .clang-tidy                 # clang-tidy configuration (for static analysis)
-├── .gersemirc                  # gersemi configuration (for CMake code formatting)
-├── .markdownlint.yaml          # markdownlint configuration (for Markdown formatting)
-├── .pre-commit-config.yaml     # pre-commit hooks configuration
+├── .github/                    # GitHub Actions configuration
+│   └── workflows/              # GitHub Actions workflows
+├── .vscode/                    # VS Code configuration
+│   ├── launch.json             # VS Code launch configuration
+│   ├── settings.json           # VS Code settings
+│   └── tasks.json              # VS Code tasks
+├── build/                      # Build output (generated by CMake)
+│   ├── debug/                  # Debug build output
+│   ├── release/                # Release build output
+│   └── [other presets]
 ├── cmake/                      # CMake modules and utilities
-│   ├── ModuleHelpers.cmake     # Module helper functions
-│   ├── Dependencies.cmake      # External dependencies configuration
 │   ├── CompilerWarnings.cmake  # Compiler warning configuration
+│   ├── Dependencies.cmake      # External dependencies configuration
+│   ├── ModuleHelpers.cmake     # Module helper functions
 │   ├── StaticAnalysis.cmake    # Static analysis tools
 │   ├── config.cmake.in         # Package configuration
 │   └── README.md               # CMake modules documentation
@@ -220,7 +287,17 @@ cpp-demo-project/
 │   ├── CMakeLists.txt          # Components configuration
 │   └── [mirrors include structure]
 ├── examples/                   # Usage examples and demonstrations
-└── tests/                      # Test suite using Catch2 v3
+├── tests/                      # Test suite using Catch2 v3
+├── .clang-format               # clang-format configuration (for C++ code formatting)
+├── .clang-tidy                 # clang-tidy configuration (for static analysis)
+├── .clangd                     # clangd configuration (for code completion)
+├── .gersemirc                  # gersemi configuration (for CMake code formatting)
+├── .markdownlint.yaml          # markdownlint configuration (for Markdown formatting)
+├── .pre-commit-config.yaml     # pre-commit hooks configuration
+├── CMakeLists.txt              # Main project configuration
+├── CMakePresets.json           # CMake presets configuration
+├── LICENSE                     # MIT License
+└── README.md                   # This file
 ```
 
 ## 🔧 Components Overview
