@@ -23,6 +23,8 @@ auto SeverityToString(ErrorSeverity severity) -> std::string_view {
       return "ERROR";
     case ErrorSeverity::kFatal:
       return "FATAL";
+    default:
+      return "UNKNOWN";
   }
 }
 
