@@ -49,10 +49,10 @@ void DemonstrateProbabilityDistributions() {
   RandomGenerator generator{42};
 
   // Uniform distributions
-  Container<int> uniform_ints{generator.GenerateIntVector(10, 20, 5)};
+  Container uniform_ints(generator.GenerateIntVector(10, 20, 5));
   std::println("   Uniform integers [10, 20]: {}", uniform_ints);
 
-  Container<float> uniform_reals{generator.GenerateRealVector(0.5F, 1.5F, 3)};
+  Container uniform_reals(generator.GenerateRealVector(0.5F, 1.5F, 3));
   std::println("   Uniform reals [0.5, 1.5): {}", uniform_reals);
 
   // Normal distribution
@@ -94,20 +94,20 @@ void DemonstrateRangeOperations() {
   std::println("\n4. Range Operations:");
 
   // Container shuffling
-  Container<int> deck{1, 2, 3, 4, 5, 6, 7, 8};
+  Container deck{1, 2, 3, 4, 5, 6, 7, 8};
   std::println("   Original deck: {}", deck);
 
   ShuffleContainer(deck);
   std::println("   Shuffled deck: {}", deck);
 
   // Random sampling
-  Container<int> population{10, 20, 30, 40, 50, 60, 70, 80, 90};
-  auto sample = SampleFromRange(population, 4);
+  Container population{10, 20, 30, 40, 50, 60, 70, 80, 90};
+  Container sample(SampleFromRange(population, 4));
   std::println("   Sample from population: {}", sample);
 
   // String sampling
   std::string_view vowels{"AEIOU"};
-  auto vowel_sample = SampleFromRange(vowels, 3);
+  Container vowel_sample(SampleFromRange(vowels, 3));
   std::println("   Random vowels: {}", vowel_sample);
 }
 
@@ -119,7 +119,7 @@ void DemonstratePracticalApplications() {
   RandomGenerator dice_generator;
 
   // Simulate rolling multiple dice
-  Container<int> dice_rolls{dice_generator.GenerateIntVector(1, 6, 3)};
+  Container dice_rolls(dice_generator.GenerateIntVector(1, 6, 3));
   auto total = std::reduce(dice_rolls.begin(), dice_rolls.end(), 0);
   std::println("   Rolling 3 dice: {}, Total: {}", dice_rolls, total);
 
