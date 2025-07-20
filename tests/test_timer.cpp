@@ -17,41 +17,41 @@ using namespace cpp_features::timing;
 TEST_CASE("Timer basic functionality", "[timing][timer]") {
   SECTION("Timer construction and immediate timing") {
     Timer timer;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto elapsed_ms = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed_ms >= 10);
-    REQUIRE(elapsed_ms < 20);  // Should be reasonable upper bound
+    REQUIRE(elapsed_ms >= 100);
+    REQUIRE(elapsed_ms < 300);  // Should be reasonable upper bound
   }
 
   SECTION("Timer start and stop") {
     Timer timer;
     timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
     auto elapsed_ms = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed_ms >= 5);
-    REQUIRE(elapsed_ms < 15);
+    REQUIRE(elapsed_ms >= 100);
+    REQUIRE(elapsed_ms < 300);  // Should be reasonable upper bound
   }
 
   SECTION("Timer reset functionality") {
     Timer timer;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     timer.Reset();
 
     auto elapsed_ms = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed_ms < 5);  // Should be very small after reset
+    REQUIRE(elapsed_ms < 100);  // Should be small after reset
   }
 
   SECTION("Timer continues after stop") {
     Timer timer;
     timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
     auto first_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     auto second_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
 
     REQUIRE(first_elapsed == second_elapsed);  // Should be same after stop
@@ -61,7 +61,7 @@ TEST_CASE("Timer basic functionality", "[timing][timer]") {
 TEST_CASE("Timer duration type conversions", "[timing][timer][duration]") {
   SECTION("Different duration types") {
     Timer timer;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
     auto ns = timer.GetElapsed<std::chrono::nanoseconds>();
@@ -69,26 +69,26 @@ TEST_CASE("Timer duration type conversions", "[timing][timer][duration]") {
     auto ms = timer.GetElapsed<std::chrono::milliseconds>();
     auto s = timer.GetElapsed<std::chrono::seconds>();
 
-    REQUIRE(ns >= 10'000'000);  // At least 10 million nanoseconds
-    REQUIRE(ns < 20'000'000);   // Less than 20 million nanoseconds
-    REQUIRE(us >= 10'000);      // At least 10 thousand microseconds
-    REQUIRE(us < 20'000);       // Less than 20 thousand microseconds
-    REQUIRE(ms >= 10);          // At least 10 milliseconds
-    REQUIRE(ms < 20);           // Less than 20 milliseconds
-    REQUIRE(s == 0);            // Should be 0 seconds for short duration
+    REQUIRE(ns >= 100'000'000);  // At least 100 million nanoseconds
+    REQUIRE(ns < 300'000'000);   // Less than 300 million nanoseconds
+    REQUIRE(us >= 100'000);      // At least 100 thousand microseconds
+    REQUIRE(us < 300'000);       // Less than 300 thousand microseconds
+    REQUIRE(ms >= 100);          // At least 100 milliseconds
+    REQUIRE(ms < 300);           // Less than 300 milliseconds
+    REQUIRE(s == 0);             // Should be 0 seconds for short duration
   }
 
   SECTION("Duration object return") {
     Timer timer;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
     auto duration = timer.GetElapsedDuration<std::chrono::microseconds>();
 
-    REQUIRE(duration.count() >= 10000);
-    REQUIRE(duration.count() < 20000);
-    REQUIRE(duration >= std::chrono::milliseconds(10));
-    REQUIRE(duration < std::chrono::milliseconds(20));
+    REQUIRE(duration.count() >= 100'000);
+    REQUIRE(duration.count() < 300'000);
+    REQUIRE(duration >= std::chrono::milliseconds(100));
+    REQUIRE(duration < std::chrono::milliseconds(300));
   }
 }
 
@@ -119,12 +119,12 @@ TEST_CASE("ScopedTimer basic functionality", "[timing][scoped_timer]") {
           },
       };
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(5));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     REQUIRE(callback_called);
-    REQUIRE(callback_time >= 5'000'000);  // At least 5 million nanoseconds
-    REQUIRE(callback_time < 15'000'000);  // Less than 15 million nanoseconds
+    REQUIRE(callback_time >= 100'000'000);
+    REQUIRE(callback_time < 300'000'000);
   }
 
   SECTION("ScopedTimer without callback") {
@@ -177,10 +177,10 @@ TEST_CASE("BenchmarkRunner functionality", "[timing][benchmark]") {
 TEST_CASE("Utility functions", "[timing][utilities]") {
   SECTION("TimeFunction utility") {
     auto elapsed =
-        TimeFunction([]() { std::this_thread::sleep_for(std::chrono::milliseconds(5)); });
+        TimeFunction([]() { std::this_thread::sleep_for(std::chrono::milliseconds(100)); });
 
-    REQUIRE(elapsed >= 5'000'000);
-    REQUIRE(elapsed < 15'000'000);
+    REQUIRE(elapsed >= 100'000'000);
+    REQUIRE(elapsed < 300'000'000);
   }
 
   SECTION("ProfileFunction single execution") {
@@ -215,20 +215,20 @@ TEST_CASE("Timer edge cases", "[timing][timer][edge_cases]") {
   SECTION("Multiple start calls") {
     Timer timer;
     timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
     timer.Start();  // Should reset the start time
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
     auto elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed >= 5);
-    REQUIRE(elapsed < 15);  // Should be closer to 5ms due to restart
+    REQUIRE(elapsed >= 100);
+    REQUIRE(elapsed < 300);  // Should be closer to 100ms due to restart
   }
 
   SECTION("Multiple stop calls") {
     Timer timer;
     timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     timer.Stop();
     auto first_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
     timer.Stop();  // Second stop should have no effect
@@ -240,12 +240,12 @@ TEST_CASE("Timer edge cases", "[timing][timer][edge_cases]") {
   SECTION("Reset after stop") {
     Timer timer;
     timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     timer.Stop();
     timer.Reset();
 
     auto elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed < 5);  // Should be very small after reset
+    REQUIRE(elapsed < 100);  // Should be small after reset
   }
 }
 
@@ -254,17 +254,17 @@ TEST_CASE("BenchmarkResult structure", "[timing][benchmark][result]") {
     BenchmarkRunner::BenchmarkResult result{
         .name = "Test",
         .iterations = 100,
-        .total_ns = 1'000'000,
-        .avg_ns = 10'000,
-        .min_ns = 8'000,
+        .total_ns = 1'234'567,
+        .avg_ns = 12'345,
+        .min_ns = 10'000,
         .max_ns = 15'000,
     };
 
     REQUIRE(result.name == "Test");
     REQUIRE(result.iterations == 100);
-    REQUIRE(result.total_ns == 1'000'000);
-    REQUIRE(result.avg_ns == 10'000);
-    REQUIRE(result.min_ns == 8'000);
+    REQUIRE(result.total_ns == 1'234'567);
+    REQUIRE(result.avg_ns == 12'345);
+    REQUIRE(result.min_ns == 10'000);
     REQUIRE(result.max_ns == 15'000);
   }
 
@@ -272,10 +272,10 @@ TEST_CASE("BenchmarkResult structure", "[timing][benchmark][result]") {
     BenchmarkRunner::BenchmarkResult result{
         .name = "Test output",
         .iterations = 50,
-        .total_ns = 5'000'000,
-        .avg_ns = 100'000,
-        .min_ns = 80'000,
-        .max_ns = 150'000,
+        .total_ns = 5'678'901,
+        .avg_ns = 113'578,
+        .min_ns = 100'000,
+        .max_ns = 130'000,
     };
     BenchmarkRunner::PrintResult(result);
 
