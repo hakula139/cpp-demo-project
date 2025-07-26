@@ -1,6 +1,6 @@
 # Modern C++ Features Demo Project
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com)
+[![Build & Test](https://github.com/hakula139/cpp-demo-project/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/hakula139/cpp-demo-project/actions/workflows/build-and-test.yml)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://isocpp.org)
 [![CMake](https://img.shields.io/badge/CMake-3.23+-blue.svg)](https://cmake.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
