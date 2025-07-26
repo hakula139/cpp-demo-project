@@ -65,6 +65,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
+          echo "CC=clang" >>$GITHUB_ENV
           echo "CXX=clang++" >>$GITHUB_ENV
 
       - name: Install dependencies (Ubuntu & GCC ${{ env.GCC_VERSION }})
@@ -81,6 +82,7 @@ jobs:
 
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
+          echo "CC=gcc" >>$GITHUB_ENV
           echo "CXX=g++" >>$GITHUB_ENV
 
       - name: Install dependencies (macOS & LLVM ${{ env.LLVM_VERSION }})
@@ -95,6 +97,7 @@ jobs:
 
           LLVM_HOME=$(brew --prefix llvm@${{ env.LLVM_VERSION }})
           echo "$LLVM_HOME/bin" >>$GITHUB_PATH
+          echo "CC=$LLVM_HOME/bin/clang" >>$GITHUB_ENV
           echo "CXX=$LLVM_HOME/bin/clang++" >>$GITHUB_ENV
           echo "CPPFLAGS=-I$LLVM_HOME/include" >>$GITHUB_ENV
           echo "LDFLAGS=-L$LLVM_HOME/lib/c++ -L$LLVM_HOME/lib/unwind -lunwind" >>$GITHUB_ENV
@@ -110,6 +113,7 @@ jobs:
 
           GCC_HOME=$(brew --prefix gcc@${{ env.GCC_VERSION }})
           echo "$GCC_HOME/bin" >>$GITHUB_PATH
+          echo "CC=$GCC_HOME/bin/gcc-${{ env.GCC_VERSION }}" >>$GITHUB_ENV
           echo "CXX=$GCC_HOME/bin/g++-${{ env.GCC_VERSION }}" >>$GITHUB_ENV
           echo "CPPFLAGS=-I$GCC_HOME/include" >>$GITHUB_ENV
           echo "LDFLAGS=-L$GCC_HOME/lib/gcc/${{ env.GCC_VERSION }}" >>$GITHUB_ENV

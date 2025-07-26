@@ -89,9 +89,12 @@ This project demonstrates practical applications of:
 
 ### Prerequisites
 
-- **C++23 compatible compiler** ([GCC] 14+ / [Clang] 20+)
+- **C++23 compatible compiler** ([Clang] 20+ / [GCC] 14+)
 - **[CMake] 3.23+**
 - **[Ninja] build system** (required for CMake - faster builds than Make)
+
+It's recommended to use a development container for the best development experience.
+See [`.devcontainer/README.md`](.devcontainer/README.md) for more details.
 
 [GCC]: https://gcc.gnu.org
 [Clang]: https://clang.llvm.org
