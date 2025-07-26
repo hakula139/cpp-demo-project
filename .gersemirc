@@ -2,8 +2,8 @@ indent: 2
 line_length: 100
 list_expansion: favour-expansion
 definitions:
-  - cmake/ModuleHelpers.cmake
-  - cmake/Dependencies.cmake
   - cmake/CompilerWarnings.cmake
+  - cmake/Dependencies.cmake
+  - cmake/ModuleHelpers.cmake
   - cmake/StaticAnalysis.cmake
 warn_about_unknown_commands: true
