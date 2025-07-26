@@ -31,8 +31,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
-          - macos-latest
+          - ubuntu-24.04
+          - macos-15
         compiler:
           - gcc
           - clang
@@ -73,6 +73,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
+          sudo apt-cache search gcc
           sudo apt-get install -y \
             build-essential \
             cmake \
