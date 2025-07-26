@@ -34,8 +34,8 @@ jobs:
           - ubuntu-24.04
           - macos-15
         compiler:
-          - gcc
           - clang
+          - gcc
         preset:
           - debug-strict
           - release-strict
@@ -116,7 +116,7 @@ jobs:
 
       - name: Configure with preset
         run: |
-          cmake --preset ${{ matrix.preset }}
+          cmake --preset ${{ matrix.preset }} -DENABLE_CLANG_TIDY=${{ matrix.compiler == 'clang' }}
 
       - name: Build with preset
         run: |
