@@ -99,7 +99,7 @@ If C++23 features don't work:
 2. **Check standard**: Use `-std=c++23` flag explicitly
 
 3. **Library support**: Some C++23 features may not be supported by the compiler yet
-   - Check [C++23 compiler support](https://en.cppreference.com/w/cpp/23.html) for more information
+   - Check [Compiler support for C++23](https://en.cppreference.com/w/cpp/compiler_support/23) for more information
 
 ### VS Code Integration
 
