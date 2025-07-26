@@ -65,15 +65,13 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
-
           echo "CXX=clang++" >>$GITHUB_ENV
 
       - name: Install dependencies (Ubuntu & GCC ${{ env.GCC_VERSION }})
         if: runner.os == 'Linux' && matrix.compiler == 'gcc'
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y
           sudo apt-get update
-          sudo apt-cache search gcc
           sudo apt-get install -y \
             build-essential \
             cmake \
@@ -83,7 +81,6 @@ jobs:
 
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
-
           echo "CXX=g++" >>$GITHUB_ENV
 
       - name: Install dependencies (macOS & LLVM ${{ env.LLVM_VERSION }})
