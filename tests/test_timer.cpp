@@ -140,31 +140,22 @@ TEST_CASE("ScopedTimer basic functionality", "[timing][scoped_timer]") {
 
 TEST_CASE("BenchmarkRunner functionality", "[timing][benchmark]") {
   SECTION("Basic benchmarking") {
-    auto simple_task = []() {
-      volatile int sum = 0;
-      for (int i = 0; i < 100; ++i) {
-        sum += i;
-      }
-      return sum;
-    };
+    auto task = []() { std::this_thread::sleep_for(std::chrono::milliseconds(50)); };
 
-    auto result = BenchmarkRunner::Benchmark("Simple task", simple_task, 10);
+    auto result = BenchmarkRunner::Benchmark("Simple task", task, 10);
 
     REQUIRE(result.name == "Simple task");
     REQUIRE(result.iterations == 10);
-    REQUIRE(result.total_ns > 0);
-    REQUIRE(result.avg_ns > 0);
-    REQUIRE(result.min_ns > 0);
-    REQUIRE(result.max_ns > 0);
+    REQUIRE(result.total_ns >= 500'000'000);
+    REQUIRE(result.avg_ns >= 50'000'000);
+    REQUIRE(result.min_ns >= 50'000'000);
+    REQUIRE(result.max_ns >= 50'000'000);
     REQUIRE(result.min_ns <= result.avg_ns);
     REQUIRE(result.max_ns >= result.avg_ns);
   }
 
   SECTION("Benchmark with different iteration counts") {
-    auto task = []() {
-      volatile int x = 42;
-      x = x + 1;
-    };
+    auto task = []() { std::this_thread::sleep_for(std::chrono::milliseconds(50)); };
 
     auto result1 = BenchmarkRunner::Benchmark("Task 1", task, 5);
     auto result2 = BenchmarkRunner::Benchmark("Task 2", task, 20);
