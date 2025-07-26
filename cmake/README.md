@@ -89,4 +89,4 @@ This build system follows modern CMake best practices:
 3. **Generator expressions**: For build-type specific configurations
 4. **Proper installation**: With package config files for easy consumption
 5. **Modular structure**: Each component is a separate library
-6. **Namespace aliases**: All targets have `${PROJECT_PREFIX}::` namespaced aliases
+6. **Namespace aliases**: All targets have `${PROJECT_NAME}::` namespaced aliases
