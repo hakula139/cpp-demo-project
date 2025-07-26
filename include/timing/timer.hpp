@@ -16,7 +16,7 @@
 #include <string>
 #include <string_view>
 
-#include "concepts/concepts.hpp"
+#include "concepts/callable_concepts.hpp"
 
 namespace cpp_features::timing {
 
@@ -272,10 +272,10 @@ class ScopedTimer {
  * std::println("Function took {}ns", elapsed);
  * @endcode
  */
-template <concepts::VoidNullaryCallable Func>
+template <concepts::NullaryCallable Func>
 [[nodiscard]] auto TimeFunction(Func &&func) -> std::int64_t {
   Timer timer;
-  func();
+  static_cast<void>(func());
   timer.Stop();
   return timer.GetElapsed<std::chrono::nanoseconds>();
 }

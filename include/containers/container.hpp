@@ -24,7 +24,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "concepts/concepts.hpp"
+#include "concepts/callable_concepts.hpp"
+#include "concepts/container_concepts.hpp"
+#include "concepts/utility_concepts.hpp"
 
 namespace cpp_features::containers {
 

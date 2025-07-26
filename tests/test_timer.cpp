@@ -145,6 +145,7 @@ TEST_CASE("BenchmarkRunner functionality", "[timing][benchmark]") {
       for (int i = 0; i < 100; ++i) {
         sum += i;
       }
+      return sum;
     };
 
     auto result = BenchmarkRunner::Benchmark("Simple task", simple_task, 10);

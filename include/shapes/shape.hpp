@@ -14,7 +14,7 @@
 #include <string>
 #include <string_view>
 
-#include "concepts/concepts.hpp"
+#include "concepts/arithmetic_concepts.hpp"
 
 namespace cpp_features::shapes {
 

@@ -12,6 +12,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "concepts/callable_concepts.hpp"
 #include "custom_exception.hpp"
 
 namespace cpp_features::exceptions {
@@ -48,10 +49,10 @@ class ExceptionHandler {
    * @param func Function to execute safely
    * @return true if execution succeeded, false if exception was caught
    */
-  template <typename Func>
+  template <concepts::NullaryCallable Func>
   static auto SafeExecute(Func &&func) noexcept -> bool {
     try {
-      func();
+      static_cast<void>(func());
       return true;
     } catch (const BaseException &e) {
       LogException(e);
@@ -77,7 +78,7 @@ class ExceptionHandler {
    * @param default_value Value to return if exception occurs
    * @return Function result on success, default_value on exception
    */
-  template <typename Func, typename DefaultValue>
+  template <concepts::NullaryCallable Func, typename DefaultValue>
   static auto SafeExecuteWithDefault(Func &&func, DefaultValue &&default_value)
       -> std::decay_t<DefaultValue> {
     try {

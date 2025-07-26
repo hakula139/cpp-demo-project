@@ -12,7 +12,7 @@
 #include <memory>
 #include <string_view>
 
-#include "concepts/concepts.hpp"
+#include "concepts/arithmetic_concepts.hpp"
 #include "exceptions/custom_exception.hpp"
 #include "shapes/shape.hpp"
 

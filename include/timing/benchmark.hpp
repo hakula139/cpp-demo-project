@@ -16,7 +16,7 @@
 #include <vector>
 
 #include "algorithms/stl.hpp"
-#include "concepts/concepts.hpp"
+#include "concepts/callable_concepts.hpp"
 #include "timer.hpp"
 
 namespace cpp_features::timing {
@@ -80,7 +80,7 @@ class BenchmarkRunner {
    * }, 500);
    * @endcode
    */
-  template <concepts::VoidNullaryCallable Func>
+  template <concepts::NullaryCallable Func>
   [[nodiscard]] static auto Benchmark(std::string_view name, Func &&func,
                                       std::size_t iterations = 1000) -> BenchmarkResult {
     std::vector<std::int64_t> times;
@@ -150,11 +150,11 @@ class BenchmarkRunner {
  * }, 100);
  * @endcode
  */
-template <concepts::VoidNullaryCallable Func>
+template <concepts::NullaryCallable Func>
 void ProfileFunction(std::string_view name, Func &&func, std::size_t iterations = 1) {
   if (iterations == 1) {
     ScopedTimer timer{name};
-    func();
+    static_cast<void>(func());
   } else if (iterations > 1) {
     auto result = BenchmarkRunner::Benchmark(name, std::forward<Func>(func), iterations);
     BenchmarkRunner::PrintResult(result);
