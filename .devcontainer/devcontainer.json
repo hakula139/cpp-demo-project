@@ -49,7 +49,7 @@
         "files.insertFinalNewline": true,
         "files.trimFinalNewlines": true,
         "markdownlint.config": {
-          "extends": ".markdownlint.json"
+          "extends": ".markdownlint.yaml"
         }
       },
       "extensions": [

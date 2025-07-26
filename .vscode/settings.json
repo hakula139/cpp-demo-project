@@ -38,6 +38,6 @@
   "files.trimFinalNewlines": true,
   "git.ignoreLimitWarning": true,
   "markdownlint.config": {
-    "extends": ".markdownlint.json"
+    "extends": ".markdownlint.yaml"
   }
 }
