@@ -256,7 +256,8 @@ class Container {
   /**
    * @brief Get a filtered view of elements
    *
-   * @param predicate Function that returns true for elements to include
+   * @tparam Predicate The type of the predicate function. Must satisfy PredicateFor<T> concept.
+   * @param predicate The predicate function that returns true for elements to include.
    * @return A ranges view containing only elements that satisfy the predicate
    *
    * Returns a lazy-evaluated view that contains only elements for which the predicate returns true.
@@ -265,8 +266,8 @@ class Container {
    * auto even_numbers = container.GetFilteredView([](int n) { return n % 2 == 0; });
    * @endcode
    */
-  [[nodiscard]] auto GetFilteredView(std::function<bool(const T &)> predicate) const
-      -> std::ranges::view auto {
+  template <cpp_features::concepts::PredicateFor<T> Predicate>
+  [[nodiscard]] auto GetFilteredView(Predicate predicate) const -> std::ranges::view auto {
     return data_ | std::views::filter(predicate);
   }
 

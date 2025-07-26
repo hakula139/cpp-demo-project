@@ -198,6 +198,47 @@ TEST_CASE("TimerCallback concept", "[concepts][callable][timer]") {
   }
 }
 
+template <typename T, PredicateFor<T> Predicate>
+auto TestPredicateFor(const T &value, Predicate predicate) -> bool {
+  return predicate(value);
+}
+
+TEST_CASE("PredicateFor concept", "[concepts][callable][predicate]") {
+  SECTION("Valid predicates") {
+    REQUIRE(PredicateFor<decltype([](const int &n) { return n % 2 == 0; }), int>);
+    REQUIRE(PredicateFor<decltype([](const int &n) { return n; }), int>);
+    REQUIRE(PredicateFor<decltype([](int n) { return n > 0; }), int>);
+    REQUIRE(PredicateFor<std::function<bool(const int &)>, int>);
+    REQUIRE(PredicateFor<std::function<bool(const std::string &)>, std::string>);
+
+    auto even_predicate = [](const int &n) { return n % 2 == 0; };
+    auto string_predicate = [](const std::string &s) { return !s.empty(); };
+
+    REQUIRE(TestPredicateFor(4, even_predicate));
+    REQUIRE_FALSE(TestPredicateFor(3, even_predicate));
+    REQUIRE(TestPredicateFor(std::string{"hello"}, string_predicate));
+  }
+
+  SECTION("Invalid predicates") {
+    // Wrong parameter type
+    REQUIRE_FALSE(PredicateFor<decltype([](const std::string &) { return true; }), int>);
+    REQUIRE_FALSE(PredicateFor<decltype([](const int &) { return true; }), std::string>);
+
+    // Wrong return type
+    REQUIRE_FALSE(PredicateFor<decltype([](const int &) { return std::string{""}; }), int>);
+    REQUIRE_FALSE(PredicateFor<decltype([](const int &) -> void {}), int>);
+
+    // Wrong arity
+    REQUIRE_FALSE(PredicateFor<decltype([]() { return true; }), int>);
+    REQUIRE_FALSE(PredicateFor<decltype([](const int &, const int &) { return true; }), int>);
+
+    // Not callable
+    REQUIRE_FALSE(PredicateFor<int, int>);
+    REQUIRE_FALSE(PredicateFor<std::string, int>);
+    REQUIRE_FALSE(PredicateFor<void *, int>);
+  }
+}
+
 template <IterableContainer T>
 auto TestIterableContainer(const T &container) -> std::size_t {
   std::size_t count = 0;
