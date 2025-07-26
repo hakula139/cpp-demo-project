@@ -40,15 +40,6 @@ Supported Compilers:
   - Clang / LLVM - Comprehensive warning set including thread safety analysis
   - GCC - Standard warning set with GCC-specific checks
 
-Warning Categories Covered:
-  - Type conversion and casting warnings
-  - Uninitialized variable detection
-  - Unreachable code detection
-  - Thread safety analysis (Clang only)
-  - Format string security
-  - Shadow variable detection
-  - And many more...
-
 Example:
   include(CompilerWarnings)
   add_library(my_lib src.cpp)
@@ -72,7 +63,6 @@ function(set_project_warnings PROJECT_NAME)
     -Wold-style-cast # Warn for C-style casts
     -Woverloaded-virtual # Warn if you overload (not override) a virtual function
     -Wpedantic # Warn if non-standard C++ is used
-    -Wshadow # Warn the user if a variable declaration shadows one from a parent context
     -Wsign-conversion # Warn on sign conversions
     -Wunused # Warn on anything being unused
   )
@@ -95,6 +85,7 @@ function(set_project_warnings PROJECT_NAME)
     -Wredundant-move # Warn about redundant std::move calls
     -Wself-assign # Warn about self-assignment
     -Wself-move # Warn about self-move
+    -Wshadow # Warn the user if a variable declaration shadows one from a parent context
     -Wshift-sign-overflow # Warn about shift operations that overflow
     -Wsizeof-array-argument # Warn about sizeof on array function parameters
     -Wstring-conversion # Warn about string literal to bool conversion

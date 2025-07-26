@@ -30,13 +30,5 @@ target_link_libraries(
     Catch2::Catch2WithMain
 )
 
-# Suppress warnings from Catch2
-target_compile_options(
-  ${PROJECT_NAME}_tests
-  PRIVATE
-    -Wno-shadow
-    -Wno-error=shadow
-)
-
 # Discover and register tests with CTest
 catch_discover_tests(${PROJECT_NAME}_tests)
