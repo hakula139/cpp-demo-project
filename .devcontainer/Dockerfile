@@ -6,6 +6,7 @@ ENV GCC_VERSION=14
 
 # Install common dependencies
 RUN apt-get update && apt-get install -y \
+  software-properties-common \
   build-essential \
   catch2 \
   cmake \
