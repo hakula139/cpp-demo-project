@@ -1,0 +1,83 @@
+{
+  "name": "Dev Environment",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "C_Cpp.autocomplete": "disabled",
+        "C_Cpp.errorSquiggles": "disabled",
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "clangd.arguments": [
+          "--background-index",
+          "--clang-tidy",
+          "--compile-commands-dir=${workspaceFolder}/build/debug",
+          "--completion-style=detailed",
+          "--enable-config",
+          "--header-insertion=iwyu",
+          "--pch-storage=memory",
+          "--pretty"
+        ],
+        "clangd.detectExtensionConflicts": true,
+        "clangd.onConfigChanged": "restart",
+        "clangd.restartAfterCrash": true,
+        "clangd.serverCompletionRanking": true,
+        "cmake.automaticReconfigure": true,
+        "cmake.configureOnEdit": true,
+        "cmake.configureOnOpen": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.clangd": "explicit",
+          "source.organizeImports": "explicit"
+        },
+        "editor.detectIndentation": false,
+        "editor.semanticTokenColorCustomizations": {
+          "enabled": true
+        },
+        "editor.suggest.insertMode": "replace",
+        "editor.tabSize": 2,
+        "files.associations": {
+          "*.cpp": "cpp",
+          "*.h": "cpp",
+          "*.hpp": "cpp"
+        },
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "markdownlint.config": {
+          "extends": ".markdownlint.json"
+        }
+      },
+      "extensions": [
+        "KylinIdeTeam.kylin-clangd",
+        "vadimcn.vscode-lldb",
+        "KylinIdeTeam.kylin-cmake-tools",
+        "KylinIdeTeam.cmake-intellisence",
+        "cschlosser.doxdocgen",
+        "yzhang.markdown-all-in-one",
+        "shd101wyy.markdown-preview-enhanced",
+        "DavidAnson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "usernamehw.errorlens",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "CC": "clang",
+    "CXX": "clang++"
+  },
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+  "mounts": [],
+  "forwardPorts": [],
+  "portsAttributes": {},
+  "otherPortsAttributes": {
+    "onAutoForward": "silent"
+  },
+  "shutdownAction": "none",
+  "userEnvProbe": "loginInteractiveShell"
+}
