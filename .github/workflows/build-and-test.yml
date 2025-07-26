@@ -16,6 +16,10 @@ on:
         required: true
         default: 'master'
 
+env:
+  LLVM_VERSION: 20
+  GCC_VERSION: 14
+
 permissions:
   contents: read
 
@@ -30,8 +34,8 @@ jobs:
           - ubuntu-latest
           - macos-latest
         compiler:
-          - g++
-          - clang++
+          - gcc
+          - clang
         preset:
           - debug-strict
           - release-strict
@@ -42,12 +46,12 @@ jobs:
         with:
           ref: ${{ inputs.branch || '' }}
 
-      - name: Install dependencies (Ubuntu & LLVM 20)
-        if: runner.os == 'Linux' && matrix.compiler == 'clang++'
+      - name: Install dependencies (Ubuntu & LLVM ${{ env.LLVM_VERSION }})
+        if: runner.os == 'Linux' && matrix.compiler == 'clang'
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x ./llvm.sh
-          sudo ./llvm.sh 20
+          sudo ./llvm.sh ${{ env.LLVM_VERSION }}
 
           sudo apt-get update
           sudo apt-get install -y \
@@ -56,16 +60,16 @@ jobs:
             cmake \
             cppcheck \
             ninja-build \
-            clang-tidy-20
+            clang-tidy-${{ env.LLVM_VERSION }}
 
-          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 2000
-          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 2000
-          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-20 2000
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${{ env.LLVM_VERSION }} ${{ env.LLVM_VERSION }}00
 
           echo "CXX=clang++" >>$GITHUB_ENV
 
-      - name: Install dependencies (Ubuntu & GCC 14)
-        if: runner.os == 'Linux' && matrix.compiler == 'g++'
+      - name: Install dependencies (Ubuntu & GCC ${{ env.GCC_VERSION }})
+        if: runner.os == 'Linux' && matrix.compiler == 'gcc'
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
@@ -75,44 +79,44 @@ jobs:
             cmake \
             cppcheck \
             ninja-build \
-            gcc-14
+            gcc-${{ env.GCC_VERSION }}
 
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 1400
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 1400
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GCC_VERSION }} ${{ env.GCC_VERSION }}00
 
           echo "CXX=g++" >>$GITHUB_ENV
 
-      - name: Install dependencies (macOS & LLVM 20)
-        if: runner.os == 'macOS' && matrix.compiler == 'clang++'
+      - name: Install dependencies (macOS & LLVM ${{ env.LLVM_VERSION }})
+        if: runner.os == 'macOS' && matrix.compiler == 'clang'
         run: |
-          brew install \
+          brew install --quiet \
             catch2 \
             cmake \
             cppcheck \
             ninja \
-            llvm@20
+            llvm@${{ env.LLVM_VERSION }}
 
-          LLVM_HOME=$(brew --prefix llvm@20)
+          LLVM_HOME=$(brew --prefix llvm@${{ env.LLVM_VERSION }})
           echo "$LLVM_HOME/bin" >>$GITHUB_PATH
           echo "CXX=$LLVM_HOME/bin/clang++" >>$GITHUB_ENV
           echo "CPPFLAGS=-I$LLVM_HOME/include" >>$GITHUB_ENV
           echo "LDFLAGS=-L$LLVM_HOME/lib/c++ -L$LLVM_HOME/lib/unwind -lunwind" >>$GITHUB_ENV
 
-      - name: Install dependencies (macOS & GCC 14)
-        if: runner.os == 'macOS' && matrix.compiler == 'g++'
+      - name: Install dependencies (macOS & GCC ${{ env.GCC_VERSION }})
+        if: runner.os == 'macOS' && matrix.compiler == 'gcc'
         run: |
-          brew install \
+          brew install --quiet \
             catch2 \
             cmake \
             cppcheck \
             ninja \
-            gcc@14
+            gcc@${{ env.GCC_VERSION }}
 
-          GCC_HOME=$(brew --prefix gcc@14)
+          GCC_HOME=$(brew --prefix gcc@${{ env.GCC_VERSION }})
           echo "$GCC_HOME/bin" >>$GITHUB_PATH
-          echo "CXX=$GCC_HOME/bin/g++-14" >>$GITHUB_ENV
+          echo "CXX=$GCC_HOME/bin/g++-${{ env.GCC_VERSION }}" >>$GITHUB_ENV
           echo "CPPFLAGS=-I$GCC_HOME/include" >>$GITHUB_ENV
-          echo "LDFLAGS=-L$GCC_HOME/lib/gcc/14" >>$GITHUB_ENV
+          echo "LDFLAGS=-L$GCC_HOME/lib/gcc/${{ env.GCC_VERSION }}" >>$GITHUB_ENV
 
       - name: Configure with preset
         run: |
