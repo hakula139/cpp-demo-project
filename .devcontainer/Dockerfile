@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
   curl \
   wget
 
-# Use mirror sources to speed up
-COPY sources.list.d /tmp/sources.list.d
+# Use mirror to speed up
+COPY apt/sources.list.d /tmp/sources.list.d
 RUN /tmp/sources.list.d/init.sh \
   && rm -rf /tmp/sources.list.d
 
@@ -39,11 +39,14 @@ RUN apt-get update && apt-get install -y \
 # Unminimize to restore human-friendly tools that are missing from a minimal install
 RUN yes | unminimize
 
-# Set locale
+# Generate locale
 RUN locale-gen en_US.UTF-8
 
 # Set zsh as default shell
 RUN chsh -s /bin/zsh
+
+# Use mirror to speed up
+COPY pip/pip.conf /root/.pip/pip.conf
 
 # Install Python
 RUN apt-get update && apt-get install -y \
