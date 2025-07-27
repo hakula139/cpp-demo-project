@@ -1,0 +1,41 @@
+# Ubuntu ports (for ARM64 and other non-x86 architectures)
+
+Types: deb
+URIs: https://mirrors.aliyun.com/ubuntu-ports
+Suites: noble noble-updates noble-backports
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+Types: deb-src
+URIs: https://mirrors.aliyun.com/ubuntu-ports
+Suites: noble noble-updates noble-backports
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# Ubuntu ports security
+
+Types: deb
+URIs: https://mirrors.aliyun.com/ubuntu-ports
+Suites: noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+Types: deb-src
+URIs: https://mirrors.aliyun.com/ubuntu-ports
+Suites: noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# Ubuntu ports proposed
+
+# Types: deb
+# URIs: https://mirrors.aliyun.com/ubuntu-ports
+# Suites: noble-proposed
+# Components: main restricted universe multiverse
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+# Types: deb-src
+# URIs: https://mirrors.aliyun.com/ubuntu-ports
+# Suites: noble-proposed
+# Components: main restricted universe multiverse
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg

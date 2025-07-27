@@ -70,6 +70,7 @@
     "CC": "clang",
     "CXX": "clang++"
   },
+  "remoteUser": "root",
   "postStartCommand": "bash .devcontainer/post-start.sh",
   "mounts": [],
   "forwardPorts": [],
