@@ -65,7 +65,7 @@ echo "========================================="
 echo ""
 
 # Verify compiler setup
-echo "🔧 Verifying compiler configuration..."
+echo "🛠 Verifying compiler configuration..."
 echo "CC: $CC ($(which $CC))"
 echo "CXX: $CXX ($(which $CXX))"
 echo ""
@@ -76,23 +76,23 @@ if command -v pre-commit &> /dev/null; then
   pre-commit install
   echo "✅ Pre-commit hooks installed!"
 else
-  echo "⚠️ Pre-commit not installed! Please install it manually."
+  echo "🚨 Pre-commit not installed! Please install it manually."
 fi
 echo ""
 
 # Test CMake configuration
 if command -v cmake &> /dev/null; then
-  echo "🏗️ Testing CMake configuration..."
+  echo "🔍 Testing CMake configuration..."
   cmake --list-presets=configure 2>/dev/null || echo "No configure presets found"
   echo ""
 
   if cmake --workflow --preset debug-workflow; then
     echo "✅ CMake configuration successful!"
   else
-    echo "⚠️ CMake configuration failed!"
+    echo "🚨 CMake configuration failed!"
   fi
 else
-  echo "⚠️ CMake not installed! Please install it manually."
+  echo "🚨 CMake not installed! Please install it manually."
 fi
 echo ""
 
