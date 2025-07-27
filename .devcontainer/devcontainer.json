@@ -1,13 +1,15 @@
 {
   "name": "Dev Environment",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+
   "customizations": {
     "vscode": {
       "settings": {
@@ -66,18 +68,14 @@
       ]
     }
   },
-  "remoteEnv": {
-    "CC": "clang",
-    "CXX": "clang++"
-  },
+
   "remoteUser": "root",
   "postStartCommand": "bash .devcontainer/post-start.sh",
-  "mounts": [],
   "forwardPorts": [],
   "portsAttributes": {},
   "otherPortsAttributes": {
     "onAutoForward": "silent"
   },
-  "shutdownAction": "none",
+  "shutdownAction": "stopCompose",
   "userEnvProbe": "loginInteractiveShell"
 }

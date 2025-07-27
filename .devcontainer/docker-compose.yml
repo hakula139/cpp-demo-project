@@ -1,0 +1,18 @@
+services:
+  devcontainer:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: devcontainer
+    command: ['sleep', 'infinity']
+    tty: true
+    network_mode: host
+    working_dir: /workspace
+
+    volumes:
+      - ..:/workspace:cached
+      - ${HOME}:/root:cached
+
+    environment:
+      CC: clang
+      CXX: clang++

@@ -70,6 +70,3 @@ RUN apt-get install -y \
   && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${LLVM_VERSION} ${LLVM_VERSION}00 \
   && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${LLVM_VERSION} ${LLVM_VERSION}00 \
   && update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-${LLVM_VERSION} ${LLVM_VERSION}00
-
-# Set working directory to workspace
-WORKDIR /workspaces/cpp-demo-project
