@@ -12,9 +12,9 @@ C++23 development environment based on Ubuntu 24.04 with LLVM 20 / GCC 14.
 | Ubuntu    | 24.04   | Latest stable Ubuntu release           |
 | LLVM      | 20.1    | Latest LLVM / Clang with C++23 support |
 | GCC       | 14.2    | Latest GCC compiler with C++23 support |
-| CMake     | 4.0     | Modern build system                    |
-| Ninja     | 1.13    | Fast build system backend              |
-| Catch2    | 3.9     | C++ testing framework                  |
+| CMake     | 3.28    | Modern build system                    |
+| Ninja     | 1.11    | Fast build system backend              |
+| Catch2    | 3.4     | C++ testing framework                  |
 
 ### Development Tools
 
