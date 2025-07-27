@@ -19,19 +19,28 @@ RUN /tmp/sources.list.d/init.sh \
 # Install common dependencies
 RUN apt-get update && apt-get install -y \
   unminimize \
+  sudo \
   software-properties-common \
+  locales \
   build-essential \
   cmake \
   ninja-build \
   cppcheck \
   catch2 \
+  fzf \
   git \
   htop \
   jq \
-  zsh
+  tree \
+  vim \
+  zsh \
+  autojump
 
 # Unminimize to restore human-friendly tools that are missing from a minimal install
 RUN yes | unminimize
+
+# Set locale
+RUN locale-gen en_US.UTF-8
 
 # Set zsh as default shell
 RUN chsh -s /bin/zsh
@@ -52,6 +61,7 @@ RUN add-apt-repository ppa:ubuntu-toolchain-r/ppa -y \
   && apt-get update && apt-get install -y \
   gcc-${GCC_VERSION} \
   g++-${GCC_VERSION} \
+  libunwind-dev \
   && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} ${GCC_VERSION}00 \
   && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} ${GCC_VERSION}00
 
