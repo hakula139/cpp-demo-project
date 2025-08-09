@@ -119,8 +119,8 @@ This function:
 
 Dependencies:
   - Git (for fetching from GitHub)
-  - Python 3.8+ development headers
-  - pybind11 v2.13.0 from https://github.com/pybind/pybind11.git
+  - Python 3.13+ development headers
+  - pybind11 v3.0.0 from https://github.com/pybind/pybind11.git
 
 Variables used:
   BUILD_PYTHON_BINDINGS - Must be ON to enable pybind11 setup
@@ -134,7 +134,6 @@ function(setup_pybind11_dependency)
     return()
   endif()
 
-  # Find Python first
   find_package(
     Python3
     COMPONENTS
@@ -142,6 +141,7 @@ function(setup_pybind11_dependency)
       Development
     QUIET
   )
+
   if(NOT Python3_FOUND)
     message(WARNING "Python3 not found. Python bindings will not be built.")
     return()
@@ -155,7 +155,7 @@ function(setup_pybind11_dependency)
     FetchContent_Declare(
       pybind11
       GIT_REPOSITORY https://github.com/pybind/pybind11.git
-      GIT_TAG v2.13.0
+      GIT_TAG v3.0.0
       GIT_SHALLOW TRUE
     )
 

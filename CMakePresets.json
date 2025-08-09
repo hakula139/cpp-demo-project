@@ -95,6 +95,60 @@
         "ENABLE_CPPCHECK": "ON",
         "WARNINGS_AS_ERRORS": "ON"
       }
+    },
+    {
+      "name": "debug-python",
+      "displayName": "Debug Configuration (Python Bindings)",
+      "description": "Debug build with Python bindings enabled",
+      "inherits": "debug",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "release-python",
+      "displayName": "Release Configuration (Python Bindings)",
+      "description": "Release build with Python bindings enabled",
+      "inherits": "release",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "debug-python-no-tests",
+      "displayName": "Debug Configuration (Python Bindings, No Tests & Examples)",
+      "description": "Debug build with Python bindings enabled, without tests and examples",
+      "inherits": "debug-no-tests",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "release-python-no-tests",
+      "displayName": "Release Configuration (Python Bindings, No Tests & Examples)",
+      "description": "Release build with Python bindings enabled, without tests and examples",
+      "inherits": "release-no-tests",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "debug-python-strict",
+      "displayName": "Debug Configuration (Python Bindings, Static Analysis + Strict Warnings)",
+      "description": "Debug build with Python bindings enabled, static analysis and warnings treated as errors",
+      "inherits": "debug-strict",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
+    },
+    {
+      "name": "release-python-strict",
+      "displayName": "Release Configuration (Python Bindings, Static Analysis + Strict Warnings)",
+      "description": "Release build with Python bindings enabled, static analysis and warnings treated as errors",
+      "inherits": "release-strict",
+      "cacheVariables": {
+        "BUILD_PYTHON_BINDINGS": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -138,6 +192,48 @@
       "displayName": "Release Build (Strict)",
       "description": "Build release configuration with strict warnings",
       "configurePreset": "release-strict",
+      "jobs": 0
+    },
+    {
+      "name": "debug-python",
+      "displayName": "Debug Build (Python Bindings)",
+      "description": "Build debug configuration with Python bindings",
+      "configurePreset": "debug-python",
+      "jobs": 0
+    },
+    {
+      "name": "release-python",
+      "displayName": "Release Build (Python Bindings)",
+      "description": "Build release configuration with Python bindings",
+      "configurePreset": "release-python",
+      "jobs": 0
+    },
+    {
+      "name": "debug-python-no-tests",
+      "displayName": "Debug Build (Python Bindings, No Tests & Examples)",
+      "description": "Build debug configuration with Python bindings, without tests and examples",
+      "configurePreset": "debug-python-no-tests",
+      "jobs": 0
+    },
+    {
+      "name": "release-python-no-tests",
+      "displayName": "Release Build (Python Bindings, No Tests & Examples)",
+      "description": "Build release configuration with Python bindings, without tests and examples",
+      "configurePreset": "release-python-no-tests",
+      "jobs": 0
+    },
+    {
+      "name": "debug-python-strict",
+      "displayName": "Debug Build (Python Bindings, Static Analysis + Strict Warnings)",
+      "description": "Build debug configuration with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "debug-python-strict",
+      "jobs": 0
+    },
+    {
+      "name": "release-python-strict",
+      "displayName": "Release Build (Python Bindings, Static Analysis + Strict Warnings)",
+      "description": "Build release configuration with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "release-python-strict",
       "jobs": 0
     }
   ],

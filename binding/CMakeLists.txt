@@ -1,7 +1,4 @@
-# Python bindings for cpp-demo-project
-# This directory contains pybind11 bindings for all C++ modules
-
-cmake_minimum_required(VERSION 3.23)
+# Python bindings
 
 # Ensure pybind11 is available
 if(NOT TARGET pybind11::pybind11)
@@ -14,13 +11,13 @@ endif()
 # Create the main Python module
 pybind11_add_module(cpp_features
   cpp_features.cpp
-  shapes_binding.cpp
-  containers_binding.cpp
   algorithms_binding.cpp
+  containers_binding.cpp
   exceptions_binding.cpp
   memory_binding.cpp
-  timing_binding.cpp
   random_binding.cpp
+  shapes_binding.cpp
+  timing_binding.cpp
 )
 
 # Link against all the required libraries

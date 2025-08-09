@@ -1,6 +1,6 @@
 # Tests CMakeLists.txt
 
-# Check if Catch2 is available
+# Ensure Catch2 is available
 if(NOT TARGET Catch2::Catch2WithMain)
   if(NOT COMMAND catch_discover_tests)
     message(
