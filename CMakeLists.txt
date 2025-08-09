@@ -22,6 +22,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # Options
 option(BUILD_TESTS "Build tests" ${IS_MAIN_PROJECT})
 option(BUILD_EXAMPLES "Build examples" ${IS_MAIN_PROJECT})
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(ENABLE_WARNINGS "Enable compiler warnings" ON)
 
 # macOS-specific fixes for Mach-O linker errors
@@ -115,6 +116,11 @@ endif()
 # Build examples if enabled
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)
+endif()
+
+# Build Python bindings if enabled
+if(BUILD_PYTHON_BINDINGS)
+  add_subdirectory(binding)
 endif()
 
 # Installation
