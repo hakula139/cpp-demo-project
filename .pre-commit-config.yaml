@@ -17,10 +17,18 @@ repos:
 
   # CMake formatting with gersemi
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.21.0
+    rev: 0.22.1
     hooks:
       - id: gersemi
         files: (\.cmake|CMakeLists\.txt)$
+
+  # Python formatting with black
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        files: \.py$
+        args: ['-S', '--line-length=100', '--target-version=py313']
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
