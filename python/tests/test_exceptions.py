@@ -299,7 +299,10 @@ class TestResultMapChaining:
     def test_result_map_chain_success(self) -> None:
         """Test chaining map operations on successful Result."""
         result = (
-            exceptions.Result.ok(5).map(lambda x: x * 2).map(lambda x: x + 3).map(lambda x: x // 2)
+            exceptions.Result.ok(5)
+            .map(lambda x: x * 2)
+            .map(lambda x: x + 3)
+            .map(lambda x: x // 2)
         )
 
         assert result.is_ok
@@ -313,7 +316,9 @@ class TestResultMapChaining:
                 raise ValueError('Too large')
             return x * 2
 
-        result = exceptions.Result.ok(5).map(lambda x: x * 3).map(might_fail)  # 15  # Should fail
+        result = (
+            exceptions.Result.ok(5).map(lambda x: x * 3).map(might_fail)
+        )  # 15  # Should fail
 
         assert result.is_err
 

@@ -274,4 +274,6 @@ class TestContainerIntegration:
 
         assert len(factory_container) == len(direct_container)
         assert list(factory_container) == list(direct_container)
-        assert factory_container.filter(lambda x: x > 3) == direct_container.filter(lambda x: x > 3)
+        assert factory_container.filter(lambda x: x > 3) == direct_container.filter(
+            lambda x: x > 3
+        )

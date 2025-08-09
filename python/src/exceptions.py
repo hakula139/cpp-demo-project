@@ -201,7 +201,9 @@ class Result(Generic[T]):
                 raise ValueError(f'Unsupported result type: {type(value)}')
 
     @staticmethod
-    def error(message: str, severity: ErrorSeverity = ErrorSeverity.ERROR) -> 'Result[Any]':
+    def error(
+        message: str, severity: ErrorSeverity = ErrorSeverity.ERROR
+    ) -> 'Result[Any]':
         """Create an error Result.
 
         Parameters

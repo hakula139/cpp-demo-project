@@ -380,7 +380,9 @@ class Normal(Distribution[float]):
         Standard deviation of the distribution
     """
 
-    def __init__(self, generator: RandomGenerator, mean: float = 0.0, stddev: float = 1.0):
+    def __init__(
+        self, generator: RandomGenerator, mean: float = 0.0, stddev: float = 1.0
+    ):
         super().__init__(generator)
         self.mean = mean
         self.stddev = stddev

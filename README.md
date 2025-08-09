@@ -54,7 +54,9 @@ This project serves as both a learning resource and a reference implementation f
     - [Build the project](#build-the-project)
     - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
-    - [Build Python bindings (optional)](#build-python-bindings-optional)
+    - [Build Python bindings](#build-python-bindings)
+    - [Run Python examples](#run-python-examples)
+    - [Run Python tests](#run-python-tests)
   - [CMake Presets](#cmake-presets)
     - [Configure Presets](#configure-presets)
     - [Build \& Test Presets](#build--test-presets)
@@ -73,10 +75,6 @@ This project serves as both a learning resource and a reference implementation f
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
   - [Pre-commit Configuration](#pre-commit-configuration)
-  - [Python Development](#python-development)
-    - [Testing](#testing)
-    - [Examples and Documentation](#examples-and-documentation)
-    - [Code Quality](#code-quality)
 - [📄 License](#-license)
 
 ## 🎓 What You'll Learn
@@ -142,19 +140,25 @@ cmake --build --preset release
 ctest --preset release
 ```
 
-#### Build Python bindings (optional)
+#### Build Python bindings
 
 ```bash
-cmake --preset release -DBUILD_PYTHON_BINDINGS=ON
-cmake --build --preset release
+cmake --preset release-python
+cmake --build --preset release-python
+```
 
-# Test Python bindings (optional)
-cd python_tests
-python -m pytest --verbose
+#### Run Python examples
 
-# Run Python examples (optional)
-python python_examples/basic_usage.py
-python python_examples/advanced_usage.py
+```bash
+python3 python/examples/basic_usage.py
+python3 python/examples/advanced_usage.py
+```
+
+#### Run Python tests
+
+```bash
+# pip3 install pytest
+pytest python/tests -v
 ```
 
 ### CMake Presets
@@ -163,14 +167,20 @@ This project uses CMake presets for streamlined build configuration.
 
 #### Configure Presets
 
-| Preset             | Description                                                       |
-| ------------------ | ----------------------------------------------------------------- |
-| `debug`            | Debug build with symbols and no optimization                      |
-| `release`          | Release build with full optimization                              |
-| `debug-no-tests`   | Debug build without tests and examples (faster config)            |
-| `release-no-tests` | Release build without tests and examples (faster config)          |
-| `debug-strict`     | Debug build with static analysis and warnings treated as errors   |
-| `release-strict`   | Release build with static analysis and warnings treated as errors |
+| Preset                    | Description                                                       |
+| ------------------------- | ----------------------------------------------------------------- |
+| `debug`                   | Debug build with symbols and no optimization                      |
+| `release`                 | Release build with full optimization                              |
+| `debug-no-tests`          | Debug build without tests and examples (faster config)            |
+| `release-no-tests`        | Release build without tests and examples (faster config)          |
+| `debug-strict`            | Debug build with static analysis and warnings treated as errors   |
+| `release-strict`          | Release build with static analysis and warnings treated as errors |
+| `debug-python`            | Debug build with Python bindings                                  |
+| `release-python`          | Release build with Python bindings                                |
+| `debug-python-no-tests`   | Debug build with Python bindings and no tests and examples        |
+| `release-python-no-tests` | Release build with Python bindings and no tests and examples      |
+| `debug-python-strict`     | Debug build with Python bindings and strict warnings              |
+| `release-python-strict`   | Release build with Python bindings and strict warnings            |
 
 #### Build & Test Presets
 
@@ -212,13 +222,6 @@ cmake --workflow --preset release-workflow  # Complete release cycle
 
 ### Build Options
 
-| Option                  | Description                        | Default               |
-|-------------------------|------------------------------------|-----------------------|
-| `BUILD_TESTS`           | Build test suite                   | `ON` (main project)   |
-| `BUILD_EXAMPLES`        | Build example applications         | `ON` (main project)   |
-| `BUILD_PYTHON_BINDINGS`| Build Python bindings with pybind11| `OFF`                |
-| `ENABLE_WARNINGS`       | Enable compiler warnings           | `ON`                  |
-
 See [`cmake/README.md`](cmake/README.md#options) for additional build options.
 
 ### Pre-commit Setup (Recommended)
@@ -253,6 +256,7 @@ pre-commit run --all-files
   - Checks for added large files
 - **clang-format**: Formats C++ code according to the project style
 - **gersemi**: Formats CMake files with consistent indentation
+- **black**: Formats Python code with consistent style
 - **markdownlint-cli2**: Lints Markdown files with consistent formatting
 
 The hooks will run automatically on `git commit` and prevent commits with formatting issues.
@@ -275,6 +279,7 @@ auto main() -> int {
   Container<int> numbers{42, 17, 89, 3, 56};
   std::println("Original: {}", numbers);
 
+  // Sort the container in place
   SortContainer(numbers);
   std::println("Sorted: {}", numbers);
 
@@ -289,115 +294,80 @@ auto main() -> int {
 ### Python Usage
 
 ```python
-from cpp_features import shapes, containers, algorithms
+from cpp_features import algorithms, containers, shapes
 
-# Create and use shapes
-circle = shapes.create_shape("circle", 5.0)
-rectangle = shapes.create_shape("rectangle", 4.0, 3.0)
-
-print(f"Circle area: {circle.get_area():.2f}")
-print(f"Rectangle area: {rectangle.get_area():.2f}")
-
-# Use enhanced containers
+# Use C++ containers
 container = containers.create_container([1, 3, 2, 5, 4])
+print(f'Original: {list(container)}')
+
+# Sort the container in place
 algorithms.sort_inplace(container)
-print(f"Sorted: {list(container)}")
+print(f'Sorted: {list(container)}')
 
-# Functional programming with modern Python features
-from cpp_features.algorithms import functional_chain
-
-result = (functional_chain([1, 2, 3, 4, 5, 6])
-          .filter(lambda x: x % 2 == 0)
-          .map(lambda x: x * x)
-          .collect())
-print(f"Even squares: {result}")  # [4, 16, 36]
+# Create and use shapes with validation
+circle = shapes.create_shape(shapes.ShapeType.CIRCLE, 5.0)
+print(f'Area: {circle.get_area():.2f}, Perimeter: {circle.get_perimeter():.2f}')
 ```
 
 ## 📁 Project Structure
 
 ```text
 cpp-demo-project/
-├── .github/                    # GitHub Actions configuration
-│   └── workflows/              # GitHub Actions workflows
-├── .vscode/                    # VS Code configuration
-│   ├── launch.json             # VS Code launch configuration
-│   ├── settings.json           # VS Code settings
-│   └── tasks.json              # VS Code tasks
-├── binding/                    # Python bindings using pybind11
-│   ├── CMakeLists.txt          # Python bindings build configuration
-│   ├── cpp_features.cpp        # Main pybind11 module
-│   ├── shapes_binding.cpp      # Shapes module bindings
-│   ├── containers_binding.cpp  # Containers module bindings
-│   ├── algorithms_binding.cpp  # Algorithms module bindings
-│   ├── exceptions_binding.cpp  # Exceptions module bindings
-│   ├── memory_binding.cpp      # Memory module bindings
-│   ├── timing_binding.cpp      # Timing module bindings
-│   └── random_binding.cpp      # Random module bindings
-├── build/                      # Build output (generated by CMake)
-│   ├── debug/                  # Debug build output
-│   ├── release/                # Release build output
+├── .github/                     # GitHub Actions configuration
+│   └── workflows/               # GitHub Actions workflows
+├── .vscode/                     # VS Code configuration
+│   ├── launch.json              # VS Code launch configuration
+│   ├── settings.json            # VS Code settings
+│   └── tasks.json               # VS Code tasks
+├── build/                       # Build output (generated by CMake)
+│   ├── debug/                   # Debug build output
+│   ├── release/                 # Release build output
 │   └── [other presets]
-├── cmake/                      # CMake modules and utilities
-│   ├── CompilerWarnings.cmake  # Compiler warning configuration
-│   ├── Dependencies.cmake      # External dependencies configuration
-│   ├── ModuleHelpers.cmake     # Module helper functions
-│   ├── StaticAnalysis.cmake    # Static analysis tools
-│   ├── config.cmake.in         # Package configuration
-│   └── README.md               # CMake modules documentation
-├── include/                    # Public header files
-│   ├── algorithms/             # STL algorithm wrappers with concepts
-│   ├── concepts/               # Custom concepts and type traits
-│   ├── containers/             # Modern container wrapper with ranges support
-│   ├── exceptions/             # Custom exception hierarchy and Result type
-│   ├── memory/                 # Resource management and RAII utilities
-│   ├── random/                 # Type-safe random number generation
-│   ├── shapes/                 # Polymorphic shapes with factory functions
-│   └── timing/                 # Performance measurement and benchmarking
-├── python/                     # Python wrapper modules
-│   ├── __init__.py             # Package initialization
-│   ├── shapes.py               # Enhanced shapes module with Python 3.13 features
-│   ├── containers.py           # Enhanced containers module
-│   ├── algorithms.py           # Functional programming utilities
-│   ├── exceptions.py           # Result types and error handling
-│   ├── memory.py               # RAII and resource management
-│   ├── timing.py               # Benchmarking and timing utilities
-│   └── random.py               # Enhanced random number generation
-├── src/                        # Source implementation files
-│   ├── CMakeLists.txt          # Components configuration
-│   └── [mirrors include structure]
-├── binding/                    # pybind11 C++ binding files
-│   ├── CMakeLists.txt          # Python bindings configuration
-│   ├── cpp_features.cpp        # Main pybind11 module
-│   └── [module]_binding.cpp    # Individual module bindings
-├── python/                     # Python wrapper modules
-│   ├── __init__.py             # Package initialization
-│   ├── shapes.py               # Enhanced shape functionality
-│   ├── containers.py           # Pythonic container wrappers
-│   ├── algorithms.py           # Functional programming utilities
-│   ├── exceptions.py           # Result types and error handling
-│   ├── memory.py               # RAII and resource management
-│   ├── timing.py               # High-resolution timing utilities
-│   └── random.py               # Enhanced random number generation
-├── python_tests/               # Python test suite using pytest
-│   ├── __init__.py             # Test package initialization
-│   ├── conftest.py             # pytest configuration and fixtures
-│   └── test_[module].py        # Comprehensive module tests
-├── python_examples/            # Python usage examples
-│   ├── README.md               # Examples documentation
-│   ├── basic_usage.py          # Fundamental usage patterns
-│   └── advanced_usage.py       # Advanced and real-world examples
-├── examples/                   # C++ usage examples and demonstrations
-├── tests/                      # C++ test suite using Catch2 v3
-├── .clang-format               # clang-format configuration (for C++ code formatting)
-├── .clang-tidy                 # clang-tidy configuration (for static analysis)
-├── .clangd                     # clangd configuration (for code completion)
-├── .gersemirc                  # gersemi configuration (for CMake code formatting)
-├── .markdownlint.yaml          # markdownlint configuration (for Markdown formatting)
-├── .pre-commit-config.yaml     # pre-commit hooks configuration
-├── CMakeLists.txt              # Main project configuration
-├── CMakePresets.json           # CMake presets configuration
-├── LICENSE                     # MIT License
-└── README.md                   # This file
+├── cmake/                       # CMake modules and utilities
+│   ├── CompilerWarnings.cmake   # Compiler warning configuration
+│   ├── Dependencies.cmake       # External dependencies configuration
+│   ├── ModuleHelpers.cmake      # Module helper functions
+│   ├── StaticAnalysis.cmake     # Static analysis tools
+│   ├── config.cmake.in          # Package configuration
+│   └── README.md                # CMake modules documentation
+├── include/                     # Public C++ header files
+│   ├── algorithms/              # STL algorithm wrappers with concepts
+│   ├── concepts/                # Custom concepts and type traits
+│   ├── containers/              # Modern container wrapper with ranges support
+│   ├── exceptions/              # Custom exception hierarchy and Result type
+│   ├── memory/                  # Resource management and RAII utilities
+│   ├── random/                  # Type-safe random number generation
+│   ├── shapes/                  # Polymorphic shapes with factory functions
+│   └── timing/                  # Performance measurement and benchmarking
+├── src/                         # C++ source implementation files
+│   ├── CMakeLists.txt           # Components configuration
+│   └── [module]/                # C++ source implementation for the component
+├── examples/                    # C++ usage examples and demonstrations
+│   └── [module]_example.cpp     # C++ usage examples for the component
+├── tests/                       # C++ test suite using Catch2 v3
+│   └── test_[module].cpp        # C++ unit tests for the component
+├── binding/                     # pybind11 C++ binding files
+│   ├── CMakeLists.txt           # Python bindings configuration
+│   ├── cpp_features.cpp         # Main pybind11 module
+│   └── [module]_binding.cpp     # Individual module bindings
+├── python/                      # Python wrapper modules
+│   ├── src/                     # Python source implementation files
+│   │   └── [module].py          # Python source implementation for the component
+│   ├── examples/                # Python usage examples and demonstrations
+│   │   └── [module]_example.py  # Python usage examples for the component
+│   └── tests/                   # Python test suite using pytest
+│       ├── conftest.py          # pytest configuration and common fixtures
+│       └── test_[module].py     # Python unit tests for the component
+├── .clang-format                # clang-format configuration (for C++ code formatting)
+├── .clang-tidy                  # clang-tidy configuration (for static analysis)
+├── .clangd                      # clangd configuration (for code completion)
+├── .gersemirc                   # gersemi configuration (for CMake code formatting)
+├── .markdownlint.yaml           # markdownlint configuration (for Markdown formatting)
+├── .pre-commit-config.yaml      # pre-commit hooks configuration
+├── CMakeLists.txt               # Main project configuration
+├── CMakePresets.json            # CMake presets configuration
+├── LICENSE                      # MIT License
+└── README.md                    # This file
 ```
 
 ## 🔧 Components Overview
@@ -417,12 +387,19 @@ cpp-demo-project/
 
 ### Code Style
 
-This project follows the **Google C++ Style Guide** with some modifications:
-
-- **Automatic formatting**: Uses `.clang-format` for C++ code and `gersemi` for CMake files
-- **Static analysis**: Enabled with `.clang-tidy` for code quality checks
-- **Modern C++ practices**: Follows Core Guidelines and C++23 best practices
-- **Documentation**: Comprehensive Doxygen-style documentation
+- **Consistent formatting**
+  - Uses `clang-format` for C++ code
+  - Uses `gersemi` for CMake files
+  - Uses `black` for Python code
+  - Uses `markdownlint-cli2` for Markdown files
+- **Static analysis**
+  - Uses `clang-tidy` and `cppcheck` for static analysis
+- **Modern practices**
+  - Follows Core Guidelines and modern C++23 best practices
+  - Follows PEP 8 and modern Python 3.13 conventions
+- **Comprehensive documentation**
+  - Doxygen-style documentation for C++ code
+  - Numpy-style docstrings for Python code
 
 ### Pre-commit Configuration
 
@@ -441,17 +418,25 @@ repos:
 
   # C++ formatting with clang-format
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.7
+    rev: v20.1.8
     hooks:
       - id: clang-format
         files: \.(cpp|hpp|h)$
 
   # CMake formatting with gersemi
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.19.3
+    rev: 0.22.1
     hooks:
       - id: gersemi
         files: (\.cmake|CMakeLists\.txt)$
+
+  # Python formatting with black
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        files: \.py$
+        args: ['-S']
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
@@ -467,31 +452,6 @@ repos:
 - Automatic detection of common issues before commit
 - Enforced coding standards for all contributors
 - Integration with modern formatting tools
-
-### Python Development
-
-The project includes comprehensive Python bindings and tooling:
-
-#### Testing
-
-- **pytest-based test suite**: Located in `python_tests/` with comprehensive coverage
-- **C++ test pattern adoption**: Python tests mirror C++ test structure and patterns
-- **Fixtures and configuration**: Shared test utilities in `conftest.py`
-- **Type safety testing**: Verifies type annotations and generic behavior
-
-#### Examples and Documentation
-
-- **Basic examples**: `python_examples/basic_usage.py` demonstrates fundamental usage
-- **Advanced examples**: `python_examples/advanced_usage.py` shows real-world patterns
-- **Comprehensive documentation**: Numpy-style docstrings throughout
-- **Modern Python features**: Extensive use of Python 3.13 features like pattern matching
-
-#### Code Quality
-
-- **Black formatting**: Consistent Python code style
-- **Type annotations**: Full type hint coverage with modern typing
-- **Error handling**: Result types for functional error management
-- **Performance integration**: Built-in timing and benchmarking utilities
 
 ## 📄 License
 

@@ -32,7 +32,7 @@ def sort_inplace(data: list[T] | Container[T]) -> None:
             # Ensure the original Python list is sorted in place
             data.sort()
         case Container():
-            _algorithms.sort_container(data._container)
+            _algorithms.sort(data._container)
         case _:
             raise TypeError(f'Unsupported type for sorting: {type(data)}')
 
@@ -84,15 +84,17 @@ def transform(data: Iterable[T], func: Callable[[T], U]) -> list[U]:
             sample_out = func(items[0])
             # Prefer fast C++ path for numeric transforms we support
             if all(isinstance(x, int) for x in items) and isinstance(sample_out, int):
-                return _algorithms.transform_to_vector(items, func)  # list[int] -> list[int]
+                return _algorithms.transform(items, func)  # list[int] -> list[int]
             if all(isinstance(x, int) for x in items) and isinstance(sample_out, float):
-                return _algorithms.transform_to_vector(items, func)  # list[int] -> list[float]
-            if all(isinstance(x, float) for x in items) and isinstance(sample_out, float):
-                return _algorithms.transform_to_vector(items, func)  # list[float] -> list[float]
+                return _algorithms.transform(items, func)  # list[int] -> list[float]
+            if all(isinstance(x, float) for x in items) and isinstance(
+                sample_out, float
+            ):
+                return _algorithms.transform(items, func)  # list[float] -> list[float]
             # Fallback to Python for other types (e.g., str)
             return [func(item) for item in items]
         case Container():
-            return _algorithms.transform_to_vector(data._container, func)
+            return _algorithms.transform(data._container, func)
         case _:
             return [func(item) for item in data]
 
@@ -114,7 +116,9 @@ def find_min_max(data: Sequence[T]) -> tuple[T, T]:
         case list() | tuple():
             if not data:
                 raise ValueError('find_min_max requires a non-empty sequence')
-            if all(isinstance(x, int) for x in data) or all(isinstance(x, float) for x in data):
+            if all(isinstance(x, int) for x in data) or all(
+                isinstance(x, float) for x in data
+            ):
                 return _algorithms.find_min_max(list(data))
             # Fallback for strings or mixed types using Python semantics
             return (min(data), max(data))

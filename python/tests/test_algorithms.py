@@ -56,7 +56,7 @@ class TestSortInplace:
         expected = [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
         assert data == expected
 
-    def test_sort_container(self) -> None:
+    def test_sort(self) -> None:
         """Test sorting container."""
         container = containers.Container(int, [3, 1, 4, 1, 5])
         algorithms.sort_inplace(container)
@@ -301,14 +301,18 @@ class TestFunctionalChain:
 
     def test_chain_with_reverse_sort(self) -> None:
         """Test chain with reverse sorting."""
-        result = algorithms.functional_chain([3, 1, 4, 1, 5]).sort(reverse=True).collect()
+        result = (
+            algorithms.functional_chain([3, 1, 4, 1, 5]).sort(reverse=True).collect()
+        )
 
         assert result == [5, 4, 3, 1, 1]
 
     def test_chain_with_key_sort(self) -> None:
         """Test chain with key-based sorting."""
         result = (
-            algorithms.functional_chain(['apple', 'pie', 'a', 'cherry']).sort(key=len).collect()
+            algorithms.functional_chain(['apple', 'pie', 'a', 'cherry'])
+            .sort(key=len)
+            .collect()
         )
 
         assert result == ['a', 'pie', 'apple', 'cherry']
@@ -316,7 +320,10 @@ class TestFunctionalChain:
     def test_chain_take_and_skip(self) -> None:
         """Test chain with take and skip operations."""
         result = (
-            algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).skip(3).take(4).collect()
+            algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            .skip(3)
+            .take(4)
+            .collect()
         )
 
         assert result == [4, 5, 6, 7]
@@ -329,7 +336,9 @@ class TestFunctionalChain:
 
     def test_chain_reduce_with_initial(self) -> None:
         """Test chain with reduce operation and initial value."""
-        result = algorithms.functional_chain([1, 2, 3, 4, 5]).reduce(lambda a, b: a * b, 1)
+        result = algorithms.functional_chain([1, 2, 3, 4, 5]).reduce(
+            lambda a, b: a * b, 1
+        )
 
         assert result == 120
 
