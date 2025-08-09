@@ -14,7 +14,6 @@ pybind11_add_module(cpp_features
   algorithms_binding.cpp
   containers_binding.cpp
   exceptions_binding.cpp
-  memory_binding.cpp
   random_binding.cpp
   shapes_binding.cpp
   timing_binding.cpp
@@ -46,7 +45,7 @@ set_target_properties(
 )
 
 # Compile definitions
-target_compile_definitions(cpp_features PRIVATE VERSION_INFO=${PROJECT_VERSION})
+target_compile_definitions(cpp_features PRIVATE VERSION_INFO="${PROJECT_VERSION}")
 
 # Install the Python module
 install(TARGETS cpp_features COMPONENT python LIBRARY DESTINATION .)

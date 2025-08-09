@@ -6,12 +6,15 @@ This directory contains custom CMake modules and utilities for the project.
 
 The project provides several configuration options:
 
-- `BUILD_TESTS`: Build test suite (default: ON for main project)
-- `BUILD_EXAMPLES`: Build example programs (default: ON for main project)
-- `ENABLE_WARNINGS`: Enable compiler warnings (default: ON)
-- `WARNINGS_AS_ERRORS`: Treat warnings as errors (default: OFF)
-- `ENABLE_CLANG_TIDY`: Enable clang-tidy static analysis (default: OFF)
-- `ENABLE_CPPCHECK`: Enable cppcheck static analysis (default: OFF)
+| Option                  | Description                         | Default             |
+| ----------------------- | ----------------------------------- | ------------------- |
+| `BUILD_TESTS`           | Build test suite                    | `ON` (main project) |
+| `BUILD_EXAMPLES`        | Build example applications          | `ON` (main project) |
+| `BUILD_PYTHON_BINDINGS` | Build Python bindings with pybind11 | `OFF`               |
+| `ENABLE_WARNINGS`       | Enable compiler warnings            | `ON`                |
+| `WARNINGS_AS_ERRORS`    | Treat warnings as errors            | `OFF`               |
+| `ENABLE_CLANG_TIDY`     | Enable clang-tidy static analysis   | `OFF`               |
+| `ENABLE_CPPCHECK`       | Enable cppcheck static analysis     | `OFF`               |
 
 ## Files
 
@@ -48,7 +51,8 @@ setup_project_dependencies()
 
 Currently handles:
 
-- **Catch2 v3.8.1**: Modern C++ testing framework (only when `BUILD_TESTS` is enabled)
+- **Catch2**: Modern C++ testing framework (only when `BUILD_TESTS` is enabled)
+- **pybind11**: Python bindings (only when `BUILD_PYTHON_BINDINGS` is enabled)
 
 Features:
 

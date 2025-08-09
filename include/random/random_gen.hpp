@@ -281,7 +281,7 @@ class RandomGenerator {
  * @endcode
  */
 template <std::ranges::random_access_range Range>
-void ShuffleContainer(Range &&range) {
+void ShuffleContainer(Range &range) {
   thread_local std::random_device rd;
   thread_local std::mt19937 gen{rd()};
   std::shuffle(std::ranges::begin(range), std::ranges::end(range), gen);
