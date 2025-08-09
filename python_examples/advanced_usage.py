@@ -11,8 +11,7 @@ from typing import List, Tuple
 # Add the python module to the path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'python'))
 
-from python import (algorithms, containers, exceptions, memory, random, shapes,
-                    timing)
+from python import algorithms, containers, exceptions, memory, random, shapes, timing
 
 
 class ShapeAnalyzer:
@@ -68,8 +67,7 @@ class ShapeAnalyzer:
 
         # Transform for efficiency ratios (area/perimeter)
         efficiency_ratios = algorithms.transform(
-            list(zip(areas, perimeters)),
-            lambda ap: ap[0] / ap[1] if ap[1] > 0 else 0
+            list(zip(areas, perimeters)), lambda ap: ap[0] / ap[1] if ap[1] > 0 else 0
         )
 
         self.operation_count += 1
@@ -81,10 +79,10 @@ class ShapeAnalyzer:
             'statistics': {
                 'large_shapes': large_shapes,
                 'complex_shapes': complex_shapes,
-                'avg_efficiency': sum(efficiency_ratios) / len(efficiency_ratios)
+                'avg_efficiency': sum(efficiency_ratios) / len(efficiency_ratios),
             },
             'creation_time': creation_stats['human_readable']['mean'],
-            'operation_count': self.operation_count
+            'operation_count': self.operation_count,
         }
 
 
@@ -125,7 +123,7 @@ class DataProcessor:
                     'max': max_val,
                     'median': squares[len(squares) // 2],
                     'sum': sum(squares),
-                    'large_values': algorithms.count_if(squares, lambda x: x > 1000)
+                    'large_values': algorithms.count_if(squares, lambda x: x > 1000),
                 }
 
             # Execute pipeline
@@ -174,12 +172,13 @@ class PerformanceBenchmarkSuite:
             'large_random': lambda: random.RandomGenerator(42).integers(1, 1000, 1000),
             'already_sorted': lambda: list(range(1, 501)),
             'reverse_sorted': lambda: list(range(500, 0, -1)),
-            'mostly_sorted': lambda: list(range(1, 500)) + [499, 498, 497]
+            'mostly_sorted': lambda: list(range(1, 500)) + [499, 498, 497],
         }
 
         results = {}
 
         for scenario_name, data_gen in scenarios.items():
+
             def sort_test():
                 data = data_gen()
                 algorithms.sort_inplace(data)
@@ -189,7 +188,7 @@ class PerformanceBenchmarkSuite:
             results[scenario_name] = {
                 'mean_time': stats['human_readable']['mean'],
                 'iterations': stats['iterations'],
-                'data_size': len(data_gen())
+                'data_size': len(data_gen()),
             }
 
         return results
@@ -217,7 +216,7 @@ class PerformanceBenchmarkSuite:
         operations = {
             'filter': filter_operation,
             'transform': transform_operation,
-            'mixed': mixed_operations
+            'mixed': mixed_operations,
         }
 
         results = {}
@@ -250,7 +249,7 @@ class PerformanceBenchmarkSuite:
 
         operations = {
             'shape_creation': create_many_shapes,
-            'cleanup_operations': cleanup_heavy_operations
+            'cleanup_operations': cleanup_heavy_operations,
         }
 
         results = {}
@@ -268,7 +267,7 @@ class PerformanceBenchmarkSuite:
             self.results = {
                 'sorting': self.benchmark_sorting_algorithms(),
                 'containers': self.benchmark_container_operations(),
-                'memory': self.benchmark_memory_management()
+                'memory': self.benchmark_memory_management(),
             }
 
         return self.results
@@ -289,8 +288,7 @@ def monte_carlo_pi_estimation(samples: int = 1000000) -> exceptions.Result[float
 
         # Count points inside unit circle
         inside_circle = algorithms.count_if(
-            list(zip(x_coords, y_coords)),
-            lambda p: p[0]**2 + p[1]**2 <= 1.0
+            list(zip(x_coords, y_coords)), lambda p: p[0] ** 2 + p[1] ** 2 <= 1.0
         )
 
         # Estimate π
@@ -311,24 +309,26 @@ def advanced_functional_programming_example():
     data = gen.integers(1, 100, 50)
 
     # Complex functional chain with multiple transformations
-    result = (algorithms.functional_chain(data)
-              .filter(lambda x: x % 3 == 0)  # Divisible by 3
-              .map(lambda x: x * x)          # Square them
-              .filter(lambda x: x < 1000)    # Keep reasonable size
-              .sort(reverse=True)             # Sort descending
-              .take(10)                       # Take top 10
-              .map(lambda x: x / 9)          # Divide by 9
-              .collect())
+    result = (
+        algorithms.functional_chain(data)
+        .filter(lambda x: x % 3 == 0)  # Divisible by 3
+        .map(lambda x: x * x)  # Square them
+        .filter(lambda x: x < 1000)  # Keep reasonable size
+        .sort(reverse=True)  # Sort descending
+        .take(10)  # Take top 10
+        .map(lambda x: x / 9)  # Divide by 9
+        .collect()
+    )
 
     print(f'Functional chain result: {result}')
 
     # Pipeline composition
     numerical_pipeline = algorithms.pipeline(
-        lambda nums: [x for x in nums if x > 20],     # Filter
-        lambda nums: [x * 2 for x in nums],           # Double
+        lambda nums: [x for x in nums if x > 20],  # Filter
+        lambda nums: [x * 2 for x in nums],  # Double
         lambda nums: algorithms.transform(nums, lambda x: x + 1),  # Add 1
-        lambda nums: sorted(nums),                     # Sort
-        lambda nums: nums[:5]                          # Take first 5
+        lambda nums: sorted(nums),  # Sort
+        lambda nums: nums[:5],  # Take first 5
     )
 
     pipeline_result = numerical_pipeline(gen.integers(1, 50, 20))
@@ -342,6 +342,7 @@ def advanced_functional_programming_example():
         if x <= 0:
             return exceptions.Result.error('Logarithm of non-positive number')
         import math
+
         return exceptions.Result.ok(math.log(x))
 
     # Chain safe operations
@@ -380,7 +381,9 @@ def real_world_simulation():
         print(f"Environment Analysis Results:")
         print(f"  - Total shapes: {analysis['shape_count']}")
         print(f"  - Area range: {analysis['areas']['min']:.2f} - {analysis['areas']['max']:.2f}")
-        print(f"  - Perimeter range: {analysis['perimeters']['min']:.2f} - {analysis['perimeters']['max']:.2f}")
+        print(
+            f"  - Perimeter range: {analysis['perimeters']['min']:.2f} - {analysis['perimeters']['max']:.2f}"
+        )
         print(f"  - Large shapes (area > 50): {analysis['statistics']['large_shapes']}")
         print(f"  - Complex shapes (perimeter > 20): {analysis['statistics']['complex_shapes']}")
         print(f"  - Average efficiency ratio: {analysis['statistics']['avg_efficiency']:.4f}")
@@ -445,6 +448,7 @@ def main():
     except Exception as e:
         print(f'Error running advanced examples: {e}')
         import traceback
+
         traceback.print_exc()
         return 1
 

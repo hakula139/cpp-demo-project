@@ -187,7 +187,7 @@ class TestShapeIntegration:
         shapes_list = [
             shapes.create_shape('circle', 3.0),
             shapes.create_shape('rectangle', 4.0, 5.0),
-            shapes.create_shape('square', 2.0)
+            shapes.create_shape('square', 2.0),
         ]
 
         expected_names = ['Circle', 'Rectangle', 'Rectangle']
@@ -203,7 +203,7 @@ class TestShapeIntegration:
             shapes.create_shape('circle', 1.0),
             shapes.create_shape('circle', 2.0),
             shapes.create_shape('rectangle', 2.0, 3.0),
-            shapes.create_shape('square', 2.0)
+            shapes.create_shape('square', 2.0),
         ]
 
         total_area = sum(shape.get_area() for shape in test_shapes)
@@ -218,10 +218,10 @@ class TestShapeIntegration:
     def test_shape_sorting_by_area(self) -> None:
         """Test sorting shapes by area."""
         test_shapes = [
-            shapes.create_shape('circle', 2.0),      # π * 4 ≈ 12.57
+            shapes.create_shape('circle', 2.0),  # π * 4 ≈ 12.57
             shapes.create_shape('rectangle', 2.0, 3.0),  # 6.0
-            shapes.create_shape('square', 4.0),          # 16.0
-            shapes.create_shape('circle', 1.0)       # π ≈ 3.14
+            shapes.create_shape('square', 4.0),  # 16.0
+            shapes.create_shape('circle', 1.0),  # π ≈ 3.14
         ]
 
         sorted_shapes = sorted(test_shapes, key=lambda s: s.get_area())

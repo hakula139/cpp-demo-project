@@ -252,9 +252,7 @@ class TestPipeline:
     def test_simple_pipeline(self) -> None:
         """Test simple function pipeline."""
         process = algorithms.pipeline(
-            lambda x: [i * 2 for i in x],
-            lambda x: [i for i in x if i > 5],
-            sum
+            lambda x: [i * 2 for i in x], lambda x: [i for i in x if i > 5], sum
         )
 
         result = process([1, 2, 3, 4, 5])
@@ -264,9 +262,7 @@ class TestPipeline:
     def test_string_pipeline(self) -> None:
         """Test pipeline with string operations."""
         process = algorithms.pipeline(
-            str.upper,
-            lambda s: s.replace(' ', '_'),
-            lambda s: f'PREFIX_{s}'
+            str.upper, lambda s: s.replace(' ', '_'), lambda s: f'PREFIX_{s}'
         )
 
         result = process('hello world')
@@ -288,69 +284,66 @@ class TestFunctionalChain:
 
     def test_basic_chain(self) -> None:
         """Test basic functional chain."""
-        result = (algorithms.functional_chain([1, 2, 3, 4, 5, 6])
-                 .filter(lambda x: x % 2 == 0)
-                 .map(lambda x: x * x)
-                 .collect())
+        result = (
+            algorithms.functional_chain([1, 2, 3, 4, 5, 6])
+            .filter(lambda x: x % 2 == 0)
+            .map(lambda x: x * x)
+            .collect()
+        )
 
         assert result == [4, 16, 36]
 
     def test_chain_with_sort(self) -> None:
         """Test chain with sorting."""
-        result = (algorithms.functional_chain([3, 1, 4, 1, 5])
-                 .sort()
-                 .collect())
+        result = algorithms.functional_chain([3, 1, 4, 1, 5]).sort().collect()
 
         assert result == [1, 1, 3, 4, 5]
 
     def test_chain_with_reverse_sort(self) -> None:
         """Test chain with reverse sorting."""
-        result = (algorithms.functional_chain([3, 1, 4, 1, 5])
-                 .sort(reverse=True)
-                 .collect())
+        result = algorithms.functional_chain([3, 1, 4, 1, 5]).sort(reverse=True).collect()
 
         assert result == [5, 4, 3, 1, 1]
 
     def test_chain_with_key_sort(self) -> None:
         """Test chain with key-based sorting."""
-        result = (algorithms.functional_chain(['apple', 'pie', 'a', 'cherry'])
-                 .sort(key=len)
-                 .collect())
+        result = (
+            algorithms.functional_chain(['apple', 'pie', 'a', 'cherry']).sort(key=len).collect()
+        )
 
         assert result == ['a', 'pie', 'apple', 'cherry']
 
     def test_chain_take_and_skip(self) -> None:
         """Test chain with take and skip operations."""
-        result = (algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-                 .skip(3)
-                 .take(4)
-                 .collect())
+        result = (
+            algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).skip(3).take(4).collect()
+        )
 
         assert result == [4, 5, 6, 7]
 
     def test_chain_reduce(self) -> None:
         """Test chain with reduce operation."""
-        result = (algorithms.functional_chain([1, 2, 3, 4, 5])
-                 .reduce(lambda a, b: a + b))
+        result = algorithms.functional_chain([1, 2, 3, 4, 5]).reduce(lambda a, b: a + b)
 
         assert result == 15
 
     def test_chain_reduce_with_initial(self) -> None:
         """Test chain with reduce operation and initial value."""
-        result = (algorithms.functional_chain([1, 2, 3, 4, 5])
-                 .reduce(lambda a, b: a * b, 1))
+        result = algorithms.functional_chain([1, 2, 3, 4, 5]).reduce(lambda a, b: a * b, 1)
 
         assert result == 120
 
     def test_complex_chain(self) -> None:
         """Test complex chain with multiple operations."""
-        result = (algorithms.functional_chain(range(1, 21))
-                 .filter(lambda x: x % 2 == 0)  # Even numbers
-                 .map(lambda x: x ** 2)          # Square them
-                 .filter(lambda x: x > 50)      # Only large squares
-                 .sort(reverse=True)             # Sort descending
-                 .take(3)                        # Take first 3
-                 .collect())
+        result = (
+            algorithms.functional_chain(range(1, 21))
+            .filter(lambda x: x % 2 == 0)  # Even numbers
+            .map(lambda x: x**2)  # Square them
+            .filter(lambda x: x > 50)  # Only large squares
+            .sort(reverse=True)  # Sort descending
+            .take(3)  # Take first 3
+            .collect()
+        )
 
         # Even numbers: 2,4,6,8,10,12,14,16,18,20
         # Squared: 4,16,36,64,100,144,196,256,324,400
@@ -369,7 +362,7 @@ class TestAlgorithmCombinations:
         squares = algorithms.transform(data, lambda x: x * x)
         min_val, max_val = algorithms.find_min_max(squares)
 
-        assert min_val == 1   # (-1)^2
+        assert min_val == 1  # (-1)^2
         assert max_val == 25  # (-5)^2
 
     def test_sort_transform_count_pipeline(self) -> None:
@@ -391,11 +384,13 @@ class TestAlgorithmCombinations:
         """Test chaining filter, sort, and transform operations."""
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-        result = (algorithms.functional_chain(data)
-                 .filter(lambda x: x % 2 == 0)    # [2, 4, 6, 8, 10]
-                 .sort(reverse=True)               # [10, 8, 6, 4, 2]
-                 .map(lambda x: x // 2)            # [5, 4, 3, 2, 1]
-                 .collect())
+        result = (
+            algorithms.functional_chain(data)
+            .filter(lambda x: x % 2 == 0)  # [2, 4, 6, 8, 10]
+            .sort(reverse=True)  # [10, 8, 6, 4, 2]
+            .map(lambda x: x // 2)  # [5, 4, 3, 2, 1]
+            .collect()
+        )
 
         assert result == [5, 4, 3, 2, 1]
 
@@ -412,5 +407,5 @@ class TestAlgorithmCombinations:
         combined = squares1 + squares2
         min_val, max_val = algorithms.find_min_max(combined)
 
-        assert min_val == 1   # 1^2
-        assert max_val == 100 # 10^2
+        assert min_val == 1  # 1^2
+        assert max_val == 100  # 10^2

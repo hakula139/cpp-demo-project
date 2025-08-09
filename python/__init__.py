@@ -7,8 +7,7 @@ showcasing modern C++ features, best practices, and advanced programming techniq
 __version__ = '1.0.0'
 __author__ = 'Demo Project Team'
 
-from . import (algorithms, containers, exceptions, memory, random, shapes,
-               timing)
+from . import algorithms, containers, exceptions, memory, random, shapes, timing
 
 __all__ = [
     'algorithms',

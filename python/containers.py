@@ -32,13 +32,9 @@ class Container(Generic[T]):
             case int:
                 self._container = _containers.IntContainer(list(data) if data else [])
             case float:
-                self._container = _containers.DoubleContainer(
-                    list(data) if data else []
-                )
+                self._container = _containers.DoubleContainer(list(data) if data else [])
             case str:
-                self._container = _containers.StringContainer(
-                    list(data) if data else []
-                )
+                self._container = _containers.StringContainer(list(data) if data else [])
             case _:
                 raise ValueError(f'Unsupported container type: {container_type}')
 

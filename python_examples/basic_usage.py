@@ -10,8 +10,7 @@ from pathlib import Path
 # Add the python module to the path
 sys.path.insert(0, str(Path(__file__).parent.parent / 'python'))
 
-from python import (algorithms, containers, exceptions, memory, random, shapes,
-                    timing)
+from python import algorithms, containers, exceptions, memory, random, shapes, timing
 
 
 def shapes_example():
@@ -93,19 +92,19 @@ def algorithms_example():
     print(f'Min: {min_val}, Max: {max_val}')
 
     # Functional chain
-    result = (algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-              .filter(lambda x: x % 2 == 0)
-              .map(lambda x: x * x)
-              .take(3)
-              .collect())
+    result = (
+        algorithms.functional_chain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        .filter(lambda x: x % 2 == 0)
+        .map(lambda x: x * x)
+        .take(3)
+        .collect()
+    )
 
     print(f'Functional chain result: {result}')
 
     # Pipeline
     process = algorithms.pipeline(
-        lambda lst: [x for x in lst if x > 3],
-        lambda lst: [x * 2 for x in lst],
-        sum
+        lambda lst: [x for x in lst if x > 3], lambda lst: [x * 2 for x in lst], sum
     )
 
     pipeline_result = process([1, 2, 3, 4, 5, 6])
@@ -123,6 +122,7 @@ def memory_example():
     def cleanup_function(name: str):
         def cleanup():
             cleanup_log.append(f'Cleaned up {name}')
+
         return cleanup
 
     # Using resource manager as context manager
@@ -301,10 +301,7 @@ def integration_example():
         # Time a complex operation
         with timing.Timer() as timer:
             # Complex calculation involving all shapes
-            total_complexity = sum(
-                shape.get_area() * shape.get_perimeter()
-                for shape in all_shapes
-            )
+            total_complexity = sum(shape.get_area() * shape.get_perimeter() for shape in all_shapes)
 
         print(f'Complex calculation result: {total_complexity:.2f}')
         print(f'Calculation time: {timer.elapsed_string}')
@@ -339,6 +336,7 @@ def main():
     except Exception as e:
         print(f'Error running examples: {e}')
         import traceback
+
         traceback.print_exc()
         return 1
 

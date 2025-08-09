@@ -207,14 +207,10 @@ class Benchmark:
             'median_ms': statistics.median(measurements_ms),
             'min_ms': min(measurements_ms),
             'max_ms': max(measurements_ms),
-            'stdev_ms': (
-                statistics.stdev(measurements_ms) if len(measurements_ms) > 1 else 0.0
-            ),
+            'stdev_ms': (statistics.stdev(measurements_ms) if len(measurements_ms) > 1 else 0.0),
             'measurements_ns': self.measurements.copy(),
             'human_readable': {
-                'mean': _timing.to_human_readable(
-                    int(statistics.mean(self.measurements))
-                ),
+                'mean': _timing.to_human_readable(int(statistics.mean(self.measurements))),
                 'min': _timing.to_human_readable(min(self.measurements)),
                 'max': _timing.to_human_readable(max(self.measurements)),
             },

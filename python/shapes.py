@@ -97,9 +97,7 @@ def create_shape(shape_type: str | ShapeType, *args: float) -> _shapes.Shape:
 
         case ShapeType.RECTANGLE | 'rectangle':
             if len(args) != 2:
-                raise ValueError(
-                    'Rectangle requires exactly 2 arguments (width, height)'
-                )
+                raise ValueError('Rectangle requires exactly 2 arguments (width, height)')
             return _shapes.create_rectangle(args[0], args[1])
 
         case ShapeType.SQUARE | 'square':

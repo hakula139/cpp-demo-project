@@ -60,7 +60,7 @@ class TestTimer:
         assert us > 0
         assert ns >= us  # ns should be >= us (1000x conversion)
         assert us >= ms  # us should be >= ms (1000x conversion)
-        assert ms >= s   # ms should be >= s (1000x conversion)
+        assert ms >= s  # ms should be >= s (1000x conversion)
 
     def test_timer_string_representation(self) -> None:
         """Test timer string representation."""
@@ -160,6 +160,7 @@ class TestBenchmark:
 
     def test_benchmark_run_simple(self) -> None:
         """Test running simple benchmark."""
+
         def simple_function() -> int:
             return sum(range(100))
 
@@ -176,6 +177,7 @@ class TestBenchmark:
 
     def test_benchmark_statistics(self) -> None:
         """Test benchmark statistics calculation."""
+
         def test_function() -> None:
             time.sleep(0.001)  # 1ms sleep
 
@@ -203,6 +205,7 @@ class TestBenchmark:
 
     def test_benchmark_multiple_runs(self) -> None:
         """Test multiple benchmark runs."""
+
         def test_function() -> int:
             return len([x for x in range(50)])
 
@@ -219,6 +222,7 @@ class TestBenchmark:
 
     def test_benchmark_compare_with(self) -> None:
         """Test comparing benchmarks."""
+
         def fast_function() -> int:
             return 42
 
@@ -258,6 +262,7 @@ class TestBenchmarkFunction:
 
     def test_benchmark_function_basic(self) -> None:
         """Test basic benchmark_function usage."""
+
         def test_func() -> list[int]:
             return [x * x for x in range(10)]
 
@@ -269,6 +274,7 @@ class TestBenchmarkFunction:
 
     def test_benchmark_function_with_name(self) -> None:
         """Test benchmark_function with custom name."""
+
         def test_func() -> int:
             return 42
 
@@ -290,6 +296,7 @@ class TestTimeFunction:
 
     def test_time_function_basic(self) -> None:
         """Test basic time_function usage."""
+
         def test_func() -> str:
             return 'hello' * 100
 
@@ -307,6 +314,7 @@ class TestTimeFunction:
 
     def test_time_function_different_complexities(self) -> None:
         """Test time_function with different complexity functions."""
+
         def simple_func() -> int:
             return 1 + 1
 
@@ -326,6 +334,7 @@ class TestTimingIntegration:
 
     def test_timer_benchmark_integration(self) -> None:
         """Test using Timer within benchmark context."""
+
         def timed_operation() -> None:
             with timing.Timer() as timer:
                 time.sleep(0.001)
@@ -339,6 +348,7 @@ class TestTimingIntegration:
 
     def test_multiple_timing_methods_comparison(self) -> None:
         """Test comparing different timing methods."""
+
         def test_operation() -> list[int]:
             return sorted([x for x in range(100, 0, -1)])
 
@@ -359,6 +369,7 @@ class TestTimingIntegration:
 
     def test_performance_measurement_workflow(self) -> None:
         """Test complete performance measurement workflow."""
+
         # Define test functions with different performance characteristics
         def linear_operation(n: int = 100) -> int:
             return sum(range(n))
@@ -388,6 +399,7 @@ class TestTimingIntegration:
 
     def test_timing_with_exceptions(self) -> None:
         """Test timing behavior with exceptions."""
+
         def failing_function() -> None:
             time.sleep(0.001)
             raise RuntimeError('Intentional failure')
@@ -412,6 +424,7 @@ class TestTimingIntegration:
 
     def test_precision_and_accuracy(self) -> None:
         """Test timing precision and accuracy."""
+
         # Test very short operations
         def micro_operation() -> int:
             return 1 + 1

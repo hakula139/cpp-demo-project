@@ -29,7 +29,7 @@ class TestErrorSeverity:
             exceptions.ErrorSeverity.INFO,
             exceptions.ErrorSeverity.WARNING,
             exceptions.ErrorSeverity.ERROR,
-            exceptions.ErrorSeverity.FATAL
+            exceptions.ErrorSeverity.FATAL,
         ]
         assert len(severities) == 6
 
@@ -102,6 +102,7 @@ class TestResult:
 
     def test_result_and_then_success(self) -> None:
         """Test chaining successful Results."""
+
         def double_if_positive(x: int) -> exceptions.Result[int]:
             if x > 0:
                 return exceptions.Result.ok(x * 2)
@@ -116,6 +117,7 @@ class TestResult:
 
     def test_result_and_then_error(self) -> None:
         """Test chaining with error Result."""
+
         def double_if_positive(x: int) -> exceptions.Result[int]:
             return exceptions.Result.ok(x * 2)
 
@@ -126,6 +128,7 @@ class TestResult:
 
     def test_result_or_else_success(self) -> None:
         """Test or_else with successful Result."""
+
         def handle_error(e: Exception) -> exceptions.Result[int]:
             return exceptions.Result.ok(0)
 
@@ -137,6 +140,7 @@ class TestResult:
 
     def test_result_or_else_error(self) -> None:
         """Test or_else with error Result."""
+
         def handle_error(e: Exception) -> exceptions.Result[int]:
             return exceptions.Result.ok(-1)
 
@@ -232,6 +236,7 @@ class TestChainOperations:
 
     def test_chain_operations_success(self) -> None:
         """Test successful chain of operations."""
+
         def add_one(x: float) -> exceptions.Result[float]:
             return exceptions.Result.ok(x + 1.0)
 
@@ -246,6 +251,7 @@ class TestChainOperations:
 
     def test_chain_operations_early_error(self) -> None:
         """Test chain stops at first error."""
+
         def fail_operation(x: float) -> exceptions.Result[float]:
             return exceptions.Result.error('Operation failed')
 
@@ -259,6 +265,7 @@ class TestChainOperations:
 
     def test_chain_operations_complex(self) -> None:
         """Test complex chain with safe operations."""
+
         def safe_divide_by_two(x: float) -> exceptions.Result[float]:
             return exceptions.safe_divide(x, 2.0)
 
@@ -291,33 +298,29 @@ class TestResultMapChaining:
 
     def test_result_map_chain_success(self) -> None:
         """Test chaining map operations on successful Result."""
-        result = (exceptions.Result.ok(5)
-                 .map(lambda x: x * 2)
-                 .map(lambda x: x + 3)
-                 .map(lambda x: x // 2))
+        result = (
+            exceptions.Result.ok(5).map(lambda x: x * 2).map(lambda x: x + 3).map(lambda x: x // 2)
+        )
 
         assert result.is_ok
         assert result.unwrap() == 6  # ((5 * 2) + 3) // 2 = 6
 
     def test_result_map_chain_with_error(self) -> None:
         """Test map chaining when intermediate operation fails."""
+
         def might_fail(x: int) -> int:
             if x > 10:
                 raise ValueError('Too large')
             return x * 2
 
-        result = (exceptions.Result.ok(5)
-                 .map(lambda x: x * 3)  # 15
-                 .map(might_fail))      # Should fail
+        result = exceptions.Result.ok(5).map(lambda x: x * 3).map(might_fail)  # 15  # Should fail
 
         assert result.is_err
 
     def test_result_type_transformations(self) -> None:
         """Test Result with different type transformations."""
         # Start with int, transform to string, then to length
-        result = (exceptions.Result.ok(42)
-                 .map(str)              # '42'
-                 .map(len))             # 2
+        result = exceptions.Result.ok(42).map(str).map(len)  # '42'  # 2
 
         assert result.is_ok
         assert result.unwrap() == 2
@@ -328,11 +331,14 @@ class TestExceptionIntegration:
 
     def test_complex_calculation_pipeline(self) -> None:
         """Test complex calculation with error handling."""
+
         def complex_calculation(x: float) -> exceptions.Result[float]:
             # Chain: sqrt -> divide by 2 -> add 1
-            return (exceptions.safe_sqrt(x)
-                   .and_then(lambda v: exceptions.safe_divide(v, 2.0))
-                   .map(lambda v: v + 1.0))
+            return (
+                exceptions.safe_sqrt(x)
+                .and_then(lambda v: exceptions.safe_divide(v, 2.0))
+                .map(lambda v: v + 1.0)
+            )
 
         # Test with valid input
         result_valid = complex_calculation(16.0)
@@ -345,6 +351,7 @@ class TestExceptionIntegration:
 
     def test_result_error_recovery(self) -> None:
         """Test error recovery patterns."""
+
         def might_fail(x: int) -> exceptions.Result[int]:
             if x < 0:
                 return exceptions.Result.error('Negative number')

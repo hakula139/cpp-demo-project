@@ -398,6 +398,6 @@ class TestMemoryIntegration:
             'resource1_used',
             'resource2_used',
             'resource2_cleaned',  # Inner scope cleaned first
-            'resource1_cleaned'   # Outer scope cleaned last
+            'resource1_cleaned',  # Outer scope cleaned last
         ]
         assert resource_log == expected_log
