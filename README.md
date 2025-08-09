@@ -54,6 +54,7 @@ This project serves as both a learning resource and a reference implementation f
     - [Build the project](#build-the-project)
     - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
+    - [Build Python bindings (optional)](#build-python-bindings-optional)
   - [CMake Presets](#cmake-presets)
     - [Configure Presets](#configure-presets)
     - [Build \& Test Presets](#build--test-presets)
@@ -66,11 +67,16 @@ This project serves as both a learning resource and a reference implementation f
     - [Run on all files (optional)](#run-on-all-files-optional)
     - [What the hooks do](#what-the-hooks-do)
 - [🎯 Usage](#-usage)
+  - [Python Usage](#python-usage)
 - [📁 Project Structure](#-project-structure)
 - [🔧 Components Overview](#-components-overview)
 - [💻 Development Notes](#-development-notes)
   - [Code Style](#code-style)
   - [Pre-commit Configuration](#pre-commit-configuration)
+  - [Python Development](#python-development)
+    - [Testing](#testing)
+    - [Examples and Documentation](#examples-and-documentation)
+    - [Code Quality](#code-quality)
 - [📄 License](#-license)
 
 ## 🎓 What You'll Learn
@@ -141,6 +147,14 @@ ctest --preset release
 ```bash
 cmake --preset release -DBUILD_PYTHON_BINDINGS=ON
 cmake --build --preset release
+
+# Test Python bindings (optional)
+cd python_tests
+python -m pytest --verbose
+
+# Run Python examples (optional)
+python python_examples/basic_usage.py
+python python_examples/advanced_usage.py
 ```
 
 ### CMake Presets
@@ -351,8 +365,29 @@ cpp-demo-project/
 ├── src/                        # Source implementation files
 │   ├── CMakeLists.txt          # Components configuration
 │   └── [mirrors include structure]
-├── examples/                   # Usage examples and demonstrations
-├── tests/                      # Test suite using Catch2 v3
+├── binding/                    # pybind11 C++ binding files
+│   ├── CMakeLists.txt          # Python bindings configuration
+│   ├── cpp_features.cpp        # Main pybind11 module
+│   └── [module]_binding.cpp    # Individual module bindings
+├── python/                     # Python wrapper modules
+│   ├── __init__.py             # Package initialization
+│   ├── shapes.py               # Enhanced shape functionality
+│   ├── containers.py           # Pythonic container wrappers
+│   ├── algorithms.py           # Functional programming utilities
+│   ├── exceptions.py           # Result types and error handling
+│   ├── memory.py               # RAII and resource management
+│   ├── timing.py               # High-resolution timing utilities
+│   └── random.py               # Enhanced random number generation
+├── python_tests/               # Python test suite using pytest
+│   ├── __init__.py             # Test package initialization
+│   ├── conftest.py             # pytest configuration and fixtures
+│   └── test_[module].py        # Comprehensive module tests
+├── python_examples/            # Python usage examples
+│   ├── README.md               # Examples documentation
+│   ├── basic_usage.py          # Fundamental usage patterns
+│   └── advanced_usage.py       # Advanced and real-world examples
+├── examples/                   # C++ usage examples and demonstrations
+├── tests/                      # C++ test suite using Catch2 v3
 ├── .clang-format               # clang-format configuration (for C++ code formatting)
 ├── .clang-tidy                 # clang-tidy configuration (for static analysis)
 ├── .clangd                     # clangd configuration (for code completion)
@@ -432,6 +467,31 @@ repos:
 - Automatic detection of common issues before commit
 - Enforced coding standards for all contributors
 - Integration with modern formatting tools
+
+### Python Development
+
+The project includes comprehensive Python bindings and tooling:
+
+#### Testing
+
+- **pytest-based test suite**: Located in `python_tests/` with comprehensive coverage
+- **C++ test pattern adoption**: Python tests mirror C++ test structure and patterns
+- **Fixtures and configuration**: Shared test utilities in `conftest.py`
+- **Type safety testing**: Verifies type annotations and generic behavior
+
+#### Examples and Documentation
+
+- **Basic examples**: `python_examples/basic_usage.py` demonstrates fundamental usage
+- **Advanced examples**: `python_examples/advanced_usage.py` shows real-world patterns
+- **Comprehensive documentation**: Numpy-style docstrings throughout
+- **Modern Python features**: Extensive use of Python 3.13 features like pattern matching
+
+#### Code Quality
+
+- **Black formatting**: Consistent Python code style
+- **Type annotations**: Full type hint coverage with modern typing
+- **Error handling**: Result types for functional error management
+- **Performance integration**: Built-in timing and benchmarking utilities
 
 ## 📄 License
 
