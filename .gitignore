@@ -14,6 +14,14 @@ out/
 *.dylib
 *.dll
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
 # Debug and temporary files
 *.log
 *.tmp

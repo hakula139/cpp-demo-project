@@ -28,15 +28,14 @@ class Container(Generic[T]):
         """Initialize container with specific type."""
         self._type = container_type
 
-        match container_type:
-            case int:
-                self._container = _containers.IntContainer(list(data) if data else [])
-            case float:
-                self._container = _containers.DoubleContainer(list(data) if data else [])
-            case str:
-                self._container = _containers.StringContainer(list(data) if data else [])
-            case _:
-                raise ValueError(f'Unsupported container type: {container_type}')
+        if container_type is int:
+            self._container = _containers.IntContainer(list(data) if data else [])
+        elif container_type is float:
+            self._container = _containers.DoubleContainer(list(data) if data else [])
+        elif container_type is str:
+            self._container = _containers.StringContainer(list(data) if data else [])
+        else:
+            raise ValueError(f'Unsupported container type: {container_type}')
 
     def add(self, item: T) -> None:
         """Add item to container.

@@ -235,6 +235,26 @@ class ScopedTimer {
   explicit ScopedTimer(std::string_view name, Func callback) : name_{name}, callback_{callback} {}
 
   /**
+   * @brief Copy constructor is deleted - ScopedTimer should not be copied
+   */
+  ScopedTimer(const ScopedTimer &) = delete;
+
+  /**
+   * @brief Copy assignment operator is deleted - ScopedTimer should not be copied
+   */
+  auto operator=(const ScopedTimer &) -> ScopedTimer & = delete;
+
+  /**
+   * @brief Move constructor is default - ScopedTimer can be moved
+   */
+  ScopedTimer(ScopedTimer &&) = default;
+
+  /**
+   * @brief Move assignment operator is default - ScopedTimer can be moved
+   */
+  auto operator=(ScopedTimer &&) -> ScopedTimer & = default;
+
+  /**
    * @brief Destructor that automatically prints timing results
    *
    * Automatically stops the timer, prints the elapsed time with the provided name, and calls the

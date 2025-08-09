@@ -30,12 +30,16 @@ void bind_memory(py::module &m) {
             return self.CreateUnique<Rectangle>(width, height);
           },
           py::return_value_policy::take_ownership)
-      .def("create_shared_circle",
-           [](ResourceManager &self, double radius) { return self.CreateShared<Circle>(radius); })
-      .def("create_shared_rectangle",
-           [](ResourceManager &self, double width, double height) {
-             return self.CreateShared<Rectangle>(width, height);
-           })
+      .def(
+          "create_shared_circle",
+          [](ResourceManager &self, double radius) { return self.CreateShared<Circle>(radius); },
+          py::return_value_policy::reference)
+      .def(
+          "create_shared_rectangle",
+          [](ResourceManager &self, double width, double height) {
+            return self.CreateShared<Rectangle>(width, height);
+          },
+          py::return_value_policy::reference)
       .def("register_cleanup",
            [](ResourceManager &self, std::function<void()> cleanup_func) {
              self.RegisterCleanup<int>(cleanup_func);

@@ -18,6 +18,10 @@
   "cmake.automaticReconfigure": true,
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
+  "cursorpyright.analysis.extraPaths": [
+    "build/debug/binding",
+    "build/release/binding"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.clangd": "explicit",
     "source.organizeImports": "explicit"
@@ -27,7 +31,6 @@
     "enabled": true
   },
   "editor.suggest.insertMode": "replace",
-  "editor.tabSize": 2,
   "files.associations": {
     "*.cpp": "cpp",
     "*.h": "cpp",

@@ -19,18 +19,21 @@ void bind_shapes(py::module &m) {
   using namespace cpp_features::shapes;
 
   // Bind the abstract Shape base class
-  py::class_<Shape>(m, "Shape", "Abstract base class for geometric shapes")
+  py::class_<Shape, std::shared_ptr<Shape>>(m, "Shape", "Abstract base class for geometric shapes")
       .def("get_area", &Shape::GetArea, "Calculate the area of the shape")
       .def("get_perimeter", &Shape::GetPerimeter, "Calculate the perimeter of the shape")
       .def("draw", &Shape::Draw, "Draw the shape")
-      .def("get_name", &Shape::GetName, "Get the name of the shape")
+      .def(
+          "get_name", [](const Shape &s) { return std::string{s.GetName()}; },
+          "Get the name of the shape")
       .def("__str__", [](const Shape &s) { return std::string{s.GetName()}; })
       .def("__repr__", [](const Shape &s) {
         return std::format("<{} at {}>", s.GetName(), static_cast<const void *>(&s));
       });
 
   // Bind Circle class
-  py::class_<Circle, Shape>(m, "Circle", "Circle shape with radius-based geometry")
+  py::class_<Circle, Shape, std::shared_ptr<Circle>>(m, "Circle",
+                                                     "Circle shape with radius-based geometry")
       .def(py::init<double>(), py::arg("radius"), "Construct a circle with the specified radius")
       .def("get_radius", &Circle::GetRadius, "Get the radius of the circle")
       .def("__eq__", [](const Circle &self, const Circle &other) { return self == other; })
@@ -60,7 +63,8 @@ void bind_shapes(py::module &m) {
       });
 
   // Bind Rectangle class
-  py::class_<Rectangle, Shape>(m, "Rectangle", "Rectangle shape with width and height geometry")
+  py::class_<Rectangle, Shape, std::shared_ptr<Rectangle>>(
+      m, "Rectangle", "Rectangle shape with width and height geometry")
       .def(py::init<Rectangle::Dimensions>(), py::arg("dimensions"),
            "Construct a rectangle from a Dimensions structure")
       .def(py::init<double, double>(), py::arg("width"), py::arg("height"),
@@ -91,36 +95,34 @@ void bind_shapes(py::module &m) {
   // Bind factory functions
   m.def(
       "create_circle",
-      [](double radius) -> std::unique_ptr<Circle> { return CreateCircle(radius); },
-      py::arg("radius"), "Factory function for creating Circle objects",
-      py::return_value_policy::take_ownership);
+      [](double radius) -> std::shared_ptr<Circle> { return std::make_shared<Circle>(radius); },
+      py::arg("radius"), "Factory function for creating Circle objects");
 
   m.def(
       "create_rectangle",
-      [](double width, double height) -> std::unique_ptr<Rectangle> {
-        return CreateRectangle(width, height);
+      [](double width, double height) -> std::shared_ptr<Rectangle> {
+        return std::make_shared<Rectangle>(width, height);
       },
-      py::arg("width"), py::arg("height"), "Factory function for creating Rectangle objects",
-      py::return_value_policy::take_ownership);
+      py::arg("width"), py::arg("height"), "Factory function for creating Rectangle objects");
 
   m.def(
-      "create_square", [](double side) -> std::unique_ptr<Rectangle> { return CreateSquare(side); },
-      py::arg("side"), "Factory function for creating square Rectangle objects",
-      py::return_value_policy::take_ownership);
+      "create_square",
+      [](double side) -> std::shared_ptr<Rectangle> { return std::make_shared<Rectangle>(side); },
+      py::arg("side"), "Factory function for creating square Rectangle objects");
 
   m.def(
       "create_shape",
-      [](const std::string &shape_type, py::args args) -> std::unique_ptr<Shape> {
+      [](const std::string &shape_type, py::args args) -> std::shared_ptr<Shape> {
         if (shape_type == "circle") {
           if (args.size() != 1) {
             throw std::invalid_argument("Circle requires exactly 1 argument (radius)");
           }
-          return CreateCircle(args[0].cast<double>());
+          return std::make_shared<Circle>(args[0].cast<double>());
         } else if (shape_type == "rectangle") {
           if (args.size() == 1) {
-            return CreateSquare(args[0].cast<double>());
+            return std::make_shared<Rectangle>(args[0].cast<double>());
           } else if (args.size() == 2) {
-            return CreateRectangle(args[0].cast<double>(), args[1].cast<double>());
+            return std::make_shared<Rectangle>(args[0].cast<double>(), args[1].cast<double>());
           } else {
             throw std::invalid_argument(
                 "Rectangle requires 1 argument (side) or 2 arguments (width, height)");

@@ -29,7 +29,8 @@ def sort_inplace(data: list[T] | Container[T]) -> None:
     """
     match data:
         case list():
-            _algorithms.sort_container(data)
+            # Ensure the original Python list is sorted in place
+            data.sort()
         case Container():
             _algorithms.sort_container(data._container)
         case _:
@@ -77,7 +78,19 @@ def transform(data: Iterable[T], func: Callable[[T], U]) -> list[U]:
     """
     match data:
         case list() | tuple():
-            return _algorithms.transform_to_vector(list(data), func)
+            items = list(data)
+            if not items:
+                return []
+            sample_out = func(items[0])
+            # Prefer fast C++ path for numeric transforms we support
+            if all(isinstance(x, int) for x in items) and isinstance(sample_out, int):
+                return _algorithms.transform_to_vector(items, func)  # list[int] -> list[int]
+            if all(isinstance(x, int) for x in items) and isinstance(sample_out, float):
+                return _algorithms.transform_to_vector(items, func)  # list[int] -> list[float]
+            if all(isinstance(x, float) for x in items) and isinstance(sample_out, float):
+                return _algorithms.transform_to_vector(items, func)  # list[float] -> list[float]
+            # Fallback to Python for other types (e.g., str)
+            return [func(item) for item in items]
         case Container():
             return _algorithms.transform_to_vector(data._container, func)
         case _:
@@ -99,12 +112,21 @@ def find_min_max(data: Sequence[T]) -> tuple[T, T]:
     """
     match data:
         case list() | tuple():
-            return _algorithms.find_min_max(list(data))
+            if not data:
+                raise ValueError('find_min_max requires a non-empty sequence')
+            if all(isinstance(x, int) for x in data) or all(isinstance(x, float) for x in data):
+                return _algorithms.find_min_max(list(data))
+            # Fallback for strings or mixed types using Python semantics
+            return (min(data), max(data))
         case Container():
             return _algorithms.find_min_max(data._container)
         case _:
             items = list(data)
-            return _algorithms.find_min_max(items)
+            if not items:
+                raise ValueError('find_min_max requires a non-empty sequence')
+            if all(isinstance(x, (int, float)) for x in items):
+                return _algorithms.find_min_max(items)
+            return (min(items), max(items))
 
 
 def pipeline(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:

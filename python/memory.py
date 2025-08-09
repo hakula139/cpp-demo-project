@@ -34,7 +34,7 @@ class ResourceManager:
         Circle
             Created circle instance
         """
-        return self._manager.create_unique_circle(radius)
+        return self._manager.create_shared_circle(radius)
 
     def create_rectangle(self, width: float, height: float) -> Rectangle:
         """Create a Rectangle using the resource manager.
@@ -51,7 +51,7 @@ class ResourceManager:
         Rectangle
             Created rectangle instance
         """
-        return self._manager.create_unique_rectangle(width, height)
+        return self._manager.create_shared_rectangle(width, height)
 
     def create_shared_circle(self, radius: float) -> Circle:
         """Create a shared Circle.

@@ -240,6 +240,8 @@ def sample(population: list[T], k: int) -> list[T]:
     list[T]
         Sampled elements
     """
+    if k > len(population):
+        raise ValueError('Sample size cannot exceed population size')
     match population:
         case list() if all(isinstance(x, int) for x in population):
             return _random_cpp.sample_from_range(population, k)
