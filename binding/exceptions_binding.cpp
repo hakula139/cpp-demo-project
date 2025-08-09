@@ -26,11 +26,11 @@ void bind_exceptions(py::module &m) {
 
   m.def("severity_to_string", &SeverityToString, "Convert ErrorSeverity to string");
 
-  // Bind BaseException
-  py::exception<BaseException>(m, "BaseException")
+  // Bind BaseException as regular class
+  py::class_<BaseException>(m, "BaseException")
       .def(py::init<std::string_view, ErrorSeverity>(), py::arg("message"),
            py::arg("severity") = ErrorSeverity::kError)
-      .def("what", &BaseException::what)
+      .def("what", [](const BaseException &e) { return std::string(e.what()); })
       .def("get_severity", &BaseException::GetSeverity)
       .def("get_location", &BaseException::GetLocation, py::return_value_policy::reference_internal)
       .def("get_formatted_message", &BaseException::GetFormattedMessage)
@@ -40,7 +40,7 @@ void bind_exceptions(py::module &m) {
       });
 
   // Bind ValidationException
-  py::exception<ValidationException>(m, "ValidationException", m.attr("BaseException"))
+  py::class_<ValidationException, BaseException>(m, "ValidationException")
       .def(py::init<std::string_view, std::optional<std::string_view>>(), py::arg("message"),
            py::arg("field_name") = std::nullopt)
       .def("get_field_name", &ValidationException::GetFieldName)
@@ -52,7 +52,7 @@ void bind_exceptions(py::module &m) {
       });
 
   // Bind ResourceException
-  py::exception<ResourceException>(m, "ResourceException", m.attr("BaseException"))
+  py::class_<ResourceException, BaseException>(m, "ResourceException")
       .def(py::init<std::string_view, std::optional<std::string_view>>(), py::arg("message"),
            py::arg("resource_name") = std::nullopt)
       .def("get_resource_name", &ResourceException::GetResourceName)
@@ -64,7 +64,7 @@ void bind_exceptions(py::module &m) {
       });
 
   // Bind CalculationException
-  py::exception<CalculationException>(m, "CalculationException", m.attr("BaseException"))
+  py::class_<CalculationException, BaseException>(m, "CalculationException")
       .def(py::init<std::string_view, double>(), py::arg("message"), py::arg("input_value") = 0.0)
       .def("get_input_value", &CalculationException::GetInputValue)
       .def("__repr__", [](const CalculationException &e) {
@@ -77,16 +77,19 @@ void bind_exceptions(py::module &m) {
       .def(py::init<int>())
       .def(py::init<BaseException>())
       .def("has_value", &Result<int>::HasValue)
-      .def("get_value", &Result<int>::GetValue, py::return_value_policy::reference_internal)
-      .def("get_exception", &Result<int>::GetException, py::return_value_policy::reference_internal)
-      .def("visit", &Result<int>::Visit<std::function<py::object(const auto &)>>)
+      .def("get_value",
+           [](const Result<int> &r) -> int {
+             return r.GetValue();  // This will throw if error, which pybind11 will convert to
+                                   // Python exception
+           })
+      .def("get_exception", [](const Result<int> &r) -> BaseException { return r.GetException(); })
       .def("map", &Result<int>::Map<std::function<int(const int &)>>)
       .def("then", &Result<int>::Then<std::function<Result<int>(const int &)>>)
       .def("__bool__", &Result<int>::HasValue)
       .def("__str__",
            [](const Result<int> &r) {
              return r.HasValue() ? std::format("Result({})", r.GetValue())
-                                 : std::format("Result(Error: {})", r.GetException().GetMessage());
+                                 : std::format("Result(Error: {})", r.GetException().what());
            })
       .def("__repr__", [](const Result<int> &r) {
         return std::format("<IntResult({}) at {}>",
@@ -99,17 +102,16 @@ void bind_exceptions(py::module &m) {
       .def(py::init<double>())
       .def(py::init<BaseException>())
       .def("has_value", &Result<double>::HasValue)
-      .def("get_value", &Result<double>::GetValue, py::return_value_policy::reference_internal)
-      .def("get_exception", &Result<double>::GetException,
-           py::return_value_policy::reference_internal)
-      .def("visit", &Result<double>::Visit<std::function<py::object(const auto &)>>)
+      .def("get_value", [](const Result<double> &r) -> double { return r.GetValue(); })
+      .def("get_exception",
+           [](const Result<double> &r) -> BaseException { return r.GetException(); })
       .def("map", &Result<double>::Map<std::function<double(const double &)>>)
       .def("then", &Result<double>::Then<std::function<Result<double>(const double &)>>)
       .def("__bool__", &Result<double>::HasValue)
       .def("__str__",
            [](const Result<double> &r) {
              return r.HasValue() ? std::format("Result({})", r.GetValue())
-                                 : std::format("Result(Error: {})", r.GetException().GetMessage());
+                                 : std::format("Result(Error: {})", r.GetException().what());
            })
       .def("__repr__", [](const Result<double> &r) {
         return std::format("<DoubleResult({}) at {}>",
@@ -122,10 +124,9 @@ void bind_exceptions(py::module &m) {
       .def(py::init<std::string>())
       .def(py::init<BaseException>())
       .def("has_value", &Result<std::string>::HasValue)
-      .def("get_value", &Result<std::string>::GetValue, py::return_value_policy::reference_internal)
-      .def("get_exception", &Result<std::string>::GetException,
-           py::return_value_policy::reference_internal)
-      .def("visit", &Result<std::string>::Visit<std::function<py::object(const auto &)>>)
+      .def("get_value", [](const Result<std::string> &r) -> std::string { return r.GetValue(); })
+      .def("get_exception",
+           [](const Result<std::string> &r) -> BaseException { return r.GetException(); })
       .def("map", &Result<std::string>::Map<std::function<std::string(const std::string &)>>)
       .def("then",
            &Result<std::string>::Then<std::function<Result<std::string>(const std::string &)>>)
@@ -133,7 +134,7 @@ void bind_exceptions(py::module &m) {
       .def("__str__",
            [](const Result<std::string> &r) {
              return r.HasValue() ? std::format("Result('{}')", r.GetValue())
-                                 : std::format("Result(Error: {})", r.GetException().GetMessage());
+                                 : std::format("Result(Error: {})", r.GetException().what());
            })
       .def("__repr__", [](const Result<std::string> &r) {
         return std::format("<StringResult({}) at {}>",

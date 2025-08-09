@@ -43,20 +43,17 @@ void bind_timing(py::module &m) {
                            static_cast<const void *>(&t));
       });
 
-  // Bind ScopedTimer class
+  // Bind ScopedTimer class with context manager support
   py::class_<ScopedTimer>(m, "ScopedTimer")
       .def(py::init<std::string_view>())
       .def(py::init<std::string_view, std::function<void(std::int64_t)>>())
-      .def("__repr__", [](const ScopedTimer &st) {
-        return std::format("<ScopedTimer at {}>", static_cast<const void *>(&st));
-      });
-
-  // Context manager support for ScopedTimer
-  py::class_<ScopedTimer>(m, "ScopedTimerContext")
-      .def(py::init<std::string_view>())
+      .def("__repr__",
+           [](const ScopedTimer &st) {
+             return std::format("<ScopedTimer at {}>", static_cast<const void *>(&st));
+           })
       .def(
           "__enter__", [](ScopedTimer &self) { return &self; }, py::return_value_policy::reference)
-      .def("__exit__", [](ScopedTimer &self, py::object, py::object, py::object) {
+      .def("__exit__", [](ScopedTimer & /*self*/, py::object, py::object, py::object) {
         // Destructor will be called automatically
         return false;
       });
