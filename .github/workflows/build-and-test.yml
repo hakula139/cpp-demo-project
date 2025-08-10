@@ -37,8 +37,8 @@ jobs:
           - clang
           - gcc
         preset:
-          - debug-strict
-          - release-strict
+          - debug-python-strict
+          - release-python-strict
 
     steps:
       - name: Checkout
