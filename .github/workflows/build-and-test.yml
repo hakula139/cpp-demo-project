@@ -118,17 +118,34 @@ jobs:
           echo "CPPFLAGS=-I$GCC_HOME/include" >>$GITHUB_ENV
           echo "LDFLAGS=-L$GCC_HOME/lib/gcc/${{ env.GCC_VERSION }}" >>$GITHUB_ENV
 
-      - name: Configure with preset
+      - name: Install Python dependencies
         run: |
-          cmake --preset ${{ matrix.preset }} -DENABLE_CLANG_TIDY=${{ matrix.compiler == 'clang' }}
+          pip3 install -U pytest
 
-      - name: Build with preset
+      - name: Configure
         run: |
-          cmake --build --preset ${{ matrix.preset }} --parallel
+          cmake \
+            --preset ${{ matrix.preset }} \
+            -DENABLE_CLANG_TIDY=${{ matrix.compiler == 'clang' }}
 
-      - name: Test with preset
+      - name: Build
         run: |
-          ctest --preset ${{ matrix.preset }} --parallel
+          cmake \
+            --build \
+            --preset ${{ matrix.preset }} \
+            --parallel
+
+      - name: Run C++ tests
+        run: |
+          ctest \
+            --preset ${{ matrix.preset }} \
+            --parallel
+
+      - name: Run Python tests
+        env:
+          PYTHONPATH: 'python/src:build/${{ matrix.preset }}-python-strict/binding'
+        run: |
+          pytest python/tests -v
 
       - name: Upload build logs
         if: failure()

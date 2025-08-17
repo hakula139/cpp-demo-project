@@ -57,7 +57,7 @@
     {
       "name": "debug-no-tests",
       "displayName": "Debug Configuration (No Tests & Examples)",
-      "description": "Debug build without tests and examples for faster configuration",
+      "description": "Debug build without tests and examples",
       "inherits": "debug",
       "cacheVariables": {
         "BUILD_TESTS": "OFF",
@@ -67,7 +67,7 @@
     {
       "name": "release-no-tests",
       "displayName": "Release Configuration (No Tests & Examples)",
-      "description": "Release build without tests and examples for faster configuration",
+      "description": "Release build without tests and examples",
       "inherits": "release",
       "cacheVariables": {
         "BUILD_TESTS": "OFF",
@@ -76,7 +76,7 @@
     },
     {
       "name": "debug-strict",
-      "displayName": "Debug Configuration (Static Analysis + Strict Warnings)",
+      "displayName": "Debug Configuration (Static Analysis & Strict Warnings)",
       "description": "Debug build with static analysis and warnings treated as errors",
       "inherits": "debug",
       "cacheVariables": {
@@ -87,7 +87,7 @@
     },
     {
       "name": "release-strict",
-      "displayName": "Release Configuration (Static Analysis + Strict Warnings)",
+      "displayName": "Release Configuration (Static Analysis & Strict Warnings)",
       "description": "Release build with static analysis and warnings treated as errors",
       "inherits": "release",
       "cacheVariables": {
@@ -134,7 +134,7 @@
     },
     {
       "name": "debug-python-strict",
-      "displayName": "Debug Configuration (Python Bindings, Static Analysis + Strict Warnings)",
+      "displayName": "Debug Configuration (Python Bindings, Static Analysis & Strict Warnings)",
       "description": "Debug build with Python bindings enabled, static analysis and warnings treated as errors",
       "inherits": "debug-strict",
       "cacheVariables": {
@@ -143,7 +143,7 @@
     },
     {
       "name": "release-python-strict",
-      "displayName": "Release Configuration (Python Bindings, Static Analysis + Strict Warnings)",
+      "displayName": "Release Configuration (Python Bindings, Static Analysis & Strict Warnings)",
       "description": "Release build with Python bindings enabled, static analysis and warnings treated as errors",
       "inherits": "release-strict",
       "cacheVariables": {
@@ -182,15 +182,15 @@
     },
     {
       "name": "debug-strict",
-      "displayName": "Debug Build (Strict)",
-      "description": "Build debug configuration with strict warnings",
+      "displayName": "Debug Build (Static Analysis & Strict Warnings)",
+      "description": "Build debug configuration with static analysis and warnings treated as errors",
       "configurePreset": "debug-strict",
       "jobs": 0
     },
     {
       "name": "release-strict",
-      "displayName": "Release Build (Strict)",
-      "description": "Build release configuration with strict warnings",
+      "displayName": "Release Build (Static Analysis & Strict Warnings)",
+      "description": "Build release configuration with static analysis and warnings treated as errors",
       "configurePreset": "release-strict",
       "jobs": 0
     },
@@ -224,14 +224,14 @@
     },
     {
       "name": "debug-python-strict",
-      "displayName": "Debug Build (Python Bindings, Static Analysis + Strict Warnings)",
+      "displayName": "Debug Build (Python Bindings, Static Analysis & Strict Warnings)",
       "description": "Build debug configuration with Python bindings, static analysis and warnings treated as errors",
       "configurePreset": "debug-python-strict",
       "jobs": 0
     },
     {
       "name": "release-python-strict",
-      "displayName": "Release Build (Python Bindings, Static Analysis + Strict Warnings)",
+      "displayName": "Release Build (Python Bindings, Static Analysis & Strict Warnings)",
       "description": "Build release configuration with Python bindings, static analysis and warnings treated as errors",
       "configurePreset": "release-python-strict",
       "jobs": 0
@@ -247,7 +247,7 @@
         "outputOnFailure": true
       },
       "execution": {
-        "noTestsAction": "error",
+        "noTestsAction": "ignore",
         "stopOnFailure": false
       }
     },
@@ -260,14 +260,14 @@
         "outputOnFailure": true
       },
       "execution": {
-        "noTestsAction": "error",
+        "noTestsAction": "ignore",
         "stopOnFailure": false
       }
     },
     {
       "name": "debug-strict",
-      "displayName": "Debug Tests (Strict)",
-      "description": "Run tests in debug configuration with strict warnings",
+      "displayName": "Debug Tests (Static Analysis & Strict Warnings)",
+      "description": "Run tests in debug configuration with static analysis and warnings treated as errors",
       "configurePreset": "debug-strict",
       "output": {
         "outputOnFailure": true
@@ -279,9 +279,61 @@
     },
     {
       "name": "release-strict",
-      "displayName": "Release Tests (Strict)",
-      "description": "Run tests in release configuration with strict warnings",
+      "displayName": "Release Tests (Static Analysis & Strict Warnings)",
+      "description": "Run tests in release configuration with static analysis and warnings treated as errors",
       "configurePreset": "release-strict",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "debug-python",
+      "displayName": "Debug Tests (Python Bindings)",
+      "description": "Run tests in debug configuration with Python bindings",
+      "configurePreset": "debug-python",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "ignore",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "release-python",
+      "displayName": "Release Tests (Python Bindings)",
+      "description": "Run tests in release configuration with Python bindings",
+      "configurePreset": "release-python",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "ignore",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "debug-python-strict",
+      "displayName": "Debug Tests (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Run tests in debug configuration with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "debug-python-strict",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "release-python-strict",
+      "displayName": "Release Tests (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Run tests in release configuration with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "release-python-strict",
       "output": {
         "outputOnFailure": true
       },
@@ -303,13 +355,49 @@
       "displayName": "Release Package",
       "description": "Create package from release build",
       "configurePreset": "release"
+    },
+    {
+      "name": "debug-strict",
+      "displayName": "Debug Package (Static Analysis & Strict Warnings)",
+      "description": "Create package from debug build with static analysis and warnings treated as errors",
+      "configurePreset": "debug-strict"
+    },
+    {
+      "name": "release-strict",
+      "displayName": "Release Package (Static Analysis & Strict Warnings)",
+      "description": "Create package from release build with static analysis and warnings treated as errors",
+      "configurePreset": "release-strict"
+    },
+    {
+      "name": "debug-python",
+      "displayName": "Debug Package (Python Bindings)",
+      "description": "Create package from debug build with Python bindings",
+      "configurePreset": "debug-python"
+    },
+    {
+      "name": "release-python",
+      "displayName": "Release Package (Python Bindings)",
+      "description": "Create package from release build with Python bindings",
+      "configurePreset": "release-python"
+    },
+    {
+      "name": "debug-python-strict",
+      "displayName": "Debug Package (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Create package from debug build with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "debug-python-strict"
+    },
+    {
+      "name": "release-python-strict",
+      "displayName": "Release Package (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Create package from release build with Python bindings, static analysis and warnings treated as errors",
+      "configurePreset": "release-python-strict"
     }
   ],
   "workflowPresets": [
     {
       "name": "debug-workflow",
       "displayName": "Debug Workflow",
-      "description": "Complete debug workflow: configure, build, test",
+      "description": "Complete debug workflow",
       "steps": [
         {
           "type": "configure",
@@ -328,7 +416,7 @@
     {
       "name": "release-workflow",
       "displayName": "Release Workflow",
-      "description": "Complete release workflow: configure, build, test",
+      "description": "Complete release workflow",
       "steps": [
         {
           "type": "configure",
@@ -341,6 +429,120 @@
         {
           "type": "test",
           "name": "release"
+        }
+      ]
+    },
+    {
+      "name": "debug-strict-workflow",
+      "displayName": "Debug Workflow (Static Analysis & Strict Warnings)",
+      "description": "Complete debug workflow with static analysis and warnings treated as errors: configure, build, test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug-strict"
+        },
+        {
+          "type": "build",
+          "name": "debug-strict"
+        },
+        {
+          "type": "test",
+          "name": "debug-strict"
+        }
+      ]
+    },
+    {
+      "name": "release-strict-workflow",
+      "displayName": "Release Workflow (Static Analysis & Strict Warnings)",
+      "description": "Complete release workflow with static analysis and warnings treated as errors: configure, build, test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "release-strict"
+        },
+        {
+          "type": "build",
+          "name": "release-strict"
+        },
+        {
+          "type": "test",
+          "name": "release-strict"
+        }
+      ]
+    },
+    {
+      "name": "debug-python-workflow",
+      "displayName": "Debug Workflow (Python Bindings)",
+      "description": "Complete debug workflow with Python bindings",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug-python"
+        },
+        {
+          "type": "build",
+          "name": "debug-python"
+        },
+        {
+          "type": "test",
+          "name": "debug-python"
+        }
+      ]
+    },
+    {
+      "name": "release-python-workflow",
+      "displayName": "Release Workflow (Python Bindings)",
+      "description": "Complete release workflow with Python bindings",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "release-python"
+        },
+        {
+          "type": "build",
+          "name": "release-python"
+        },
+        {
+          "type": "test",
+          "name": "release-python"
+        }
+      ]
+    },
+    {
+      "name": "debug-python-strict-workflow",
+      "displayName": "Debug Workflow (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Complete debug workflow with Python bindings, static analysis and warnings treated as errors",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug-python-strict"
+        },
+        {
+          "type": "build",
+          "name": "debug-python-strict"
+        },
+        {
+          "type": "test",
+          "name": "debug-python-strict"
+        }
+      ]
+    },
+    {
+      "name": "release-python-strict-workflow",
+      "displayName": "Release Workflow (Python Bindings, Static Analysis & Strict Warnings)",
+      "description": "Complete release workflow with Python bindings, static analysis and warnings treated as errors",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "release-python-strict"
+        },
+        {
+          "type": "build",
+          "name": "release-python-strict"
+        },
+        {
+          "type": "test",
+          "name": "release-python-strict"
         }
       ]
     }

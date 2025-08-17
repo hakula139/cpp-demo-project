@@ -69,7 +69,6 @@ This project serves as both a learning resource and a reference implementation f
     - [Run on all files (optional)](#run-on-all-files-optional)
     - [What the hooks do](#what-the-hooks-do)
 - [🎯 Usage](#-usage)
-  - [Python Usage](#python-usage)
 - [📁 Project Structure](#-project-structure)
 - [🔧 Components Overview](#-components-overview)
 - [💻 Development Notes](#-development-notes)
@@ -167,20 +166,20 @@ This project uses CMake presets for streamlined build configuration.
 
 #### Configure Presets
 
-| Preset                    | Description                                                       |
-| ------------------------- | ----------------------------------------------------------------- |
-| `debug`                   | Debug build with symbols and no optimization                      |
-| `release`                 | Release build with full optimization                              |
-| `debug-no-tests`          | Debug build without tests and examples (faster config)            |
-| `release-no-tests`        | Release build without tests and examples (faster config)          |
-| `debug-strict`            | Debug build with static analysis and warnings treated as errors   |
-| `release-strict`          | Release build with static analysis and warnings treated as errors |
-| `debug-python`            | Debug build with Python bindings                                  |
-| `release-python`          | Release build with Python bindings                                |
-| `debug-python-no-tests`   | Debug build with Python bindings and no tests and examples        |
-| `release-python-no-tests` | Release build with Python bindings and no tests and examples      |
-| `debug-python-strict`     | Debug build with Python bindings and strict warnings              |
-| `release-python-strict`   | Release build with Python bindings and strict warnings            |
+| Preset                    | Description                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `debug`                   | Debug build with symbols and no optimization                                       |
+| `release`                 | Release build with full optimization                                               |
+| `debug-no-tests`          | Debug build without tests and examples (faster config)                             |
+| `release-no-tests`        | Release build without tests and examples (faster config)                           |
+| `debug-strict`            | Debug build with static analysis and warnings treated as errors                    |
+| `release-strict`          | Release build with static analysis and warnings treated as errors                  |
+| `debug-python`            | Debug build with Python bindings                                                   |
+| `release-python`          | Release build with Python bindings                                                 |
+| `debug-python-no-tests`   | Debug build with Python bindings, without tests and examples                       |
+| `release-python-no-tests` | Release build with Python bindings, without tests and examples                     |
+| `debug-python-strict`     | Debug build with Python bindings, static analysis and warnings treated as errors   |
+| `release-python-strict`   | Release build with Python bindings, static analysis and warnings treated as errors |
 
 #### Build & Test Presets
 
@@ -188,10 +187,18 @@ Each configure preset has corresponding build and test presets with the same nam
 
 #### Workflow Presets
 
-| Preset             | Description                                         |
-| ------------------ | --------------------------------------------------- |
-| `debug-workflow`   | Complete debug workflow: configure + build + test   |
-| `release-workflow` | Complete release workflow: configure + build + test |
+Each workflow preset is a combination of the configure, build, and test presets.
+
+| Preset                           | Description                                          |
+| -------------------------------- | ---------------------------------------------------- |
+| `debug-workflow`                 | Complete workflow for `debug` preset                 |
+| `release-workflow`               | Complete workflow for `release` preset               |
+| `debug-strict-workflow`          | Complete workflow for `debug-strict` preset          |
+| `release-strict-workflow`        | Complete workflow for `release-strict` preset        |
+| `debug-python-workflow`          | Complete workflow for `debug-python` preset          |
+| `release-python-workflow`        | Complete workflow for `release-python` preset        |
+| `debug-python-strict-workflow`   | Complete workflow for `debug-python-strict` preset   |
+| `release-python-strict-workflow` | Complete workflow for `release-python-strict` preset |
 
 #### Usage Examples
 
@@ -289,24 +296,6 @@ auto main() -> int {
 
   return 0;
 }
-```
-
-### Python Usage
-
-```python
-from cpp_features import algorithms, containers, shapes
-
-# Use C++ containers
-container = containers.create_container([1, 3, 2, 5, 4])
-print(f'Original: {list(container)}')
-
-# Sort the container in place
-algorithms.sort_inplace(container)
-print(f'Sorted: {list(container)}')
-
-# Create and use shapes with validation
-circle = shapes.create_shape(shapes.ShapeType.CIRCLE, 5.0)
-print(f'Area: {circle.get_area():.2f}, Perimeter: {circle.get_perimeter():.2f}')
 ```
 
 ## 📁 Project Structure
@@ -437,6 +426,14 @@ repos:
       - id: black
         files: \.py$
         args: ['-S']
+
+  # Python import sorting with isort
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        files: \.py$
+        args: ['--profile', 'black', '--filter-files']
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
