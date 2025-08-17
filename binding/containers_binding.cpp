@@ -21,6 +21,7 @@
 namespace py = pybind11;
 using namespace cpp_features::containers;
 using cpp_features::concepts::CopyableType;
+using cpp_features::concepts::TransformFunction;
 
 namespace {
 
@@ -30,6 +31,12 @@ auto GetItem(const Container<T> &self, typename Container<T>::size_type index) -
     return result->get();
   }
   throw py::index_error("Index out of bounds");
+}
+
+template <typename Input, typename Output>
+auto GetTransformWrapper(const Container<Input> &self,
+                         const std::function<Output(Input)> &transform) {
+  return self.template GetTransformedView<Output>(transform);
 }
 
 template <CopyableType T>
@@ -69,7 +76,9 @@ void BindContainers(py::module &m) {
       .def("at", &GetItem<int>)
       .def("view", &IntContainer::GetView)
       .def("filter", &IntContainer::GetFilteredView<std::function<bool(int)>>)
-      .def("transform", &IntContainer::GetTransformedView<std::function<int(int)>>)
+      .def("transform", &GetTransformWrapper<int, int>)
+      .def("transform", &GetTransformWrapper<int, double>)
+      .def("transform", &GetTransformWrapper<int, std::string>)
       .def("__len__", &IntContainer::GetSize)
       .def("__bool__", [](const IntContainer &self) { return !self.IsEmpty(); })
       .def("__getitem__", &GetItem<int>)
@@ -90,7 +99,9 @@ void BindContainers(py::module &m) {
       .def("at", &GetItem<double>)
       .def("view", &FloatContainer::GetView)
       .def("filter", &FloatContainer::GetFilteredView<std::function<bool(double)>>)
-      .def("transform", &FloatContainer::GetTransformedView<std::function<double(double)>>)
+      .def("transform", &GetTransformWrapper<double, int>)
+      .def("transform", &GetTransformWrapper<double, double>)
+      .def("transform", &GetTransformWrapper<double, std::string>)
       .def("__len__", &FloatContainer::GetSize)
       .def("__bool__", [](const FloatContainer &self) { return !self.IsEmpty(); })
       .def("__getitem__", &GetItem<double>)
@@ -111,8 +122,9 @@ void BindContainers(py::module &m) {
       .def("at", &GetItem<std::string>)
       .def("view", &StringContainer::GetView)
       .def("filter", &StringContainer::GetFilteredView<std::function<bool(const std::string &)>>)
-      .def("transform",
-           &StringContainer::GetTransformedView<std::function<std::string(const std::string &)>>)
+      .def("transform", &GetTransformWrapper<std::string, int>)
+      .def("transform", &GetTransformWrapper<std::string, double>)
+      .def("transform", &GetTransformWrapper<std::string, std::string>)
       .def("__len__", &StringContainer::GetSize)
       .def("__bool__", [](const StringContainer &self) { return !self.IsEmpty(); })
       .def("__getitem__", &GetItem<std::string>)

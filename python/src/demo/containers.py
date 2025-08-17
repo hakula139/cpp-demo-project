@@ -1,55 +1,77 @@
-"""Modern Python wrapper for the containers module.
+"""Python wrapper for the containers module."""
 
-Enhanced container functionality with Python 3.13 features.
-"""
-
+import builtins
 from collections.abc import Iterable
 from typing import Any, Callable, Generic, Iterator, TypeVar
 
 import cpp_features.containers as _containers
 
 T = TypeVar('T')
+U = TypeVar('U')
 
 
 class Container(Generic[T]):
-    """Generic container wrapper with enhanced Python integration.
+    """A generic container wrapper with enhanced functionality."""
 
-    Provides a more Pythonic interface to the C++ Container class.
+    def __init__(
+        self, container_type: type[T], data: Iterable[T] | None = None
+    ) -> None:
+        """Initialize container with specific type.
 
-    Parameters
-    ----------
-    container_type : type[T]
-        The type of elements to store in the container
-    data : Iterable[T], optional
-        Initial data to populate the container
-    """
+        Parameters
+        ----------
+        container_type : type[T]
+            The type of elements stored in the container
+        data : Iterable[T], optional
+            Initial data to populate the container
 
-    def __init__(self, container_type: type[T], data: Iterable[T] | None = None):
-        """Initialize container with specific type."""
+        Examples
+        --------
+        >>> Container(int, [1, 2, 3])
+        <IntContainer(size=3) at 0x7f8458000000>
+        >>> Container(float, [1.1, 2.2, 3.3])
+        <FloatContainer(size=3) at 0x7f8458000000>
+        >>> Container(str, ['a', 'b', 'c'])
+        <StringContainer(size=3) at 0x7f8458000000>
+        """
         self._type = container_type
 
-        if container_type is int:
-            self._container = _containers.IntContainer(list(data) if data else [])
-        elif container_type is float:
-            # C++ name is FloatContainer in bindings
-            self._container = _containers.FloatContainer(list(data) if data else [])
-        elif container_type is str:
-            self._container = _containers.StringContainer(list(data) if data else [])
-        else:
-            raise ValueError(f'Unsupported container type: {container_type}')
+        match container_type:
+            case builtins.int:
+                cls = _containers.IntContainer
+            case builtins.float:
+                cls = _containers.FloatContainer
+            case builtins.str:
+                cls = _containers.StringContainer
+            case _:
+                raise ValueError(f'Unsupported container type: {container_type}')
+
+        self._container = cls(list(data)) if data else cls()
 
     def add(self, item: T) -> None:
-        """Add item to container.
+        """Add an element to the container.
+
+        Adds a copy of the specified element to the end of the container.
 
         Parameters
         ----------
         item : T
-            The item to add to the container
+            The element to add
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3])
+        >>> container.add(4)
+        >>> list(container)
+        [1, 2, 3, 4]
         """
         self._container.add(item)
 
     def remove(self, item: T) -> int:
-        """Remove all occurrences of item.
+        """Remove all occurrences of a specific item.
+
+        Removes all elements that compare equal to the specified item.
+        The container size is reduced by the number of removed elements.
 
         Parameters
         ----------
@@ -59,86 +81,149 @@ class Container(Generic[T]):
         Returns
         -------
         int
-            Number of items removed
+            The number of elements that were removed
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3, 2, 4, 2])
+        >>> container.remove(2)
+        3
+        >>> list(container)
+        [1, 3, 4]
         """
         return self._container.remove(item)
 
     def __len__(self) -> int:
-        """Get container size.
+        """Get the number of elements in the container.
 
         Returns
         -------
         int
-            Number of elements in the container
+            The number of elements currently stored in the container
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3])
+        >>> len(container)
+        3
         """
         return len(self._container)
 
     def __bool__(self) -> bool:
-        """Check if container is not empty.
+        """Check if the container is not empty.
 
         Returns
         -------
         bool
-            True if container has elements, False otherwise
+            True if the container contains elements, False otherwise
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3])
+        >>> bool(container)
+        True
+        >>> container = Container(int, [])
+        >>> bool(container)
+        False
         """
         return bool(self._container)
 
     def __iter__(self) -> Iterator[T]:
-        """Iterate over container.
+        """Iterate over the container.
+
+        Iterates over the elements in the container in the order they were added.
 
         Returns
         -------
         Iterator[T]
             Iterator over container elements
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3])
+        >>> for item in container:
+        ...     print(item)
+        1
+        2
+        3
         """
         return iter(self._container)
 
     def __getitem__(self, index: int) -> T:
-        """Get item at index.
+        """Access the element at specified index.
+
+        Returns the element at the specified index.
 
         Parameters
         ----------
         index : int
-            Index of the item to retrieve
+            The index of the element to access
 
         Returns
         -------
         T
-            The item at the specified index
+            The element at the specified index
+
+        Raises
+        ------
+        IndexError
+            If the index is out of bounds
+
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3])
+        >>> container[1]
+        2
         """
         return self._container[index]
 
     def filter(self, predicate: Callable[[T], bool]) -> list[T]:
         """Filter container elements.
 
+        Returns a list of elements that satisfy the predicate.
+
         Parameters
         ----------
         predicate : Callable[[T], bool]
-            Function to test each element
+            The predicate function that returns true for elements to include.
 
         Returns
         -------
         list[T]
-            List of elements that satisfy the predicate
-        """
-        return [item for item in self._container if predicate(item)]
+            A list of elements that satisfy the predicate
 
-    def transform(self, func: Callable[[T], Any]) -> list[Any]:
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3, 4, 5])
+        >>> container.filter(lambda x: x % 2 == 0)
+        [2, 4]
+        """
+        return self._container.filter(predicate)
+
+    def transform(self, func: Callable[[T], U]) -> list[U]:
         """Transform container elements.
+
+        Returns a list of elements that have been transformed by the provided function.
 
         Parameters
         ----------
-        func : Callable[[T], Any]
-            Function to apply to each element
+        func : Callable[[T], U]
+            The function to apply to each element
 
         Returns
         -------
-        list[Any]
-            List of transformed elements
-        """
-        return [func(item) for item in self._container]
+        list[U]
+            A list of transformed elements
 
-    def __repr__(self) -> str:
+        Examples
+        --------
+        >>> container = Container(int, [1, 2, 3, 4, 5])
+        >>> container.transform(lambda x: x * 2)
+        [2, 4, 6, 8, 10]
+        """
+        return self._container.transform(func)
+
+    def __str__(self) -> str:
         """String representation.
 
         Returns
@@ -146,57 +231,19 @@ class Container(Generic[T]):
         str
             String representation of the container
         """
-        return f'Container[{self._type.__name__}]({list(self._container)})'
+        return str(self._container)
 
+    def __repr__(self) -> str:
+        """String representation (for debugging).
 
-def create_container(data: Iterable[T]) -> Container[T]:
-    """Factory function to create appropriately typed container.
+        Returns
+        -------
+        str
+            String representation of the container
+        """
+        return repr(self._container)
 
-    Uses pattern matching to determine container type.
-
-    Parameters
-    ----------
-    data : Iterable[T]
-        Data to populate the container
-
-    Returns
-    -------
-    Container[T]
-        Container with appropriate type
-
-    Raises
-    ------
-    ValueError
-        If data is empty or contains unsupported types
-    """
-    if not data:
-        raise ValueError('Cannot determine type from empty data')
-
-    # Get first item to determine type
-    first_item = next(iter(data))
-
-    match first_item:
-        case int():
-            return Container(int, data)
-        case float():
-            return Container(float, data)
-        case str():
-            return Container(str, data)
-        case _:
-            raise ValueError(f'Unsupported data type: {type(first_item)}')
-
-
-# Re-export C++ classes
-IntContainer = _containers.IntContainer
-FloatContainer = _containers.FloatContainer
-StringContainer = _containers.StringContainer
-ContainerError = _containers.ContainerError
 
 __all__ = [
     'Container',
-    'IntContainer',
-    'FloatContainer',
-    'StringContainer',
-    'ContainerError',
-    'create_container',
 ]

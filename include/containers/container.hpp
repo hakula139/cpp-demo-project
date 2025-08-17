@@ -276,8 +276,9 @@ class Container {
   /**
    * @brief Get a transformed view of elements
    *
-   * @tparam Func Type of the transformation function
-   * @param transform_func Function to apply to each element
+   * @tparam U The type of the output elements
+   * @tparam Func The type of the transformation function. Must satisfy TransformFunction<T, U>
+   * @param transform_func The function to apply to each element
    * @return A ranges view containing transformed elements
    *
    * Returns a lazy-evaluated view where each element is transformed by the provided function.
@@ -286,7 +287,7 @@ class Container {
    * auto doubled = container.GetTransformedView([](int n) { return n * 2; });
    * @endcode
    */
-  template <typename Func>
+  template <typename U = T, cpp_features::concepts::TransformFunction<T, U> Func>
   [[nodiscard]] auto GetTransformedView(Func transform_func) const {
     return data_ | std::views::transform(transform_func);
   }

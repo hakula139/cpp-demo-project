@@ -198,6 +198,75 @@ TEST_CASE("TimerCallback concept", "[concepts][callable][timer]") {
   }
 }
 
+template <typename Input, typename Output, TransformFunction<Input, Output> Func>
+auto TestTransformFunction(const Input &input, const Func &transform) -> Output {
+  return transform(input);
+}
+
+TEST_CASE("TransformFunction concept", "[concepts][callable][transform]") {
+  SECTION("Valid transform functions") {
+    // Lambda functions
+    REQUIRE(TransformFunction<decltype([](int n) { return n * n; }), int, int>);
+    REQUIRE(TransformFunction<decltype([](int n) { return static_cast<double>(n); }), int, double>);
+    REQUIRE(TransformFunction<decltype([](const std::string &s) { return s.length(); }),
+                              std::string, std::size_t>);
+    REQUIRE(TransformFunction<decltype([](double d) { return std::to_string(d); }), double,
+                              std::string>);
+
+    // Function pointers
+    REQUIRE(TransformFunction<int (*)(int), int, int>);
+    REQUIRE(TransformFunction<double (*)(int), int, double>);
+    REQUIRE(TransformFunction<std::string (*)(int), int, std::string>);
+
+    // std::function
+    REQUIRE(TransformFunction<std::function<int(int)>, int, int>);
+    REQUIRE(TransformFunction<std::function<double(int)>, int, double>);
+    REQUIRE(TransformFunction<std::function<std::string(int)>, int, std::string>);
+
+    // Test actual usage
+    auto square = [](int n) { return n * n; };
+    auto to_double = [](int n) { return static_cast<double>(n); };
+    auto to_string = [](int n) { return std::to_string(n); };
+    auto string_length = [](const std::string &s) { return s.length(); };
+
+    std::function<int(int)> func_square = [](int n) { return n * n; };
+    std::function<std::string(int)> func_to_string = [](int n) { return std::to_string(n); };
+
+    REQUIRE(TestTransformFunction<int, int>(5, square) == 25);
+    REQUIRE(TestTransformFunction<int, double>(42, to_double) == 42.0);
+    REQUIRE(TestTransformFunction<int, std::string>(123, to_string) == "123");
+    REQUIRE(TestTransformFunction<std::string, std::size_t>("hello", string_length) == 5);
+    REQUIRE(TestTransformFunction<int, int>(7, func_square) == 49);
+    REQUIRE(TestTransformFunction<int, std::string>(456, func_to_string) == "456");
+  }
+
+  SECTION("Invalid transform functions") {
+    // Wrong input type
+    REQUIRE_FALSE(TransformFunction<decltype([](int) { return 42; }), std::string, int>);
+    REQUIRE_FALSE(TransformFunction<decltype([](const std::string &) { return 42; }), int, int>);
+
+    // Wrong output type (not convertible)
+    struct NonConvertible {};
+    REQUIRE_FALSE(TransformFunction<decltype([](const int &) { return NonConvertible{}; }), int,
+                                    std::string>);
+    REQUIRE_FALSE(TransformFunction<decltype([](int) { return std::vector<int>{}; }), int, int>);
+
+    // Wrong arity
+    REQUIRE_FALSE(TransformFunction<decltype([]() { return 42; }), int, int>);
+    REQUIRE_FALSE(TransformFunction<decltype([](int, int) { return 42; }), int, int>);
+
+    // Not callable
+    REQUIRE_FALSE(TransformFunction<int, int, int>);
+    REQUIRE_FALSE(TransformFunction<std::string, int, int>);
+    REQUIRE_FALSE(TransformFunction<void *, int, int>);
+
+    // Function pointers with wrong signatures
+    REQUIRE_FALSE(TransformFunction<void (*)(int), int, int>);
+    REQUIRE_FALSE(TransformFunction<int (*)(), int, int>);
+    REQUIRE_FALSE(TransformFunction<int (*)(std::string), int, int>);
+  }
+}
+
 template <typename T, PredicateFor<T> Predicate>
 auto TestPredicateFor(const T &value, Predicate predicate) -> bool {
   return predicate(value);
