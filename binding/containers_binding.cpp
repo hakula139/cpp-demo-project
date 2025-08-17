@@ -12,9 +12,7 @@
 
 #include <pybind11/attr.h>
 #include <pybind11/detail/common.h>
-#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 
 #include "concepts/concepts.hpp"
 #include "concepts/utility_concepts.hpp"

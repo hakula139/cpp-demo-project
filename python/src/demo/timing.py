@@ -298,15 +298,9 @@ def time_function(func: Callable[[], Any]) -> str:
     return _timing.to_human_readable(elapsed_ns)
 
 
-# Re-export C++ classes
-CppTimer = _timing.Timer
-ScopedTimer = _timing.ScopedTimer
-
 __all__ = [
     'Timer',
     'Benchmark',
-    'CppTimer',
-    'ScopedTimer',
     'measure_time',
     'benchmark_function',
     'time_function',

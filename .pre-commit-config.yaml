@@ -30,6 +30,14 @@ repos:
         files: \.py$
         args: ['-S']
 
+  # Python import sorting with isort
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        files: \.py$
+        args: ['--profile', 'black', '--filter-files']
+
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.18.1

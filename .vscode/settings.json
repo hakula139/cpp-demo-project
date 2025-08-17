@@ -19,6 +19,7 @@
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
   "cursorpyright.analysis.extraPaths": [
+    "python/src",
     "build/debug-python/binding",
     "build/release-python/binding",
     "build/debug-python-no-tests/binding",
@@ -42,6 +43,10 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.ignoreLimitWarning": true,
+  "isort.args": [
+    "--profile",
+    "black"
+  ],
   "markdownlint.config": {
     "extends": ".markdownlint.yaml"
   }
