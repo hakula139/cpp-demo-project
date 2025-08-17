@@ -17,12 +17,14 @@ U = TypeVar('U')
 
 
 def sort_inplace(data: list[T] | Container[T]) -> None:
-    """Sort a list or Container in place.
+    """Sort a container in-place.
+
+    Sorts the elements in the container in ascending order.
 
     Parameters
     ----------
-    data : list[T] or Container[T]
-        The data structure to sort
+    data : list[T] | Container[T]
+        The container to sort in-place
 
     Examples
     --------
@@ -41,17 +43,20 @@ def sort_inplace(data: list[T] | Container[T]) -> None:
 def count_if(data: Iterable[T], predicate: Callable[[T], bool]) -> int:
     """Count elements in a sequence that satisfy a predicate.
 
+    Counts the number of elements in the sequence for which the predicate
+    returns true.
+
     Parameters
     ----------
     data : Iterable[T]
-        The data to search through
+        The input sequence to examine
     predicate : Callable[[T], bool]
-        Function to test each element
+        The predicate function to test each element
 
     Returns
     -------
     int
-        Number of elements matching the predicate
+        The number of elements that satisfy the predicate
 
     Examples
     --------
@@ -72,17 +77,20 @@ def count_if(data: Iterable[T], predicate: Callable[[T], bool]) -> int:
 def transform_to_list(data: Iterable[T], func: Callable[[T], U]) -> list[U]:
     """Transform a sequence into a list using a transformation function.
 
+    Applies the transformation function to each element in the input sequence
+    and collects the results in a new list.
+
     Parameters
     ----------
     data : Iterable[T]
-        The data to transform
+        The input sequence to transform
     func : Callable[[T], U]
-        Function to apply to each element
+        The transformation function to apply to each element
 
     Returns
     -------
     list[U]
-        List of transformed elements
+        A list containing the transformed elements
 
     Examples
     --------
@@ -107,13 +115,13 @@ def find_min_max(
 
     Parameters
     ----------
-    data : Iterable[T]
-        The sequence to search
+    data : Iterable[SupportsRichComparisonT]
+        The input sequence to search for minimum and maximum elements
 
     Returns
     -------
-    tuple[T, T]
-        Tuple containing (minimum, maximum) values
+    tuple[SupportsRichComparisonT, SupportsRichComparisonT]
+        A tuple containing the minimum and maximum elements (min, max)
     """
     match data:
         case list() | tuple():
@@ -127,15 +135,17 @@ def find_min_max(
 def pipeline(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     """Create a function pipeline.
 
+    Creates a function that applies a sequence of functions in a pipeline.
+
     Parameters
     ----------
     *functions : Callable[[Any], Any]
-        Functions to compose in pipeline order
+        The functions to compose in pipeline order
 
     Returns
     -------
     Callable[[Any], Any]
-        Composed function that applies all functions in sequence
+        A composed function that applies all functions in sequence
 
     Examples
     --------
