@@ -93,12 +93,6 @@ def geometric_data_analysis() -> None:
         print(f'  Perimeter statistics:')
         print(f'    Range: {min_perim:.2f} - {max_perim:.2f}')
         print(f'    Complex shapes (perimeter > 15): {complex_shapes}')
-        print(f'  Efficiency analysis:')
-        print(f'    Best efficiency: {max(efficiency_ratios):.4f}')
-        print(f'    Worst efficiency: {min(efficiency_ratios):.4f}')
-        print(
-            f'    Median efficiency: {efficiency_ratios[len(efficiency_ratios)//2]:.4f}'
-        )
 
     print()
 

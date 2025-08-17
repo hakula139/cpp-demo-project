@@ -31,7 +31,8 @@ class Container(Generic[T]):
         if container_type is int:
             self._container = _containers.IntContainer(list(data) if data else [])
         elif container_type is float:
-            self._container = _containers.DoubleContainer(list(data) if data else [])
+            # C++ name is FloatContainer in bindings
+            self._container = _containers.FloatContainer(list(data) if data else [])
         elif container_type is str:
             self._container = _containers.StringContainer(list(data) if data else [])
         else:
@@ -187,14 +188,14 @@ def create_container(data: Iterable[T]) -> Container[T]:
 
 # Re-export C++ classes
 IntContainer = _containers.IntContainer
-DoubleContainer = _containers.DoubleContainer
+FloatContainer = _containers.FloatContainer
 StringContainer = _containers.StringContainer
 ContainerError = _containers.ContainerError
 
 __all__ = [
     'Container',
     'IntContainer',
-    'DoubleContainer',
+    'FloatContainer',
     'StringContainer',
     'ContainerError',
     'create_container',

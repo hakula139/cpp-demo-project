@@ -58,7 +58,8 @@ class RandomGenerator:
         int
             Random long integer in the specified range
         """
-        return self._generator.generate_long(min_val, max_val)
+        # Use 64-bit integer generation via bound template
+        return self._generator.generate_int(min_val, max_val)
 
     def random(self) -> float:
         """Generate random float in range [0.0, 1.0).
@@ -102,7 +103,8 @@ class RandomGenerator:
         float
             Random float32 in the specified range
         """
-        return self._generator.generate_float(min_val, max_val)
+        # No dedicated float32; reuse double precision
+        return float(self._generator.generate_real(min_val, max_val))
 
     def choice(self, probability: float = 0.5) -> bool:
         """Generate random boolean with given probability.
@@ -151,7 +153,8 @@ class RandomGenerator:
         float
             Random float32 from normal distribution
         """
-        return self._generator.generate_normal_float(mean, stddev)
+        # No dedicated float32 normal; reuse double precision
+        return float(self._generator.generate_normal(mean, stddev))
 
     def integers(self, min_val: int, max_val: int, count: int) -> list[int]:
         """Generate list of random integers.
@@ -170,7 +173,7 @@ class RandomGenerator:
         list[int]
             List of random integers
         """
-        return self._generator.generate_int_vector(min_val, max_val, count)
+        return self._generator.generate_int_list(min_val, max_val, count)
 
     def floats(self, min_val: float, max_val: float, count: int) -> list[float]:
         """Generate list of random floats.
@@ -189,7 +192,7 @@ class RandomGenerator:
         list[float]
             List of random floats
         """
-        return self._generator.generate_real_vector(min_val, max_val, count)
+        return self._generator.generate_real_list(min_val, max_val, count)
 
     def seed(self, seed: int) -> None:
         """Set seed for reproducible results.

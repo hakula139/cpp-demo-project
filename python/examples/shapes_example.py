@@ -61,13 +61,11 @@ def shape_analysis_demo() -> None:
     print(f'  - Area: {circle_metrics.area:.2f}')
     print(f'  - Perimeter: {circle_metrics.perimeter:.2f}')
     print(f'  - Aspect ratio: {circle_metrics.aspect_ratio:.4f}')
-    print(f'  - Efficiency: {circle_metrics.efficiency:.4f}')
 
     print(f'Rectangle analysis:')
     print(f'  - Area: {rectangle_metrics.area:.2f}')
     print(f'  - Perimeter: {rectangle_metrics.perimeter:.2f}')
     print(f'  - Aspect ratio: {rectangle_metrics.aspect_ratio:.4f}')
-    print(f'  - Efficiency: {rectangle_metrics.efficiency:.4f}')
 
     print()
 
@@ -99,15 +97,12 @@ def shape_comparison_demo() -> None:
     print(f'  - Average area: {comparison["average_area"]:.2f}')
     print(f'  - Largest shape by area: {comparison["largest_by_area"].get_name()}')
     print(f'  - Smallest shape by area: {comparison["smallest_by_area"].get_name()}')
-    print(f'  - Most efficient shape: {comparison["most_efficient"].get_name()}')
 
     # Show individual shape details
     print(f'\nIndividual Shape Details:')
     for i, shape in enumerate(shapes, 1):
         metrics = analyze_shape(shape)
-        print(
-            f'  {i}. {shape.get_name()}: area={metrics.area:.2f}, efficiency={metrics.efficiency:.4f}'
-        )
+        print(f'  {i}. {shape.get_name()}: area={metrics.area:.2f}')
 
     print()
 
