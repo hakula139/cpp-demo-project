@@ -30,7 +30,6 @@
     "source.fixAll.clangd": "explicit",
     "source.organizeImports": "explicit"
   },
-  "editor.detectIndentation": false,
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
   },
