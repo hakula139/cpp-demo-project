@@ -4,8 +4,7 @@ Comprehensive tests following C++ test patterns for container functionality.
 """
 
 import pytest
-
-from python import containers
+from demo import containers
 
 
 class TestContainer:

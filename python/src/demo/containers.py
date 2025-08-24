@@ -2,7 +2,7 @@
 
 import builtins
 from collections.abc import Iterable
-from typing import Any, Callable, Generic, Iterator, TypeVar
+from typing import Callable, Generic, Iterator, TypeVar
 
 import cpp_features.containers as _containers
 
