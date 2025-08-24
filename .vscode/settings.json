@@ -5,6 +5,7 @@
   "clangd.arguments": [
     "--background-index",
     "--clang-tidy",
+    "--compile-commands-dir=build",
     "--completion-style=detailed",
     "--enable-config",
     "--header-insertion=iwyu",
@@ -20,12 +21,7 @@
   "cmake.configureOnOpen": true,
   "cursorpyright.analysis.extraPaths": [
     "python/src",
-    "build/debug-python/binding",
-    "build/release-python/binding",
-    "build/debug-python-no-tests/binding",
-    "build/release-python-no-tests/binding",
-    "build/debug-python-strict/binding",
-    "build/release-python-strict/binding"
+    "build/binding"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.clangd": "explicit",
