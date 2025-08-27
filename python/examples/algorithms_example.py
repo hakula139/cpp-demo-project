@@ -1,12 +1,6 @@
 """Example demonstrating the usage of the algorithms module."""
 
-from demo.algorithms import (
-    count_if,
-    find_min_max,
-    pipeline,
-    sort_inplace,
-    transform_to_list,
-)
+from demo.algorithms import *
 from demo.containers import Container
 
 
@@ -14,11 +8,11 @@ def main() -> None:
     """Run all algorithm examples."""
     print('=== Algorithms Module Example ===')
 
-    # Demonstrate sort_inplace with integers
+    # Demonstrate sort with integers
     numbers = Container(int, [42, 17, 89, 3, 56, 23, 78, 12, 95, 34])
     print(f'Original numbers: {numbers}')
 
-    sort_inplace(numbers)
+    sort(numbers)
     print(f'Sorted numbers: {numbers}')
 
     # Demonstrate count_if
@@ -40,7 +34,7 @@ def main() -> None:
     words = Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple'])
     print(f'Original words: {words}')
 
-    sort_inplace(words)
+    sort(words)
     print(f'Sorted words: {words}')
 
     long_words = count_if(words, lambda word: len(word) > 5)

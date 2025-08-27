@@ -1,50 +1,41 @@
-"""Modern Python wrapper for the random module.
+"""Python wrapper for the random module."""
 
-Type-safe random number generation with enhanced Python integration.
-"""
+from typing import TypeVar
 
-import random as _random
-from typing import Generic, TypeVar
+import cpp_features.random as _random
 
-import cpp_features.random as _random_cpp
+from .containers import Container
 
 T = TypeVar('T')
 
 
 class RandomGenerator:
-    """Enhanced random generator with additional Python functionality.
+    """A random number generator."""
 
-    Parameters
-    ----------
-    seed : int, optional
-        Seed value for reproducible results
-    """
+    def __init__(self, seed: int | None = None) -> None:
+        """Initialize the random number generator.
 
-    def __init__(self, seed: int | None = None):
+        Parameters
+        ----------
+        seed : int, optional
+            Seed value for reproducible results
+
+        Examples
+        --------
+        >>> RandomGenerator()
+        <RandomGenerator(seed=None) at 0x7f8458000000>
+        >>> RandomGenerator(seed=12345)
+        <RandomGenerator(seed=12345) at 0x7f8458000000>
+        """
         if seed is not None:
-            self._generator = _random_cpp.RandomGenerator(seed)
+            self._generator = _random.RandomGenerator(seed)
         else:
-            self._generator = _random_cpp.RandomGenerator()
+            self._generator = _random.RandomGenerator()
 
-    def randint(self, min_val: int, max_val: int) -> int:
-        """Generate random integer in range [min_val, max_val].
+    def rand_int(self, min_val: int, max_val: int) -> int:
+        """Generate a random integer within a range.
 
-        Parameters
-        ----------
-        min_val : int
-            Minimum value (inclusive)
-        max_val : int
-            Maximum value (inclusive)
-
-        Returns
-        -------
-        int
-            Random integer in the specified range
-        """
-        return self._generator.generate_int(min_val, max_val)
-
-    def randlong(self, min_val: int, max_val: int) -> int:
-        """Generate random long integer in range [min_val, max_val].
+        Generates a uniformly distributed random integral value within the specified range.
 
         Parameters
         ----------
@@ -56,23 +47,19 @@ class RandomGenerator:
         Returns
         -------
         int
-            Random long integer in the specified range
+            Random integer in the range [min_val, max_val]
+
+        Examples
+        --------
+        >>> rg.rand_int(1, 10)
+        5
         """
-        # Use 64-bit integer generation via bound template
-        return self._generator.generate_int(min_val, max_val)
+        return self._generator.rand_int(min_val, max_val)
 
-    def random(self) -> float:
-        """Generate random float in range [0.0, 1.0).
+    def rand_float(self, min_val: float, max_val: float) -> float:
+        """Generate a random floating-point value within a range.
 
-        Returns
-        -------
-        float
-            Random float between 0.0 and 1.0
-        """
-        return self._generator.generate_real(0.0, 1.0)
-
-    def uniform(self, min_val: float, max_val: float) -> float:
-        """Generate random float in range [min_val, max_val).
+        Generates a uniformly distributed random floating-point value within the specified range.
 
         Parameters
         ----------
@@ -84,30 +71,74 @@ class RandomGenerator:
         Returns
         -------
         float
-            Random float in the specified range
-        """
-        return self._generator.generate_real(min_val, max_val)
+            Random floating-point value in the range [min_val, max_val)
 
-    def randfloat(self, min_val: float, max_val: float) -> float:
-        """Generate random float32 value.
+        Examples
+        --------
+        >>> rg.rand_float(0.0, 1.0)
+        0.5
+        """
+        return self._generator.rand_float(min_val, max_val)
+
+    def rand_ints(self, min_val: int, max_val: int, count: int) -> list[int]:
+        """Generate a list of random integral values.
+
+        Efficiently generates a vector of uniformly distributed random integral values.
+        Each value is independently generated within the specified range.
+
+        Parameters
+        ----------
+        min_val : int
+            Minimum value for each element (inclusive)
+        max_val : int
+            Maximum value for each element (inclusive)
+        count : int
+            Number of random values to generate
+
+        Returns
+        -------
+        list[int]
+            A list of random integral values
+
+        Examples
+        --------
+        >>> rg.rand_ints(1, 10, 5)
+        [3, 8, 2, 6, 4]
+        """
+        return self._generator.rand_ints(min_val, max_val, count)
+
+    def rand_floats(self, min_val: float, max_val: float, count: int) -> list[float]:
+        """Generate a list of random floating-point values.
+
+        Efficiently generates a vector of uniformly distributed random floating-point values.
+        Each value is independently generated within the specified range.
 
         Parameters
         ----------
         min_val : float
-            Minimum value (inclusive)
+            Minimum value for each element (inclusive)
         max_val : float
-            Maximum value (exclusive)
+            Maximum value for each element (exclusive)
+        count : int
+            Number of random values to generate
 
         Returns
         -------
-        float
-            Random float32 in the specified range
-        """
-        # No dedicated float32; reuse double precision
-        return float(self._generator.generate_real(min_val, max_val))
+        list[float]
+            A list of random floating-point values
 
-    def choice(self, probability: float = 0.5) -> bool:
-        """Generate random boolean with given probability.
+        Examples
+        --------
+        >>> rg.rand_floats(0.0, 1.0, 5)
+        [0.234, 0.765, 0.123, 0.890, 0.456]
+        """
+        return self._generator.rand_floats(min_val, max_val, count)
+
+    def rand_bool(self, probability: float = 0.5) -> bool:
+        """Generate a random boolean value with specified probability.
+
+        Generates a random boolean value using a Bernoulli distribution with the specified probability.
+        A probability of 0.5 creates a fair coin flip, while other values bias the outcome accordingly.
 
         Parameters
         ----------
@@ -118,390 +149,137 @@ class RandomGenerator:
         -------
         bool
             Random boolean value
+
+        Examples
+        --------
+        >>> rg.rand_bool()     # 50% chance of True
+        False
+        >>> rg.rand_bool(0.7)  # 70% chance of True
+        True
         """
-        return self._generator.generate_bool(probability)
+        return self._generator.rand_bool(probability)
 
     def normal(self, mean: float = 0.0, stddev: float = 1.0) -> float:
-        """Generate random value from normal distribution.
+        """Generate a random value from a normal (Gaussian) distribution.
+
+        Generates a random value from a normal (Gaussian) distribution with the specified mean and
+        standard deviation. This is useful for generating naturally distributed data, noise, or
+        measurements with known statistics.
 
         Parameters
         ----------
         mean : float, default=0.0
-            Mean of the distribution
+            Mean (center) of the distribution
         stddev : float, default=1.0
             Standard deviation of the distribution
 
         Returns
         -------
         float
-            Random value from normal distribution
+            A random value from the normal distribution
+
+        Examples
+        --------
+        >>> rg.normal()
+        0.5
+        >>> rg.normal(100.0, 15.0)
+        105.0
         """
-        return self._generator.generate_normal(mean, stddev)
-
-    def normal_float(self, mean: float = 0.0, stddev: float = 1.0) -> float:
-        """Generate random float32 from normal distribution.
-
-        Parameters
-        ----------
-        mean : float, default=0.0
-            Mean of the distribution
-        stddev : float, default=1.0
-            Standard deviation of the distribution
-
-        Returns
-        -------
-        float
-            Random float32 from normal distribution
-        """
-        # No dedicated float32 normal; reuse double precision
-        return float(self._generator.generate_normal(mean, stddev))
-
-    def integers(self, min_val: int, max_val: int, count: int) -> list[int]:
-        """Generate list of random integers.
-
-        Parameters
-        ----------
-        min_val : int
-            Minimum value (inclusive)
-        max_val : int
-            Maximum value (inclusive)
-        count : int
-            Number of integers to generate
-
-        Returns
-        -------
-        list[int]
-            List of random integers
-        """
-        return self._generator.generate_int_list(min_val, max_val, count)
-
-    def floats(self, min_val: float, max_val: float, count: int) -> list[float]:
-        """Generate list of random floats.
-
-        Parameters
-        ----------
-        min_val : float
-            Minimum value (inclusive)
-        max_val : float
-            Maximum value (exclusive)
-        count : int
-            Number of floats to generate
-
-        Returns
-        -------
-        list[float]
-            List of random floats
-        """
-        return self._generator.generate_real_list(min_val, max_val, count)
+        return self._generator.normal(mean, stddev)
 
     def seed(self, seed: int) -> None:
-        """Set seed for reproducible results.
+        """Manually seed the random number generator.
+
+        Sets a specific seed for the random number generator. This allows for reproducible random
+        sequences, which is useful for testing, debugging, or when deterministic behavior is required.
 
         Parameters
         ----------
         seed : int
             Seed value for the generator
+
+        Examples
+        --------
+        >>> rg.seed(42)
+        >>> rg.rand_int(1, 10)
+        5
+        >>> rg.seed(42)
+        >>> rg.rand_int(1, 10)
+        5
         """
         self._generator.seed(seed)
 
     def seed_with_time(self) -> None:
-        """Seed with current time for non-deterministic results."""
+        """Seed the generator using current time.
+
+        Re-seeds the random number generator using the current high-resolution time.
+        This provides non-deterministic behavior and is useful when you want to reset the generator
+        with a new unpredictable seed.
+
+        Examples
+        --------
+        >>> rg.seed_with_time()
+        """
         self._generator.seed_with_time()
 
 
-def shuffle(container: list[T]) -> None:
-    """Shuffle container in-place.
+def shuffle(container: list[T] | Container[T] | str) -> None:
+    """Randomly shuffle elements in a container.
+
+    Randomly reorders the elements in the provided range using the Fisher-Yates shuffle algorithm.
 
     Parameters
     ----------
-    container : list[T]
-        List to shuffle in place
+    container : list[T] | Container[T] | str
+        The container to shuffle in-place
+
+    Examples
+    --------
+    >>> deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    >>> shuffle(deck)
+    >>> deck
+    [6, 10, 8, 3, 1, 4, 2, 7, 9, 5]
+    >>> text = 'abcdefg'
+    >>> shuffle(text)
+    >>> text
+    'gcbefad'
     """
-    match container:
-        case list() if all(isinstance(x, int) for x in container):
-            _random_cpp.shuffle_container(container)
-        case list() if all(isinstance(x, float) for x in container):
-            _random_cpp.shuffle_container(container)
-        case list() if all(isinstance(x, str) for x in container):
-            _random_cpp.shuffle_container(container)
-        case _:
-            _random.shuffle(container)
+    _random.shuffle(container)
 
 
-def sample(population: list[T], k: int) -> list[T]:
-    """Sample k elements from population without replacement.
+def sample(container: list[T] | Container[T] | str, count: int) -> list[T]:
+    """Randomly sample elements from a range.
+
+    Selects a random subset of elements from the input range without replacement.
+    If count exceeds the range size, all elements are returned. The relative order of sampled
+    elements is preserved.
 
     Parameters
     ----------
-    population : list[T]
-        Population to sample from
-    k : int
+    container : list[T] | Container[T] | str
+        The source container to sample from
+    count : int
         Number of elements to sample
 
     Returns
     -------
     list[T]
-        Sampled elements
+        A list of randomly selected elements from the range
+
+    Examples
+    --------
+    >>> deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    >>> sample(deck, 5)
+    [6, 10, 8, 3, 1]
+    >>> text = 'abcdefg'
+    >>> sample(text, 3)
+    ['g', 'c', 'b']
     """
-    if k > len(population):
-        raise ValueError('Sample size cannot exceed population size')
-    match population:
-        case list() if all(isinstance(x, int) for x in population):
-            return _random_cpp.sample_from_range(population, k)
-        case list() if all(isinstance(x, float) for x in population):
-            return _random_cpp.sample_from_range(population, k)
-        case list() if all(isinstance(x, str) for x in population):
-            return _random_cpp.sample_from_range(population, k)
-        case _:
-            return _random.sample(population, k)
+    return _random.sample(container, count)
 
-
-def sample_string(text: str, k: int) -> list[str]:
-    """Sample k characters from string.
-
-    Parameters
-    ----------
-    text : str
-        String to sample from
-    k : int
-        Number of characters to sample
-
-    Returns
-    -------
-    list[str]
-        List of sampled characters
-    """
-    return _random_cpp.sample_from_range(text, k)
-
-
-class Distribution(Generic[T]):
-    """Base class for probability distributions.
-
-    Parameters
-    ----------
-    generator : RandomGenerator
-        Random generator to use for sampling
-    """
-
-    def __init__(self, generator: RandomGenerator):
-        self.generator = generator
-
-    def sample(self) -> T:
-        """Generate a single sample.
-
-        Returns
-        -------
-        T
-            Single sample from the distribution
-        """
-        raise NotImplementedError
-
-    def samples(self, count: int) -> list[T]:
-        """Generate multiple samples.
-
-        Parameters
-        ----------
-        count : int
-            Number of samples to generate
-
-        Returns
-        -------
-        list[T]
-            List of samples from the distribution
-        """
-        return [self.sample() for _ in range(count)]
-
-
-class UniformInt(Distribution[int]):
-    """Uniform integer distribution.
-
-    Parameters
-    ----------
-    generator : RandomGenerator
-        Random generator to use
-    min_val : int
-        Minimum value (inclusive)
-    max_val : int
-        Maximum value (inclusive)
-    """
-
-    def __init__(self, generator: RandomGenerator, min_val: int, max_val: int):
-        super().__init__(generator)
-        self.min_val = min_val
-        self.max_val = max_val
-
-    def sample(self) -> int:
-        """Generate random integer.
-
-        Returns
-        -------
-        int
-            Random integer from uniform distribution
-        """
-        return self.generator.randint(self.min_val, self.max_val)
-
-
-class UniformFloat(Distribution[float]):
-    """Uniform float distribution.
-
-    Parameters
-    ----------
-    generator : RandomGenerator
-        Random generator to use
-    min_val : float
-        Minimum value (inclusive)
-    max_val : float
-        Maximum value (exclusive)
-    """
-
-    def __init__(self, generator: RandomGenerator, min_val: float, max_val: float):
-        super().__init__(generator)
-        self.min_val = min_val
-        self.max_val = max_val
-
-    def sample(self) -> float:
-        """Generate random float.
-
-        Returns
-        -------
-        float
-            Random float from uniform distribution
-        """
-        return self.generator.uniform(self.min_val, self.max_val)
-
-
-class Normal(Distribution[float]):
-    """Normal (Gaussian) distribution.
-
-    Parameters
-    ----------
-    generator : RandomGenerator
-        Random generator to use
-    mean : float, default=0.0
-        Mean of the distribution
-    stddev : float, default=1.0
-        Standard deviation of the distribution
-    """
-
-    def __init__(
-        self, generator: RandomGenerator, mean: float = 0.0, stddev: float = 1.0
-    ):
-        super().__init__(generator)
-        self.mean = mean
-        self.stddev = stddev
-
-    def sample(self) -> float:
-        """Generate random value from normal distribution.
-
-        Returns
-        -------
-        float
-            Random value from normal distribution
-        """
-        return self.generator.normal(self.mean, self.stddev)
-
-
-# Convenience functions
-_default_generator = RandomGenerator()
-
-
-def randint(min_val: int, max_val: int) -> int:
-    """Generate random integer using default generator.
-
-    Parameters
-    ----------
-    min_val : int
-        Minimum value (inclusive)
-    max_val : int
-        Maximum value (inclusive)
-
-    Returns
-    -------
-    int
-        Random integer
-    """
-    return _default_generator.randint(min_val, max_val)
-
-
-def random() -> float:
-    """Generate random float using default generator.
-
-    Returns
-    -------
-    float
-        Random float between 0.0 and 1.0
-    """
-    return _default_generator.random()
-
-
-def uniform(min_val: float, max_val: float) -> float:
-    """Generate random float in range using default generator.
-
-    Parameters
-    ----------
-    min_val : float
-        Minimum value (inclusive)
-    max_val : float
-        Maximum value (exclusive)
-
-    Returns
-    -------
-    float
-        Random float in range
-    """
-    return _default_generator.uniform(min_val, max_val)
-
-
-def choice(probability: float = 0.5) -> bool:
-    """Generate random boolean using default generator.
-
-    Parameters
-    ----------
-    probability : float, default=0.5
-        Probability of returning True
-
-    Returns
-    -------
-    bool
-        Random boolean value
-    """
-    return _default_generator.choice(probability)
-
-
-def normal(mean: float = 0.0, stddev: float = 1.0) -> float:
-    """Generate normal random value using default generator.
-
-    Parameters
-    ----------
-    mean : float, default=0.0
-        Mean of the distribution
-    stddev : float, default=1.0
-        Standard deviation of the distribution
-
-    Returns
-    -------
-    float
-        Random value from normal distribution
-    """
-    return _default_generator.normal(mean, stddev)
-
-
-# Re-export C++ class
-CppRandomGenerator = _random_cpp.RandomGenerator
 
 __all__ = [
     'RandomGenerator',
-    'Distribution',
-    'UniformInt',
-    'UniformFloat',
-    'Normal',
-    'CppRandomGenerator',
     'shuffle',
     'sample',
-    'sample_string',
-    'randint',
-    'random',
-    'uniform',
-    'choice',
-    'normal',
 ]

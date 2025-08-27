@@ -1,7 +1,4 @@
-"""Modern Python wrapper for the exceptions module.
-
-Enhanced error handling with Result types and custom exceptions.
-"""
+"""Python wrapper for the exceptions module."""
 
 from enum import Enum
 

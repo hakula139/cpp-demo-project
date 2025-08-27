@@ -16,7 +16,7 @@ T = TypeVar('T')
 U = TypeVar('U')
 
 
-def sort_inplace(data: list[T] | Container[T]) -> None:
+def sort(data: list[T] | Container[T]) -> None:
     """Sort a container in-place.
 
     Sorts the elements in the container in ascending order.
@@ -28,9 +28,9 @@ def sort_inplace(data: list[T] | Container[T]) -> None:
 
     Examples
     --------
-    >>> sort_inplace([3, 1, 4, 1, 5, 9, 2, 6, 5, 3])
+    >>> sort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3])
     [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
-    >>> sort_inplace(Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple']))
+    >>> sort(Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple']))
     ['apple', 'banana', 'cherry', 'date', 'elderberry']
     """
     match data:
@@ -168,7 +168,7 @@ def pipeline(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
 
 
 __all__ = [
-    'sort_inplace',
+    'sort',
     'count_if',
     'transform_to_list',
     'find_min_max',
