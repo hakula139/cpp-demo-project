@@ -224,23 +224,11 @@ class Container(Generic[T]):
         return self._container.transform(func)
 
     def __str__(self) -> str:
-        """String representation.
-
-        Returns
-        -------
-        str
-            String representation of the container
-        """
+        """String representation."""
         return str(self._container)
 
     def __repr__(self) -> str:
-        """String representation (for debugging).
-
-        Returns
-        -------
-        str
-            String representation of the container
-        """
+        """String representation (for debugging)."""
         return repr(self._container)
 
 

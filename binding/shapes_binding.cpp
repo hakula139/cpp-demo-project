@@ -23,7 +23,6 @@ void BindShapes(py::module &m) {
       .def("get_area", &Shape::GetArea)
       .def("get_perimeter", &Shape::GetPerimeter)
       .def("draw", &Shape::Draw)
-      .def("get_name", [](const Shape &self) { return std::string{self.GetName()}; })
       .def("__str__", [](const Shape &self) { return std::string{self.GetName()}; })
       .def("__repr__", [](const Shape &self) {
         return std::format("<{} at {}>", self.GetName(), static_cast<const void *>(&self));

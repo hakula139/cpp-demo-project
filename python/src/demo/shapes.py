@@ -1,183 +1,249 @@
-"""Modern Python wrapper for the shapes module.
+"""Python wrapper for the shapes module."""
 
-Demonstrates Python 3.13 features like pattern matching, enhanced error handling,
-and modern type hints.
-"""
-
-from dataclasses import dataclass
-from enum import Enum, auto
-from typing import Any, Protocol
+from types import NotImplementedType
 
 import cpp_features.shapes as _shapes
 
 
-class ShapeProtocol(Protocol):
-    """Protocol defining the shape interface."""
+class Shape:
+    """Base class for geometric shapes."""
+
+    def __init__(self, shape: _shapes.Shape) -> None:
+        """Initialize shape wrapper.
+
+        Parameters
+        ----------
+        shape : _shapes.Shape
+            The underlying C++ shape object
+        """
+        self._shape = shape
 
     def get_area(self) -> float:
-        """Get the area of the shape."""
-        ...
-
-    def get_perimeter(self) -> float:
-        """Get the perimeter of the shape."""
-        ...
-
-    def draw(self) -> None:
-        """Draw the shape."""
-        ...
-
-    def get_name(self) -> str:
-        """Get the name of the shape."""
-        ...
-
-
-class ShapeType(Enum):
-    """Enumeration of available shape types."""
-
-    CIRCLE = auto()
-    RECTANGLE = auto()
-    SQUARE = auto()
-
-
-@dataclass(frozen=True)
-class ShapeMetrics:
-    """Immutable data class for shape measurements.
-
-    Parameters
-    ----------
-    area : float
-        The area of the shape
-    perimeter : float
-        The perimeter of the shape
-    name : str
-        The name of the shape
-    """
-
-    area: float
-    perimeter: float
-    name: str
-
-    @property
-    def aspect_ratio(self) -> float:
-        """Calculate aspect ratio for applicable shapes.
+        """Calculate the area of the shape.
 
         Returns
         -------
         float
-            The aspect ratio (area / perimeter^2)
+            Area of the shape
+
+        Examples
+        --------
+        >>> circle = Circle(5.0)
+        >>> print(f'Area: {circle.get_area():.2f}')
+        Area: 78.54
+        >>> rectangle = Rectangle(4.0, 3.0)
+        >>> print(f'Area: {rectangle.get_area():.2f}')
+        Area: 12.00
+        >>> square = Rectangle.square(5.0)
+        >>> print(f'Area: {square.get_area():.2f}')
+        Area: 25.00
         """
-        return self.area / (self.perimeter**2) if self.perimeter > 0 else 0.0
+        return self._shape.get_area()
+
+    def get_perimeter(self) -> float:
+        """Calculate the perimeter of the shape.
+
+        Returns
+        -------
+        float
+            Perimeter of the shape
+
+        Examples
+        --------
+        >>> circle = Circle(5.0)
+        >>> print(f'Perimeter: {circle.get_perimeter():.2f}')
+        Perimeter: 31.42
+        >>> rectangle = Rectangle(4.0, 3.0)
+        >>> print(f'Perimeter: {rectangle.get_perimeter():.2f}')
+        Perimeter: 14.00
+        >>> square = Rectangle.square(5.0)
+        >>> print(f'Perimeter: {square.get_perimeter():.2f}')
+        Perimeter: 20.00
+        """
+        return self._shape.get_perimeter()
+
+    def draw(self) -> None:
+        """Draw the shape.
+
+        The current implementation prints a message with the shape's information.
+
+        Examples
+        --------
+        >>> circle = Circle(5.0)
+        >>> circle.draw()
+        Drawing Circle (r = 5.00)
+        >>> rectangle = Rectangle(4.0, 3.0)
+        >>> rectangle.draw()
+        Drawing Rectangle (w = 4.00, h = 3.00)
+        >>> square = Rectangle.square(5.0)
+        >>> square.draw()
+        Drawing Rectangle (w = 5.00, h = 5.00)
+        """
+        self._shape.draw()
+
+    def __str__(self) -> str:
+        """String representation."""
+        return str(self._shape)
+
+    def __repr__(self) -> str:
+        """String representation (for debugging)."""
+        return repr(self._shape)
 
 
-def create_shape(shape_type: str | ShapeType, *args: float) -> _shapes.Shape:
-    """Factory function using modern Python 3.13 pattern matching.
+class Circle(Shape):
+    """Circle shape implementation with radius-based geometry."""
 
-    Parameters
-    ----------
-    shape_type : str or ShapeType
-        Type of shape to create
-    *args : float
-        Arguments for shape construction
+    def __init__(self, radius: float) -> None:
+        """Construct a circle with the specified radius.
 
-    Returns
-    -------
-    Shape
-        Created shape instance
+        Parameters
+        ----------
+        radius : float
+            Radius of the circle
 
-    Raises
-    ------
-    ValueError
-        For invalid shape types or arguments
-    """
-    match shape_type:
-        case ShapeType.CIRCLE | 'circle':
-            if len(args) != 1:
-                raise ValueError('Circle requires exactly 1 argument (radius)')
-            return _shapes.Circle(args[0])
+        Raises
+        ------
+        ValidationException
+            If the radius is not positive
 
-        case ShapeType.RECTANGLE | 'rectangle':
-            if len(args) != 2:
-                raise ValueError(
-                    'Rectangle requires exactly 2 arguments (width, height)'
-                )
-            return _shapes.Rectangle(args[0], args[1])
+        Examples
+        --------
+        >>> circle = Circle(5.0)
+        """
+        shape = _shapes.Circle(radius)
+        super().__init__(shape)
 
-        case ShapeType.SQUARE | 'square':
-            if len(args) != 1:
-                raise ValueError('Square requires exactly 1 argument (side)')
-            return _shapes.Rectangle(args[0])
+    @property
+    def radius(self) -> float:
+        """Get the radius of the circle."""
+        return self._shape.get_radius()
 
-        case _:
-            raise ValueError(f'Unknown shape type: {shape_type}')
+    def __eq__(self, other: object) -> bool | NotImplementedType:
+        """Check equality with another circle."""
+        if not isinstance(other, Circle):
+            return NotImplemented
+        return self._shape == other._shape
 
+    def __lt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this circle is smaller than another."""
+        if not isinstance(other, Circle):
+            return NotImplemented
+        return self._shape < other._shape
 
-def analyze_shape(shape: ShapeProtocol) -> ShapeMetrics:
-    """Analyze a shape and return comprehensive metrics.
+    def __le__(self, other: object) -> bool | NotImplementedType:
+        """Check if this circle is smaller than or equal to another."""
+        if not isinstance(other, Circle):
+            return NotImplemented
+        return self._shape <= other._shape
 
-    Parameters
-    ----------
-    shape : ShapeProtocol
-        The shape to analyze
+    def __gt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this circle is larger than another."""
+        if not isinstance(other, Circle):
+            return NotImplemented
+        return self._shape > other._shape
 
-    Returns
-    -------
-    ShapeMetrics
-        Comprehensive metrics for the shape
-    """
-    return ShapeMetrics(
-        area=shape.get_area(), perimeter=shape.get_perimeter(), name=shape.get_name()
-    )
-
-
-def compare_shapes(*shapes: ShapeProtocol) -> dict[str, Any]:
-    """Compare multiple shapes using modern Python features.
-
-    Parameters
-    ----------
-    *shapes : ShapeProtocol
-        Variable number of shapes to compare
-
-    Returns
-    -------
-    dict[str, Any]
-        Dictionary with comparison results and statistics
-
-    Raises
-    ------
-    ValueError
-        If no shapes are provided
-    """
-    if not shapes:
-        raise ValueError('At least one shape is required')
-
-    metrics = [analyze_shape(shape) for shape in shapes]
-
-    return {
-        'count': len(shapes),
-        'total_area': sum(m.area for m in metrics),
-        'total_perimeter': sum(m.perimeter for m in metrics),
-        'largest_by_area': max(metrics, key=lambda m: m.area),
-        'smallest_by_area': min(metrics, key=lambda m: m.area),
-        'average_area': sum(m.area for m in metrics) / len(metrics),
-        'metrics': metrics,
-    }
+    def __ge__(self, other: object) -> bool | NotImplementedType:
+        """Check if this circle is larger than or equal to another."""
+        if not isinstance(other, Circle):
+            return NotImplemented
+        return self._shape >= other._shape
 
 
-# Re-export the C++ classes for direct use
-Circle = _shapes.Circle
-Rectangle = _shapes.Rectangle
-RectangleDimensions = _shapes.RectangleDimensions
-Shape = _shapes.Shape
+class Rectangle(Shape):
+    """Rectangle shape implementation with width and height geometry."""
+
+    def __init__(self, width: float, height: float | None = None) -> None:
+        """Construct a rectangle with the specified width and height.
+
+        Parameters
+        ----------
+        width : float
+            Width of the rectangle
+        height : float, optional
+            Height of the rectangle. If not provided, the rectangle is assumed to be a square.
+
+        Raises
+        ------
+        ValidationException
+            If width or height is not positive
+
+        Examples
+        --------
+        >>> rectangle = Rectangle(4.0, 3.0)
+        >>> square = Rectangle(5.0)  # 5.0 x 5.0 square
+        """
+        if height is not None:
+            shape = _shapes.Rectangle(width, height)
+        else:
+            shape = _shapes.Rectangle(width)
+
+        super().__init__(shape)
+
+    @property
+    def width(self) -> float:
+        """Get the width of the rectangle.
+
+        Returns
+        -------
+        float
+            The rectangle's width
+        """
+        return self._shape.get_width()
+
+    @property
+    def height(self) -> float:
+        """Get the height of the rectangle.
+
+        Returns
+        -------
+        float
+            The rectangle's height
+        """
+        return self._shape.get_height()
+
+    @property
+    def is_square(self) -> bool:
+        """Check if the rectangle is a square.
+
+        Returns
+        -------
+        bool
+            True if the rectangle is a square, False otherwise
+        """
+        return self._shape.is_square()
+
+    def __eq__(self, other: object) -> bool | NotImplementedType:
+        """Check equality with another rectangle."""
+        if not isinstance(other, Rectangle):
+            return NotImplemented
+        return self._shape == other._shape
+
+    def __lt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this rectangle is smaller than another."""
+        if not isinstance(other, Rectangle):
+            return NotImplemented
+        return self._shape < other._shape
+
+    def __le__(self, other: object) -> bool | NotImplementedType:
+        """Check if this rectangle is smaller than or equal to another."""
+        if not isinstance(other, Rectangle):
+            return NotImplemented
+        return self._shape <= other._shape
+
+    def __gt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this rectangle is larger than another."""
+        if not isinstance(other, Rectangle):
+            return NotImplemented
+        return self._shape > other._shape
+
+    def __ge__(self, other: object) -> bool | NotImplementedType:
+        """Check if this rectangle is larger than or equal to another."""
+        if not isinstance(other, Rectangle):
+            return NotImplemented
+        return self._shape >= other._shape
+
 
 __all__ = [
-    'Shape',
     'Circle',
     'Rectangle',
-    'RectangleDimensions',
-    'ShapeProtocol',
-    'ShapeType',
-    'ShapeMetrics',
-    'create_shape',
-    'analyze_shape',
-    'compare_shapes',
 ]
