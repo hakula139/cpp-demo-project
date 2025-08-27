@@ -1,5 +1,15 @@
 # Python bindings
 
+find_package(
+  Python
+  COMPONENTS
+    Interpreter
+    Development
+  REQUIRED
+)
+message(STATUS "Python: ${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}.${Python_VERSION_PATCH}")
+message(STATUS "Python executable: ${Python_EXECUTABLE}")
+
 # Ensure pybind11 is available
 if(NOT TARGET pybind11::pybind11)
   message(

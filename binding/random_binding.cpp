@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include "containers/container.hpp"
 #include "random/random_gen.hpp"

@@ -14,6 +14,7 @@ Checks: >
   -readability-magic-numbers
 
 CheckOptions:
+  misc-include-cleaner.IgnoreHeaders: pybind11/.*
   readability-identifier-naming.NamespaceCase: lower_case
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.StructCase: CamelCase
@@ -29,4 +30,4 @@ CheckOptions:
   readability-identifier-naming.EnumConstantPrefix: k
   readability-function-cognitive-complexity.Threshold: 25
 
-FormatStyle: Google
+FormatStyle: google

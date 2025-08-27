@@ -1,12 +1,6 @@
 """Tests for the algorithms module."""
 
-from demo.algorithms import (
-    count_if,
-    find_min_max,
-    pipeline,
-    sort_inplace,
-    transform_to_list,
-)
+from demo.algorithms import *
 from demo.containers import Container
 
 
@@ -16,49 +10,49 @@ class TestSortInplace:
     def test_sort_empty(self) -> None:
         """Test sorting empty list."""
         data: list[int] = []
-        sort_inplace(data)
+        sort(data)
         assert data == []
 
     def test_sort_single_element(self) -> None:
         """Test sorting single element list."""
         data = [42]
-        sort_inplace(data)
+        sort(data)
         assert data == [42]
 
     def test_sort_integers(self) -> None:
         """Test sorting integers in ascending order."""
         data = [42, 17, 89, 3, 56, 23, 78, 12, 95, 34]
-        sort_inplace(data)
+        sort(data)
         assert data == [3, 12, 17, 23, 34, 42, 56, 78, 89, 95]
 
     def test_sort_strings(self) -> None:
         """Test sorting strings lexicographically."""
         data = ['cherry', 'banana', 'elderberry', 'date', 'apple']
-        sort_inplace(data)
+        sort(data)
         assert data == ['apple', 'banana', 'cherry', 'date', 'elderberry']
 
     def test_sort_already_sorted(self) -> None:
         """Test sorting already sorted list."""
         data = [1, 2, 3, 4, 5]
-        sort_inplace(data)
+        sort(data)
         assert data == [1, 2, 3, 4, 5]
 
     def test_sort_reverse_sorted(self) -> None:
         """Test sorting reverse sorted list."""
         data = [5, 4, 3, 2, 1]
-        sort_inplace(data)
+        sort(data)
         assert data == [1, 2, 3, 4, 5]
 
     def test_sort_with_duplicates(self) -> None:
         """Test sorting list with duplicates."""
         data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
-        sort_inplace(data)
+        sort(data)
         assert data == [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
 
     def test_sort_container(self) -> None:
         """Test sorting container."""
         data = Container(int, [3, 1, 4, 1, 5, 9, 2, 6, 5, 3])
-        sort_inplace(data)
+        sort(data)
         assert list(data) == [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
 
 
@@ -308,7 +302,7 @@ class TestAlgorithmCombinations:
         """Test full pipeline: sort, transform, count."""
         data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
 
-        sort_inplace(data)
+        sort(data)
         # [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
         squares = transform_to_list(data, lambda x: x * x)
         # [1, 1, 4, 9, 9, 16, 25, 25, 36, 81]

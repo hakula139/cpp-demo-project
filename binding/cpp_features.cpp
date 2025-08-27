@@ -21,7 +21,7 @@ void BindTiming(py::module &m);
 
 PYBIND11_MODULE(cpp_features, m) {
   m.doc() = "Python wrappers for the C++ demo project";
-  m.attr("__version__") = PYBIND11_STRINGIFY(VERSION_INFO);
+  m.attr("__version__") = VERSION_INFO;
 
   auto algorithms = m.def_submodule("algorithms");
   BindAlgorithms(algorithms);
