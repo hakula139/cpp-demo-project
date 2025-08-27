@@ -110,6 +110,18 @@ class Timer {
   void Stop() noexcept { end_time_ = Clock::now(); }
 
   /**
+   * @brief Reset the timer to start a new measurement
+   *
+   * Resets the timer by capturing the current time as the new start point and clearing any
+   * previously recorded end time. This allows reusing the same timer instance for multiple
+   * measurements.
+   */
+  void Reset() noexcept {
+    start_time_ = Clock::now();
+    end_time_ = TimePoint{};
+  }
+
+  /**
    * @brief Get the elapsed time in the specified duration type
    *
    * @tparam DurationType The duration type for the result (default: std::chrono::milliseconds)
@@ -165,18 +177,6 @@ class Timer {
    * @endcode
    */
   [[nodiscard]] auto GetElapsedString() const noexcept -> std::string;
-
-  /**
-   * @brief Reset the timer to start a new measurement
-   *
-   * Resets the timer by capturing the current time as the new start point and clearing any
-   * previously recorded end time. This allows reusing the same timer instance for multiple
-   * measurements.
-   */
-  void Reset() noexcept {
-    start_time_ = Clock::now();
-    end_time_ = TimePoint{};
-  }
 
  private:
   TimePoint start_time_;  ///< The time point when timing started

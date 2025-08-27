@@ -29,10 +29,6 @@ auto TimeFunctionWrapper(const std::function<void()> &func) -> std::int64_t {
 }  // namespace
 
 void BindTiming(py::module &m) {
-  // Bind utility functions
-  m.def("to_human_readable", &ToHumanReadable);
-  m.def("time_function", &TimeFunctionWrapper);
-
   // Bind Timer class
   py::class_<Timer>(m, "Timer")
       .def(py::init<>())
@@ -43,10 +39,9 @@ void BindTiming(py::module &m) {
       .def("get_elapsed_us", &GetElapsedWrapper<std::chrono::microseconds>)
       .def("get_elapsed_ms", &GetElapsedWrapper<std::chrono::milliseconds>)
       .def("get_elapsed_s", &GetElapsedWrapper<std::chrono::seconds>)
-      .def("get_elapsed_string", &Timer::GetElapsedString)
-      .def("__str__", &Timer::GetElapsedString)
-      .def("__repr__", [](const Timer &self) {
-        return std::format("<Timer(elapsed='{}') at {}>", self.GetElapsedString(),
-                           static_cast<const void *>(&self));
-      });
+      .def("get_elapsed_str", &Timer::GetElapsedString);
+
+  // Bind utility functions
+  m.def("to_human_readable", &ToHumanReadable);
+  m.def("time_function", &TimeFunctionWrapper);
 }
