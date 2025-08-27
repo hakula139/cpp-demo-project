@@ -4,12 +4,13 @@
  */
 
 #include <chrono>
-#include <cstdint>
-#include <format>
+#include <cstddef>
 #include <functional>
+#include <string>
 
 #include <pybind11/pybind11.h>
 
+#include "timing/benchmark.hpp"
 #include "timing/timer.hpp"
 
 namespace py = pybind11;
@@ -22,9 +23,12 @@ auto GetElapsedWrapper(const Timer &timer) {
   return timer.GetElapsed<DurationType>();
 }
 
-auto TimeFunctionWrapper(const std::function<void()> &func) -> std::int64_t {
-  return TimeFunction(func);
+auto BenchmarkWrapper(const std::string &name, const std::function<void()> &func,
+                      std::size_t iterations = 1000) {
+  return BenchmarkRunner::Benchmark(name, func, iterations);
 }
+
+auto TimeFunctionWrapper(const std::function<void()> &func) { return TimeFunction(func); }
 
 }  // namespace
 
@@ -40,6 +44,20 @@ void BindTiming(py::module &m) {
       .def("get_elapsed_ms", &GetElapsedWrapper<std::chrono::milliseconds>)
       .def("get_elapsed_s", &GetElapsedWrapper<std::chrono::seconds>)
       .def("get_elapsed_str", &Timer::GetElapsedString);
+
+  // Bind BenchmarkResult struct
+  py::class_<BenchmarkRunner::BenchmarkResult>(m, "BenchmarkResult")
+      .def_readwrite("name", &BenchmarkRunner::BenchmarkResult::name)
+      .def_readwrite("iterations", &BenchmarkRunner::BenchmarkResult::iterations)
+      .def_readwrite("total_ns", &BenchmarkRunner::BenchmarkResult::total_ns)
+      .def_readwrite("avg_ns", &BenchmarkRunner::BenchmarkResult::avg_ns)
+      .def_readwrite("min_ns", &BenchmarkRunner::BenchmarkResult::min_ns)
+      .def_readwrite("max_ns", &BenchmarkRunner::BenchmarkResult::max_ns);
+
+  // Bind BenchmarkRunner class
+  py::class_<BenchmarkRunner>(m, "BenchmarkRunner")
+      .def_static("benchmark", &BenchmarkWrapper)
+      .def_static("print_result", &BenchmarkRunner::PrintResult);
 
   // Bind utility functions
   m.def("to_human_readable", &ToHumanReadable);

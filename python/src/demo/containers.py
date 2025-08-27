@@ -143,6 +143,7 @@ class Container(Generic[T]):
         >>> container = Container(int, [1, 2, 3])
         >>> for item in container:
         ...     print(item)
+        ...
         1
         2
         3

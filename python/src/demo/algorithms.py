@@ -154,6 +154,7 @@ def pipeline(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     ...     lambda data: [x for x in data if x > 5],
     ...     sum,
     ... )
+    ...
     >>> process([1, 2, 3, 4, 5])
     24
     """

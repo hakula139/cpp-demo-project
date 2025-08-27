@@ -1,9 +1,9 @@
 """Python wrapper for the timing module."""
 
-import statistics
 from contextlib import contextmanager
+from dataclasses import dataclass
 from types import TracebackType
-from typing import Any, Callable, ContextManager, Generator
+from typing import Any, Callable, Generator
 
 import cpp_features.timing as _timing
 
@@ -152,9 +152,11 @@ def measure_time(name: str | None = None) -> Generator[Timer, None, None]:
 
     Examples
     --------
+    >>> from time import sleep
     >>> with measure_time('Scoped operation') as timer:
     ...     sleep(3)
     ...     print('Doing some work inside scoped timer...')
+    ...
     Scoped operation: 3s
     """
     timer = Timer()
@@ -206,9 +208,93 @@ def time_function(func: Callable[[], Any]) -> int:
     return _timing.time_function(func)
 
 
+@dataclass
+class BenchmarkResult:
+    """Structure containing benchmark results and statistics."""
+
+    name: str
+    iterations: int
+    total_ns: int
+    avg_ns: int
+    min_ns: int
+    max_ns: int
+
+    @staticmethod
+    def from_cpp(result: _timing.BenchmarkResult) -> 'BenchmarkResult':
+        """Create a BenchmarkResult from the C++ BenchmarkResult.
+
+        Parameters
+        ----------
+        result : _timing.BenchmarkResult
+            The C++ BenchmarkResult to convert
+
+        Returns
+        -------
+        BenchmarkResult
+            The converted BenchmarkResult
+        """
+        return BenchmarkResult(
+            name=result.name,
+            iterations=result.iterations,
+            total_ns=result.total_ns,
+            avg_ns=result.avg_ns,
+            min_ns=result.min_ns,
+            max_ns=result.max_ns,
+        )
+
+    def print(self) -> None:
+        """Print formatted benchmark results.
+
+        Prints comprehensive benchmark statistics in a human-readable format with appropriate units
+        and formatting.
+        """
+        _timing.BenchmarkRunner.print_result(self)
+
+
+def benchmark(
+    name: str, func: Callable[[], Any], iterations: int = 1000
+) -> BenchmarkResult:
+    """Utility function to benchmark a function with a given number of iterations.
+
+    Parameters
+    ----------
+    name : str
+        Descriptive name for the benchmark
+    func : Callable[[], Any]
+        Function to benchmark
+    iterations : int, default=1000
+        Number of times to execute the function
+
+    Returns
+    -------
+    BenchmarkResult
+        Structure containing timing statistics
+
+    Examples
+    --------
+    >>> from random import randint
+    >>> def sort_data() -> None:
+    ...     data = [randint(1, 100) for _ in range(1000)]
+    ...     data.sort()
+    ...
+    >>> result = benchmark('Sorting algorithm', sort_data, 1000)
+    >>> result.print()
+    Benchmark: Sorting algorithm
+    - Iterations: 1000
+    - Total time: 12.3ms
+    - Average: 12.3μs
+    - Min: 10.1μs
+    - Max: 15.7μs
+    """
+    result = _timing.BenchmarkRunner.benchmark(name, func, iterations)
+    return BenchmarkResult.from_cpp(result)
+
+
 __all__ = [
     'Timer',
     'measure_time',
     'to_human_readable',
     'time_function',
+    'BenchmarkResult',
+    'benchmark',
 ]
