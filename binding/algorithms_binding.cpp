@@ -40,26 +40,19 @@ auto FindMinMaxWrapper(const Range &range) {
   return FindMinMax(range);
 }
 
+// Template function to register algorithms bindings for a specific type
+template <typename T>
+void BindAlgorithmsFor(py::module &m) {
+  m.def("sort", &SortContainer<Container<T>>);
+  m.def("count_if", &CountIfWrapper<Container<T>>);
+  m.def("transform_to_list", &TransformToVectorWrapper<Container<T>>);
+  m.def("find_min_max", &FindMinMaxWrapper<Container<T>>);
+}
+
 }  // namespace
 
 void BindAlgorithms(py::module &m) {
-  // Bind sort functions
-  m.def("sort", &SortContainer<Container<int>>);
-  m.def("sort", &SortContainer<Container<double>>);
-  m.def("sort", &SortContainer<Container<std::string>>);
-
-  // Bind count_if functions
-  m.def("count_if", &CountIfWrapper<Container<int>>);
-  m.def("count_if", &CountIfWrapper<Container<double>>);
-  m.def("count_if", &CountIfWrapper<Container<std::string>>);
-
-  // Bind transform functions
-  m.def("transform_to_list", &TransformToVectorWrapper<Container<int>>);
-  m.def("transform_to_list", &TransformToVectorWrapper<Container<double>>);
-  m.def("transform_to_list", &TransformToVectorWrapper<Container<std::string>>);
-
-  // Bind find_min_max functions
-  m.def("find_min_max", &FindMinMaxWrapper<Container<int>>);
-  m.def("find_min_max", &FindMinMaxWrapper<Container<double>>);
-  m.def("find_min_max", &FindMinMaxWrapper<Container<std::string>>);
+  BindAlgorithmsFor<int>(m);
+  BindAlgorithmsFor<double>(m);
+  BindAlgorithmsFor<std::string>(m);
 }
