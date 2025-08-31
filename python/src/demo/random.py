@@ -23,9 +23,9 @@ class RandomGenerator:
         Examples
         --------
         >>> RandomGenerator()
-        <RandomGenerator(seed=None) at 0x7f8458000000>
+        <RandomGenerator(seed=None) at 0x13911eaa0>>
         >>> RandomGenerator(seed=12345)
-        <RandomGenerator(seed=12345) at 0x7f8458000000>
+        <RandomGenerator(seed=12345) at 0x13911eaa0>>
         """
         if seed is not None:
             self._generator = _random.RandomGenerator(seed)

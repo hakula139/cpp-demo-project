@@ -28,11 +28,11 @@ class Container(Generic[T]):
         Examples
         --------
         >>> Container(int, [1, 2, 3])
-        <IntContainer(size=3) at 0x7f8458000000>
+        <IntContainer(size=3) at 0x13911eaa0>
         >>> Container(float, [1.1, 2.2, 3.3])
-        <FloatContainer(size=3) at 0x7f8458000000>
+        <FloatContainer(size=3) at 0x13911eaa0>
         >>> Container(str, ['a', 'b', 'c'])
-        <StringContainer(size=3) at 0x7f8458000000>
+        <StringContainer(size=3) at 0x13911eaa0>
         """
         self._type = container_type
 
