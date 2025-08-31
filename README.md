@@ -131,6 +131,7 @@ cmake --build --preset release
 ./build/examples/memory_example
 ./build/examples/random_example
 ./build/examples/shapes_example
+./build/examples/timing_example
 ```
 
 #### Run tests
@@ -149,8 +150,12 @@ cmake --build --preset release-python
 #### Run Python examples
 
 ```bash
-python3 python/examples/basic_usage.py
-python3 python/examples/advanced_usage.py
+python3 python/examples/algorithms_example.py
+python3 python/examples/containers_example.py
+python3 python/examples/exceptions_example.py
+python3 python/examples/random_example.py
+python3 python/examples/shapes_example.py
+python3 python/examples/timing_example.py
 ```
 
 #### Run Python tests

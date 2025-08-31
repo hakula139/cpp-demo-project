@@ -23,5 +23,5 @@ target_link_libraries(random_example PRIVATE ${PROJECT_NAME}::random)
 add_executable(shapes_example shapes_example.cpp)
 target_link_libraries(shapes_example PRIVATE ${PROJECT_NAME}::shapes)
 
-add_executable(timer_example timer_example.cpp)
-target_link_libraries(timer_example PRIVATE ${PROJECT_NAME}::timing)
+add_executable(timing_example timing_example.cpp)
+target_link_libraries(timing_example PRIVATE ${PROJECT_NAME}::timing)

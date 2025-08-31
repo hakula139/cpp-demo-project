@@ -1,5 +1,5 @@
 /**
- * @file timer_example.cpp
+ * @file timing_example.cpp
  * @brief Example demonstrating the usage of the timing module
  */
 
@@ -154,7 +154,7 @@ void DemonstrateChronoFeatures() {
 }  // namespace
 
 auto main() -> int {
-  std::println("=== Timer Module Example ===");
+  std::println("=== Timing Module Example ===");
 
   DemonstrateBasicTimer();
   DemonstrateScopedTimer();
@@ -162,6 +162,6 @@ auto main() -> int {
   DemonstrateUtilityFunctions();
   DemonstrateChronoFeatures();
 
-  std::println("\n=== Timer Module Example Completed ===");
+  std::println("\n=== Timing Module Example Completed ===");
   return 0;
 }

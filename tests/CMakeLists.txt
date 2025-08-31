@@ -19,7 +19,7 @@ add_executable(
   test_memory.cpp
   test_random.cpp
   test_shapes.cpp
-  test_timer.cpp
+  test_timing.cpp
 )
 
 # Link against the demo library and Catch2
