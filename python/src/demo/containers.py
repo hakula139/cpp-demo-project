@@ -44,7 +44,9 @@ class Container(Generic[T]):
             case builtins.str:
                 cls = _containers.StringContainer
             case _:
-                raise ValueError(f'Unsupported container type: {container_type}')
+                raise ValueError(
+                    f'Unsupported container type: {container_type.__name__}'
+                )
 
         self._container = cls(list(data)) if data else cls()
 
@@ -175,7 +177,11 @@ class Container(Generic[T]):
         >>> container = Container(int, [1, 2, 3])
         >>> container[1]
         2
+        >>> container[-1]
+        3
         """
+        if index < 0:
+            index %= len(self._container)
         return self._container[index]
 
     def filter(self, predicate: Callable[[T], bool]) -> list[T]:

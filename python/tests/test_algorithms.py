@@ -4,7 +4,7 @@ from demo.algorithms import *
 from demo.containers import Container
 
 
-class TestSortInplace:
+class TestSort:
     """Test in-place sorting functionality."""
 
     def test_sort_empty(self) -> None:

@@ -84,7 +84,8 @@ void BindContainerFor(py::module &m, std::string_view type_name) {
       .def("__getitem__", &GetItem<T>)
       .def("__iter__", &GetIter<T>, py::keep_alive<0, 1>())
       .def("__str__", [](const Container<T> &self) { return std::format("{}", self); })
-      .def("__repr__", [&](const Container<T> &self) { return GetRepr(self, class_name); });
+      .def("__repr__",
+           [class_name](const Container<T> &self) { return GetRepr(self, class_name); });
 }
 
 }  // namespace
