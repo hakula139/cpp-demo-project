@@ -12,6 +12,7 @@
 
 #include <pybind11/attr.h>
 #include <pybind11/detail/common.h>
+#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -37,7 +38,7 @@ auto GetItem(const Container<T> &self, typename Container<T>::size_type index) -
 template <typename Input, typename Output>
 auto GetTransformWrapper(const Container<Input> &self,
                          const std::function<Output(Input)> &transform) {
-  return self.template GetTransformedView<Output>(transform);
+  return std::ranges::to<std::vector>(self.template GetTransformedView<Output>(transform));
 }
 
 template <CopyableType T>

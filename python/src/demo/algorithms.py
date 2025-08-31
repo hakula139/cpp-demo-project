@@ -16,28 +16,34 @@ T = TypeVar('T')
 U = TypeVar('U')
 
 
-def sort(data: list[T] | Container[T]) -> None:
+def sort(
+    data: list[SupportsRichComparisonT] | Container[SupportsRichComparisonT],
+) -> None:
     """Sort a container in-place.
 
     Sorts the elements in the container in ascending order.
 
     Parameters
     ----------
-    data : list[T] | Container[T]
+    data : list[SupportsRichComparisonT] | Container[SupportsRichComparisonT]
         The container to sort in-place
 
     Examples
     --------
-    >>> sort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3])
+    >>> data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+    >>> sort(data)
+    >>> data
     [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
-    >>> sort(Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple']))
+    >>> data = Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple'])
+    >>> sort(data)
+    >>> list(data)
     ['apple', 'banana', 'cherry', 'date', 'elderberry']
     """
     match data:
-        case list():
-            _algorithms.sort(data)
         case Container():
             _algorithms.sort(data._container)
+        case _:
+            data.sort()
 
 
 def count_if(data: Iterable[T], predicate: Callable[[T], bool]) -> int:
@@ -66,8 +72,6 @@ def count_if(data: Iterable[T], predicate: Callable[[T], bool]) -> int:
     2
     """
     match data:
-        case list() | tuple():
-            return _algorithms.count_if(list(data), predicate)
         case Container():
             return _algorithms.count_if(data._container, predicate)
         case _:
@@ -100,8 +104,6 @@ def transform_to_list(data: Iterable[T], func: Callable[[T], U]) -> list[U]:
     ['APPLE', 'BANANA', 'CHERRY']
     """
     match data:
-        case list() | tuple():
-            return _algorithms.transform_to_list(list(data), func)
         case Container():
             return _algorithms.transform_to_list(data._container, func)
         case _:
@@ -124,8 +126,6 @@ def find_min_max(
         A tuple containing the minimum and maximum elements (min, max)
     """
     match data:
-        case list() | tuple():
-            return _algorithms.find_min_max(list(data))
         case Container():
             return _algorithms.find_min_max(data._container)
         case _:

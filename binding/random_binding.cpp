@@ -8,7 +8,6 @@
 #include <format>
 #include <ranges>
 #include <string>
-#include <vector>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -50,16 +49,8 @@ void BindRandom(py::module &m) {
   m.def("shuffle", &ShuffleContainer<Container<int>>);
   m.def("shuffle", &ShuffleContainer<Container<double>>);
   m.def("shuffle", &ShuffleContainer<Container<std::string>>);
-  m.def("shuffle", &ShuffleContainer<std::vector<int>>);
-  m.def("shuffle", &ShuffleContainer<std::vector<double>>);
-  m.def("shuffle", &ShuffleContainer<std::vector<std::string>>);
-  m.def("shuffle", &ShuffleContainer<std::string>);
 
   m.def("sample", &SampleFromRangeWrapper<Container<int>>);
   m.def("sample", &SampleFromRangeWrapper<Container<double>>);
   m.def("sample", &SampleFromRangeWrapper<Container<std::string>>);
-  m.def("sample", &SampleFromRangeWrapper<std::vector<int>>);
-  m.def("sample", &SampleFromRangeWrapper<std::vector<double>>);
-  m.def("sample", &SampleFromRangeWrapper<std::vector<std::string>>);
-  m.def("sample", &SampleFromRangeWrapper<std::string>);
 }
