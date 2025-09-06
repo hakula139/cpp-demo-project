@@ -73,7 +73,9 @@ void DemonstratePolymorphicBehavior() {
 
   for (const auto &shape : shapes) {
     shape->Draw();
-    std::println("   Area: {:.2f}, Perimeter: {:.2f}", shape->GetArea(), shape->GetPerimeter());
+    auto area = shape->GetArea();
+    auto perimeter = shape->GetPerimeter();
+    std::println("   Area: {:.2f}, Perimeter: {:.2f}", area, perimeter);
   }
 }
 
@@ -90,7 +92,7 @@ void DemonstrateShapeComparisons() {
   std::println("   {} {} {} (equal: {})", *rect1, GetComparisonString(ordering12), *rect2, equal12);
 
   auto rect3 = CreateRectangle(4.0, 6.0);
-  auto ordering23 = *rect2 <=> *rect3;  // First by area, then by width
+  auto ordering23 = *rect2 <=> *rect3;
   auto equal23 = *rect2 == *rect3;
   std::println("   {} {} {} (equal: {})", *rect2, GetComparisonString(ordering23), *rect3, equal23);
 
