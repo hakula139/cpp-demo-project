@@ -8,21 +8,19 @@ class TestErrorSeverity:
     """Test severity enum and conversion."""
 
     @pytest.mark.parametrize(
-        'severity, expected_str',
+        'severity',
         [
-            (ErrorSeverity.TRACE, 'TRACE'),
-            (ErrorSeverity.DEBUG, 'DEBUG'),
-            (ErrorSeverity.INFO, 'INFO'),
-            (ErrorSeverity.WARNING, 'WARNING'),
-            (ErrorSeverity.ERROR, 'ERROR'),
-            (ErrorSeverity.FATAL, 'FATAL'),
+            ErrorSeverity.TRACE,
+            ErrorSeverity.DEBUG,
+            ErrorSeverity.INFO,
+            ErrorSeverity.WARNING,
+            ErrorSeverity.ERROR,
+            ErrorSeverity.FATAL,
         ],
     )
-    def test_severity_to_string(
-        self, severity: ErrorSeverity, expected_str: str
-    ) -> None:
+    def test_str(self, severity: ErrorSeverity) -> None:
         """All severities convert to the expected string."""
-        assert severity_to_string(severity) == expected_str
+        assert str(severity) == severity.name
 
 
 class TestValidationException:
@@ -52,6 +50,16 @@ class TestValidationException:
         with pytest.raises(BaseException, match=message):
             raise ValidationException(message)
 
+    def test_throw_from_cpp(self) -> None:
+        """Test throwing ValidationException from C++."""
+        message = 'Test validation exception'
+        field_name = 'test_field'
+
+        with pytest.raises(ValidationException, match=message) as exc_info:
+            _test_throw_validation_exception()
+
+        assert exc_info.value.field_name == field_name
+
 
 class TestResourceException:
     """Test ResourceException functionality."""
@@ -80,6 +88,16 @@ class TestResourceException:
         with pytest.raises(BaseException, match=message):
             raise ResourceException(message)
 
+    def test_throw_from_cpp(self) -> None:
+        """Test throwing ResourceException from C++."""
+        message = 'Test resource exception'
+        resource_name = 'test_resource'
+
+        with pytest.raises(ResourceException, match=message) as exc_info:
+            _test_throw_resource_exception()
+
+        assert exc_info.value.resource_name == resource_name
+
 
 class TestCalculationException:
     """Test CalculationException functionality."""
@@ -107,3 +125,37 @@ class TestCalculationException:
 
         with pytest.raises(BaseException, match=message):
             raise CalculationException(message)
+
+    def test_throw_from_cpp(self) -> None:
+        """Test throwing CalculationException from C++."""
+        message = 'Test calculation exception'
+        input_value = 1.0
+
+        with pytest.raises(CalculationException, match=message) as exc_info:
+            _test_throw_calculation_exception()
+
+        assert exc_info.value.input_value == input_value
+
+
+class TestBaseException:
+    """Test BaseException functionality."""
+
+    def test_throw_from_cpp(self) -> None:
+        """Test throwing BaseException from C++."""
+        message = 'Test base exception'
+
+        with pytest.raises(BaseException, match=message) as exc_info:
+            _test_throw_base_exception()
+
+        assert exc_info.value.severity == ErrorSeverity.WARNING
+
+
+class TestUnknownException:
+    """Test UnknownException functionality."""
+
+    def test_throw_from_cpp(self) -> None:
+        """Test throwing UnknownException from C++."""
+        message = 'Test unknown exception'
+
+        with pytest.raises(RuntimeError, match=message):
+            _test_throw_unknown_exception()

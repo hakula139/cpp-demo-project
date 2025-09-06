@@ -1,9 +1,9 @@
 """Example demonstrating the usage of the containers module."""
 
-import pathlib
 import sys
+from pathlib import Path
 
-python_dir = pathlib.Path(__file__).parent.parent
+python_dir = Path(__file__).parent.parent
 sys.path.append(str(python_dir / 'src'))
 sys.path.append(str(python_dir.parent / 'build' / 'binding'))
 

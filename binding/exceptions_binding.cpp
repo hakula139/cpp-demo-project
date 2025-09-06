@@ -31,10 +31,9 @@ auto MakePyOptionalString(const std::optional<std::string_view> &arg) -> py::obj
 template <typename... Args>
   requires((std::derived_from<std::remove_cvref_t<Args>, py::object>) && ...)
 auto TranslateException(const BaseException &e, const char *name, Args &&...args) {
-  auto m = py::module_::import("cpp_features.exceptions");
+  auto m = py::module_::import("demo.exceptions");
   auto cls = m.attr(name);
-  auto severity = e.GetSeverity();
-  auto inst = cls(py::str{e.what()}, severity, std::forward<Args>(args)...);
+  auto inst = cls(py::str{e.what()}, std::forward<Args>(args)...);
   py::set_error(cls, inst);
 }
 
@@ -56,7 +55,10 @@ auto TranslateExceptions(std::exception_ptr p) {
     py::float_ input_value{e.GetInputValue()};
     TranslateException(e, "CalculationException", std::move(input_value));
   } catch (const BaseException &e) {
-    TranslateException(e, "BaseException");
+    auto m = py::module_::import("demo.exceptions");
+    auto severity_cls = m.attr("ErrorSeverity");
+    py::object severity = severity_cls(e.GetSeverity());
+    TranslateException(e, "BaseException", std::move(severity));
   }
 }
 
@@ -72,7 +74,9 @@ auto TestThrowCalculationException() {
   throw CalculationException{"Test calculation exception", 1.0};
 }
 
-auto TestThrowBaseException() { throw BaseException{"Test base exception", ErrorSeverity::kDebug}; }
+auto TestThrowBaseException() {
+  throw BaseException{"Test base exception", ErrorSeverity::kWarning};
+}
 
 auto TestThrowUnknownException() { throw std::runtime_error{"Test unknown exception"}; }
 
@@ -90,17 +94,13 @@ void BindExceptions(py::module &m) {
 
   m.def("severity_to_string", &SeverityToString);
 
+  // Register exceptions so C++ throws translate to Python exceptions
+  py::register_exception_translator(&TranslateExceptions);
+
   // Bind test functions
   m.def("test_throw_validation_exception", &TestThrowValidationException);
   m.def("test_throw_resource_exception", &TestThrowResourceException);
   m.def("test_throw_calculation_exception", &TestThrowCalculationException);
   m.def("test_throw_base_exception", &TestThrowBaseException);
   m.def("test_throw_unknown_exception", &TestThrowUnknownException);
-
-  // Register exceptions so C++ throws translate to Python exceptions
-  auto py_base_exception = py::register_exception<BaseException>(m, "BaseException");
-  py::register_exception<ValidationException>(m, "ValidationException", py_base_exception.ptr());
-  py::register_exception<ResourceException>(m, "ResourceException", py_base_exception.ptr());
-  py::register_exception<CalculationException>(m, "CalculationException", py_base_exception.ptr());
-  py::register_exception_translator(&TranslateExceptions);
 }

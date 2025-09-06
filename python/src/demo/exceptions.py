@@ -15,30 +15,18 @@ class ErrorSeverity(Enum):
     ERROR = _exceptions.ErrorSeverity.ERROR
     FATAL = _exceptions.ErrorSeverity.FATAL
 
-
-def severity_to_string(severity: ErrorSeverity) -> str:
-    """Convert error severity to string.
-
-    Parameters
-    ----------
-    severity : ErrorSeverity
-        The error severity to convert to a string
-
-    Returns
-    -------
-    str
-        The string representation of the error severity
-    """
-    return _exceptions.severity_to_string(severity.value)
+    def __str__(self) -> str:
+        """String representation."""
+        return _exceptions.severity_to_string(self.value)
 
 
-class BaseException(_exceptions.BaseException):
+class BaseException(Exception):
     """Base exception class."""
 
     def __init__(
         self,
         message: str,
-        severity: ErrorSeverity | _exceptions.ErrorSeverity = ErrorSeverity.ERROR,
+        severity: ErrorSeverity = ErrorSeverity.ERROR,
     ) -> None:
         """Constructs a BaseException.
 
@@ -46,17 +34,20 @@ class BaseException(_exceptions.BaseException):
         ----------
         message : str
             Error message describing what went wrong
-        severity : ErrorSeverity | _exceptions.ErrorSeverity, default=ErrorSeverity.ERROR
+        severity : ErrorSeverity, default=ErrorSeverity.ERROR
             Severity level of the error
+
+        Examples
+        --------
+        >>> raise BaseException('This is an error')
+        >>> raise BaseException('This is a warning', ErrorSeverity.WARNING)
         """
-        if isinstance(severity, ErrorSeverity):
-            self.severity = severity.value
-        else:
-            self.severity = severity
-        super().__init__(message, self.severity)
+        super().__init__(message)
+        self.message = message
+        self.severity = severity
 
 
-class ValidationException(_exceptions.ValidationException, BaseException):
+class ValidationException(BaseException):
     """Exception for validation and input errors.
 
     Specialized exception for validation failures, with optional field name to identify which input
@@ -78,12 +69,11 @@ class ValidationException(_exceptions.ValidationException, BaseException):
         field_name : str, optional
             Optional name of the field that failed validation
         """
-        self.severity = ErrorSeverity.ERROR
+        super().__init__(message)
         self.field_name = field_name
-        super().__init__(message, self.field_name)
 
 
-class ResourceException(_exceptions.ResourceException, BaseException):
+class ResourceException(BaseException):
     """Exception for resource-related errors.
 
     Used for errors related to external resources such as files, network connections, databases, or
@@ -105,12 +95,11 @@ class ResourceException(_exceptions.ResourceException, BaseException):
         resource_name : str, optional
             Optional name of the resource
         """
-        self.severity = ErrorSeverity.ERROR
         self.resource_name = resource_name
-        super().__init__(message, self.resource_name)
+        super().__init__(message)
 
 
-class CalculationException(_exceptions.CalculationException, BaseException):
+class CalculationException(BaseException):
     """Exception for mathematical and calculation errors.
 
     Specialized exception for mathematical operations, calculations, and numerical processing errors.
@@ -132,16 +121,44 @@ class CalculationException(_exceptions.CalculationException, BaseException):
         input_value : float, default=0.0
             The input value that caused the calculation error
         """
-        self.severity = ErrorSeverity.ERROR
+        super().__init__(message)
         self.input_value = input_value
-        super().__init__(message, self.input_value)
+
+
+def _test_throw_validation_exception() -> None:
+    """Test throwing ValidationException from C++."""
+    _exceptions.test_throw_validation_exception()
+
+
+def _test_throw_resource_exception() -> None:
+    """Test throwing ResourceException from C++."""
+    _exceptions.test_throw_resource_exception()
+
+
+def _test_throw_calculation_exception() -> None:
+    """Test throwing CalculationException from C++."""
+    _exceptions.test_throw_calculation_exception()
+
+
+def _test_throw_base_exception() -> None:
+    """Test throwing BaseException from C++."""
+    _exceptions.test_throw_base_exception()
+
+
+def _test_throw_unknown_exception() -> None:
+    """Test throwing unknown exception from C++."""
+    _exceptions.test_throw_unknown_exception()
 
 
 __all__ = [
     'ErrorSeverity',
-    'severity_to_string',
     'BaseException',
     'ValidationException',
     'ResourceException',
     'CalculationException',
+    '_test_throw_validation_exception',
+    '_test_throw_resource_exception',
+    '_test_throw_calculation_exception',
+    '_test_throw_base_exception',
+    '_test_throw_unknown_exception',
 ]
