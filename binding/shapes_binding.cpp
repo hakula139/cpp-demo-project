@@ -33,6 +33,7 @@ void BindShapes(py::module &m) {
       .def(py::init<double>())
       .def("get_radius", &Circle::GetRadius)
       .def("__eq__", [](const Circle &self, const Circle &other) { return self == other; })
+      .def("__ne__", [](const Circle &self, const Circle &other) { return self != other; })
       .def("__lt__", [](const Circle &self, const Circle &other) { return (self <=> other) < 0; })
       .def("__le__", [](const Circle &self, const Circle &other) { return (self <=> other) <= 0; })
       .def("__gt__", [](const Circle &self, const Circle &other) { return (self <=> other) > 0; })
@@ -43,29 +44,15 @@ void BindShapes(py::module &m) {
                            static_cast<const void *>(&self));
       });
 
-  // Bind Rectangle::Dimensions struct
-  py::class_<Rectangle::Dimensions>(m, "RectangleDimensions")
-      .def(py::init<double, double>())
-      .def_readwrite("width", &Rectangle::Dimensions::width)
-      .def_readwrite("height", &Rectangle::Dimensions::height)
-      .def("__str__",
-           [](const Rectangle::Dimensions &self) {
-             return std::format("(w = {:.2f}, h = {:.2f})", self.width, self.height);
-           })
-      .def("__repr__", [](const Rectangle::Dimensions &self) {
-        return std::format("<RectangleDimensions(width={:.2f}, height={:.2f}) at {}>", self.width,
-                           self.height, static_cast<const void *>(&self));
-      });
-
   // Bind Rectangle class
   py::class_<Rectangle, Shape, std::shared_ptr<Rectangle>>(m, "Rectangle")
-      .def(py::init<Rectangle::Dimensions>())
       .def(py::init<double, double>())
       .def(py::init<double>())
       .def("get_width", &Rectangle::GetWidth)
       .def("get_height", &Rectangle::GetHeight)
       .def("is_square", &Rectangle::IsSquare)
       .def("__eq__", [](const Rectangle &self, const Rectangle &other) { return self == other; })
+      .def("__ne__", [](const Rectangle &self, const Rectangle &other) { return self != other; })
       .def("__lt__",
            [](const Rectangle &self, const Rectangle &other) { return (self <=> other) < 0; })
       .def("__le__",

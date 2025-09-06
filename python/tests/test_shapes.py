@@ -1,232 +1,219 @@
-"""Tests for Python shapes module.
-
-Comprehensive tests following C++ test patterns for shapes functionality.
-"""
+"""Tests for the shapes module."""
 
 import math
 
 import pytest
-
-from python import shapes
+from demo.exceptions import ValidationException
+from demo.shapes import Circle, Rectangle, Shape
 
 
 class TestCircle:
-    """Test Circle creation and basic properties."""
+    """Test Circle functionality."""
 
-    def test_circle_creation(self) -> None:
-        """Test basic circle creation."""
-        circle = shapes.create_shape('circle', 5.0)
+    def test_creation(self) -> None:
+        """Test creation."""
+        circle = Circle(5.0)
 
-        assert circle.get_name() == 'Circle'
-        assert circle.get_area() == pytest.approx(math.pi * 25.0)
-        assert circle.get_perimeter() == pytest.approx(math.pi * 10.0)
+        assert circle.radius == 5.0
 
-    def test_circle_factory_function(self) -> None:
-        """Test circle factory function."""
-        circle = shapes.create_shape(shapes.ShapeType.CIRCLE, 3.0)
+    @pytest.mark.parametrize('radius', [0.0, -3.0])
+    def test_creation_with_invalid_radius(self, radius: float) -> None:
+        """Test creation with invalid radius."""
+        with pytest.raises(
+            ValidationException, match='Circle radius must be positive'
+        ) as exc_info:
+            Circle(radius)
 
-        assert circle.get_name() == 'Circle'
-        assert circle.get_area() == pytest.approx(math.pi * 9.0)
+        assert exc_info.value.field_name == 'radius'
 
-    def test_circle_invalid_radius(self) -> None:
-        """Test circle with invalid radius throws exception."""
-        with pytest.raises(Exception):  # C++ ValidationException
-            shapes.create_shape('circle', 0.0)
+    def test_get_area(self) -> None:
+        """Test area calculation."""
+        circle = Circle(5.0)
+        area = circle.get_area()
 
-        with pytest.raises(Exception):
-            shapes.create_shape('circle', -3.0)
+        assert area == pytest.approx(math.pi * 25.0)
 
-    def test_circle_comparison(self) -> None:
-        """Test circle comparison operations."""
-        circle1 = shapes.Circle(5.0)
-        circle2 = shapes.Circle(5.0)
-        circle3 = shapes.Circle(3.0)
+    def test_get_perimeter(self) -> None:
+        """Test perimeter calculation."""
+        circle = Circle(5.0)
+        perimeter = circle.get_perimeter()
+
+        assert perimeter == pytest.approx(math.pi * 10.0)
+
+    def test_equality_comparison(self) -> None:
+        """Test equality comparison."""
+        circle1 = Circle(5.0)
+        circle2 = Circle(5.0)
+        circle3 = Circle(3.0)
 
         assert circle1 == circle2
+        assert not (circle1 != circle2)
+
+        assert circle1 != circle3
         assert not (circle1 == circle3)
-        assert circle3 < circle1
-        assert circle1 > circle3
+
+    def test_three_way_comparison(self) -> None:
+        """Test three-way comparison."""
+        small_circle = Circle(3.0)
+        large_circle = Circle(5.0)
+
+        assert small_circle < large_circle
+        assert large_circle > small_circle
+        assert not (small_circle > large_circle)
+        assert not (large_circle < small_circle)
 
 
 class TestRectangle:
-    """Test Rectangle creation and basic properties."""
+    """Test Rectangle functionality."""
 
-    def test_rectangle_creation(self) -> None:
-        """Test basic rectangle creation."""
-        rect = shapes.create_shape('rectangle', 4.0, 6.0)
+    @pytest.mark.parametrize(
+        'width, height',
+        [
+            (4.0, 6.0),
+            (5.0, None),  # square
+        ],
+    )
+    def test_creation(self, width: float, height: float | None) -> None:
+        """Test creation."""
+        rect = Rectangle(width, height)
 
-        assert rect.get_name() == 'Rectangle'
-        assert rect.get_area() == 24.0
-        assert rect.get_perimeter() == 20.0
-        assert not rect.is_square()
+        assert rect.width == width
+        if height is None:
+            assert rect.height == width
+        else:
+            assert rect.height == height
+        assert rect.is_square == (rect.width == rect.height)
 
-    def test_square_creation(self) -> None:
-        """Test square creation."""
-        square = shapes.create_shape('square', 5.0)
+    @pytest.mark.parametrize(
+        'width, height',
+        [
+            (0.0, 5.0),
+            (5.0, 0.0),
+            (-3.0, 5.0),
+            (5.0, -3.0),
+        ],
+    )
+    def test_creation_with_invalid_dimensions(
+        self, width: float, height: float
+    ) -> None:
+        """Test creation with invalid dimensions."""
+        with pytest.raises(
+            ValidationException, match='Rectangle dimensions must be positive'
+        ):
+            Rectangle(width, height)
 
-        assert square.get_name() == 'Rectangle'
-        assert square.get_area() == 25.0
-        assert square.get_perimeter() == 20.0
-        assert square.is_square()
+    @pytest.mark.parametrize(
+        'width, height',
+        [
+            (4.0, 6.0),
+            (5.0, None),  # square
+        ],
+    )
+    def test_get_area(self, width: float, height: float | None) -> None:
+        """Test area calculation."""
+        rect = Rectangle(width, height)
+        area = rect.get_area()
 
-    def test_rectangle_invalid_dimensions(self) -> None:
-        """Test rectangle with invalid dimensions throws exception."""
-        with pytest.raises(Exception):
-            shapes.create_shape('rectangle', 0.0, 5.0)
+        if height is None:
+            assert area == width * width
+        else:
+            assert area == width * height
 
-        with pytest.raises(Exception):
-            shapes.create_shape('rectangle', 5.0, -3.0)
+    @pytest.mark.parametrize(
+        'width, height',
+        [
+            (4.0, 6.0),
+            (5.0, None),  # square
+        ],
+    )
+    def test_get_perimeter(self, width: float, height: float | None) -> None:
+        """Test perimeter calculation."""
+        rect = Rectangle(width, height)
+        perimeter = rect.get_perimeter()
 
-    def test_rectangle_comparison(self) -> None:
-        """Test rectangle comparison operations."""
-        rect1 = shapes.Rectangle(4.0, 3.0)
-        rect2 = shapes.Rectangle(4.0, 3.0)
-        rect3 = shapes.Rectangle(2.0, 3.0)
+        if height is None:
+            assert perimeter == 4 * width
+        else:
+            assert perimeter == 2 * (width + height)
+
+    def test_equality_comparison(self) -> None:
+        """Test equality comparison."""
+        rect1 = Rectangle(4.0, 3.0)
+        rect2 = Rectangle(4.0, 3.0)
+        rect3 = Rectangle(3.0, 4.0)
 
         assert rect1 == rect2
+        assert rect1 != rect3
         assert not (rect1 == rect3)
-        assert rect3 < rect1
+
+    def test_three_way_comparison_by_area(self) -> None:
+        """Test three-way comparison by area."""
+        small_rect = Rectangle(2.0, 3.0)  # area = 6.0
+        large_rect = Rectangle(4.0, 5.0)  # area = 20.0
+
+        assert small_rect < large_rect
+        assert large_rect > small_rect
+        assert not (small_rect > large_rect)
+        assert not (large_rect < small_rect)
+
+    def test_three_way_comparison_with_same_area(self) -> None:
+        """Test three-way comparison with same area."""
+        rect1 = Rectangle(2.0, 6.0)  # area = 12.0
+        rect2 = Rectangle(3.0, 4.0)  # area = 12.0
+
+        # Should compare by width when areas are equal
+        assert rect1 < rect2
+        assert rect2 > rect1
+        assert not (rect1 == rect2)
+
+    def test_three_way_comparison_with_same_width(self) -> None:
+        """Test three-way comparison with same width."""
+        rect1 = Rectangle(3.0, 4.0)  # area = 12.0
+        rect2 = Rectangle(3.0, 5.0)  # area = 15.0
+
+        # Should compare by area first
+        assert rect1 < rect2
+        assert rect2 > rect1
+        assert not (rect1 == rect2)
 
 
-class TestShapeAnalysis:
-    """Test shape analysis functions."""
+class TestShapePolymorphism:
+    """Test Shape polymorphism."""
 
-    def test_analyze_shape(self) -> None:
-        """Test shape analysis function."""
-        circle = shapes.create_shape('circle', 5.0)
-        metrics = shapes.analyze_shape(circle)
-
-        assert metrics.name == 'Circle'
-        assert metrics.area == pytest.approx(math.pi * 25.0)
-        assert metrics.perimeter == pytest.approx(math.pi * 10.0)
-        assert metrics.aspect_ratio > 0
-
-    def test_compare_shapes(self) -> None:
-        """Test shape comparison function."""
-        circle = shapes.create_shape('circle', 3.0)
-        rectangle = shapes.create_shape('rectangle', 4.0, 5.0)
-        square = shapes.create_shape('square', 2.0)
-
-        comparison = shapes.compare_shapes(circle, rectangle, square)
-
-        assert comparison['count'] == 3
-        assert comparison['total_area'] > 0
-        assert comparison['total_perimeter'] > 0
-        assert 'largest_by_area' in comparison
-        assert 'smallest_by_area' in comparison
-        assert 'average_area' in comparison
-        assert len(comparison['metrics']) == 3
-
-    def test_compare_shapes_empty(self) -> None:
-        """Test comparison with no shapes raises error."""
-        with pytest.raises(ValueError, match='At least one shape is required'):
-            shapes.compare_shapes()
-
-
-class TestShapeFactory:
-    """Test shape factory functions."""
-
-    def test_factory_with_string_types(self) -> None:
-        """Test factory with string shape types."""
-        circle = shapes.create_shape('circle', 5.0)
-        rectangle = shapes.create_shape('rectangle', 3.0, 4.0)
-        square = shapes.create_shape('square', 6.0)
-
-        assert circle.get_name() == 'Circle'
-        assert rectangle.get_name() == 'Rectangle'
-        assert square.get_name() == 'Rectangle'
-        assert square.is_square()
-
-    def test_factory_with_enum_types(self) -> None:
-        """Test factory with enum shape types."""
-        circle = shapes.create_shape(shapes.ShapeType.CIRCLE, 5.0)
-        rectangle = shapes.create_shape(shapes.ShapeType.RECTANGLE, 3.0, 4.0)
-        square = shapes.create_shape(shapes.ShapeType.SQUARE, 6.0)
-
-        assert circle.get_name() == 'Circle'
-        assert rectangle.get_name() == 'Rectangle'
-        assert square.is_square()
-
-    def test_factory_invalid_arguments(self) -> None:
-        """Test factory with invalid arguments."""
-        with pytest.raises(ValueError, match='Circle requires exactly 1 argument'):
-            shapes.create_shape('circle', 1.0, 2.0)
-
-        with pytest.raises(ValueError, match='Rectangle requires exactly 2 arguments'):
-            shapes.create_shape('rectangle', 1.0)
-
-        with pytest.raises(ValueError, match='Unknown shape type'):
-            shapes.create_shape('triangle', 1.0)
-
-
-class TestShapeMetrics:
-    """Test ShapeMetrics dataclass."""
-
-    def test_shape_metrics_creation(self) -> None:
-        """Test creating ShapeMetrics."""
-        metrics = shapes.ShapeMetrics(area=25.0, perimeter=20.0, name='Square')
-
-        assert metrics.area == 25.0
-        assert metrics.perimeter == 20.0
-        assert metrics.name == 'Square'
-        assert metrics.aspect_ratio == pytest.approx(25.0 / 400.0)
-
-    def test_shape_metrics_immutable(self) -> None:
-        """Test that ShapeMetrics is immutable."""
-        metrics = shapes.ShapeMetrics(area=25.0, perimeter=20.0, name='Square')
-
-        with pytest.raises(AttributeError):
-            metrics.area = 30.0  # Should fail - frozen dataclass
-
-
-class TestShapeIntegration:
-    """Integration tests for shape functionality."""
+    def test_derived_from_base_class(self) -> None:
+        """Test that shapes are derived from base class."""
+        assert issubclass(Circle, Shape)
+        assert issubclass(Rectangle, Shape)
 
     def test_polymorphic_behavior(self) -> None:
-        """Test polymorphic behavior with different shapes."""
-        shapes_list = [
-            shapes.create_shape('circle', 3.0),
-            shapes.create_shape('rectangle', 4.0, 5.0),
-            shapes.create_shape('square', 2.0),
+        """Test polymorphic behavior."""
+        circle = Circle(3.0)
+        rectangle = Rectangle(4.0, 5.0)
+        square = Rectangle(2.0)
+
+        shapes: list[Shape] = [circle, rectangle, square]
+        expected_results: list[tuple[type[Shape], float, float]] = [
+            (Circle, math.pi * 9.0, math.pi * 6.0),
+            (Rectangle, 20.0, 18.0),
+            (Rectangle, 4.0, 8.0),
         ]
 
-        expected_names = ['Circle', 'Rectangle', 'Rectangle']
-        expected_areas = [math.pi * 9.0, 20.0, 4.0]
-
-        for shape, name, area in zip(shapes_list, expected_names, expected_areas):
-            assert shape.get_name() == name
+        for shape, (cls, area, perimeter) in zip(shapes, expected_results):
+            assert isinstance(shape, cls)
+            assert isinstance(shape, Shape)
             assert shape.get_area() == pytest.approx(area)
+            assert shape.get_perimeter() == pytest.approx(perimeter)
 
-    def test_shape_collection_analysis(self) -> None:
-        """Test analyzing a collection of shapes."""
-        test_shapes = [
-            shapes.create_shape('circle', 1.0),
-            shapes.create_shape('circle', 2.0),
-            shapes.create_shape('rectangle', 2.0, 3.0),
-            shapes.create_shape('square', 2.0),
-        ]
+    def test_invalid_comparison(self) -> None:
+        """Test invalid comparison between different shapes."""
+        circle = Circle(3.0)
+        rectangle = Rectangle(4.0, 5.0)
 
-        total_area = sum(shape.get_area() for shape in test_shapes)
-        circle_area_1 = math.pi * 1.0
-        circle_area_2 = math.pi * 4.0
-        rect_area = 6.0
-        square_area = 4.0
+        with pytest.raises(TypeError):
+            _ = circle < rectangle
 
-        expected_total = circle_area_1 + circle_area_2 + rect_area + square_area
-        assert total_area == pytest.approx(expected_total)
+        shape1 = Shape(circle._shape)
+        shape2 = Shape(rectangle._shape)
 
-    def test_shape_sorting_by_area(self) -> None:
-        """Test sorting shapes by area."""
-        test_shapes = [
-            shapes.create_shape('circle', 2.0),  # π * 4 ≈ 12.57
-            shapes.create_shape('rectangle', 2.0, 3.0),  # 6.0
-            shapes.create_shape('square', 4.0),  # 16.0
-            shapes.create_shape('circle', 1.0),  # π ≈ 3.14
-        ]
-
-        sorted_shapes = sorted(test_shapes, key=lambda s: s.get_area())
-        areas = [shape.get_area() for shape in sorted_shapes]
-
-        # Should be in ascending order
-        for i in range(len(areas) - 1):
-            assert areas[i] <= areas[i + 1]
+        with pytest.raises(TypeError):
+            _ = shape1 == shape2

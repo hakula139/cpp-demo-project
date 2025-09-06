@@ -81,6 +81,42 @@ class Shape:
         """
         self._shape.draw()
 
+    def __eq__(self, other: object) -> bool | NotImplementedType:
+        """Check equality with another shape."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape == other._shape
+
+    def __ne__(self, other: object) -> bool | NotImplementedType:
+        """Check inequality with another shape."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape != other._shape
+
+    def __lt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this shape is smaller than another."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape < other._shape
+
+    def __le__(self, other: object) -> bool | NotImplementedType:
+        """Check if this shape is smaller than or equal to another."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape <= other._shape
+
+    def __gt__(self, other: object) -> bool | NotImplementedType:
+        """Check if this shape is larger than another."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape > other._shape
+
+    def __ge__(self, other: object) -> bool | NotImplementedType:
+        """Check if this shape is larger than or equal to another."""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._shape >= other._shape
+
     def __str__(self) -> str:
         """String representation."""
         return str(self._shape)
@@ -118,36 +154,6 @@ class Circle(Shape):
         """Get the radius of the circle."""
         return self._shape.get_radius()
 
-    def __eq__(self, other: object) -> bool | NotImplementedType:
-        """Check equality with another circle."""
-        if not isinstance(other, Circle):
-            return NotImplemented
-        return self._shape == other._shape
-
-    def __lt__(self, other: object) -> bool | NotImplementedType:
-        """Check if this circle is smaller than another."""
-        if not isinstance(other, Circle):
-            return NotImplemented
-        return self._shape < other._shape
-
-    def __le__(self, other: object) -> bool | NotImplementedType:
-        """Check if this circle is smaller than or equal to another."""
-        if not isinstance(other, Circle):
-            return NotImplemented
-        return self._shape <= other._shape
-
-    def __gt__(self, other: object) -> bool | NotImplementedType:
-        """Check if this circle is larger than another."""
-        if not isinstance(other, Circle):
-            return NotImplemented
-        return self._shape > other._shape
-
-    def __ge__(self, other: object) -> bool | NotImplementedType:
-        """Check if this circle is larger than or equal to another."""
-        if not isinstance(other, Circle):
-            return NotImplemented
-        return self._shape >= other._shape
-
 
 class Rectangle(Shape):
     """Rectangle shape implementation with width and height geometry."""
@@ -181,66 +187,18 @@ class Rectangle(Shape):
 
     @property
     def width(self) -> float:
-        """Get the width of the rectangle.
-
-        Returns
-        -------
-        float
-            The rectangle's width
-        """
+        """Get the width of the rectangle."""
         return self._shape.get_width()
 
     @property
     def height(self) -> float:
-        """Get the height of the rectangle.
-
-        Returns
-        -------
-        float
-            The rectangle's height
-        """
+        """Get the height of the rectangle."""
         return self._shape.get_height()
 
     @property
     def is_square(self) -> bool:
-        """Check if the rectangle is a square.
-
-        Returns
-        -------
-        bool
-            True if the rectangle is a square, False otherwise
-        """
+        """Check if the rectangle is a square."""
         return self._shape.is_square()
-
-    def __eq__(self, other: object) -> bool | NotImplementedType:
-        """Check equality with another rectangle."""
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return self._shape == other._shape
-
-    def __lt__(self, other: object) -> bool | NotImplementedType:
-        """Check if this rectangle is smaller than another."""
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return self._shape < other._shape
-
-    def __le__(self, other: object) -> bool | NotImplementedType:
-        """Check if this rectangle is smaller than or equal to another."""
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return self._shape <= other._shape
-
-    def __gt__(self, other: object) -> bool | NotImplementedType:
-        """Check if this rectangle is larger than another."""
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return self._shape > other._shape
-
-    def __ge__(self, other: object) -> bool | NotImplementedType:
-        """Check if this rectangle is larger than or equal to another."""
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return self._shape >= other._shape
 
 
 __all__ = [
