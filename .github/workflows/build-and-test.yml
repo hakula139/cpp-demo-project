@@ -147,6 +147,22 @@ jobs:
         run: |
           pytest python/tests -v
 
+      - name: Run C++ examples
+        run: |
+          for example in build/examples/*_example; do
+            echo "Running $example..."
+            $example
+            echo
+          done
+
+      - name: Run Python examples
+        run: |
+          for example in python/examples/*_example.py; do
+            echo "Running $example..."
+            python3 $example
+            echo
+          done
+
       - name: Upload build logs
         if: failure()
         uses: actions/upload-artifact@v4
