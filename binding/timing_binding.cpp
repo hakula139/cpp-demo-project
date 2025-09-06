@@ -8,6 +8,8 @@
 #include <functional>
 #include <string>
 
+#include <pybind11/chrono.h>
+#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 
 #include "timing/benchmark.hpp"

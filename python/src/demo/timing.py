@@ -165,6 +165,7 @@ def measure_time(name: str | None = None) -> Generator[Timer, None, None]:
     try:
         yield timer
     finally:
+        timer.stop()
         print(f'{name}: {timer.elapsed_str}')
 
 
@@ -208,39 +209,48 @@ def time_function(func: Callable[[], Any]) -> int:
     return _timing.time_function(func)
 
 
-@dataclass
 class BenchmarkResult:
     """Structure containing benchmark results and statistics."""
 
-    name: str
-    iterations: int
-    total_ns: int
-    avg_ns: int
-    min_ns: int
-    max_ns: int
-
-    @staticmethod
-    def from_cpp(result: _timing.BenchmarkResult) -> 'BenchmarkResult':
-        """Create a BenchmarkResult from the C++ BenchmarkResult.
+    def __init__(self, result: _timing.BenchmarkResult) -> None:
+        """Initialize BenchmarkResult wrapper.
 
         Parameters
         ----------
         result : _timing.BenchmarkResult
-            The C++ BenchmarkResult to convert
-
-        Returns
-        -------
-        BenchmarkResult
-            The converted BenchmarkResult
+            The underlying C++ BenchmarkResult object
         """
-        return BenchmarkResult(
-            name=result.name,
-            iterations=result.iterations,
-            total_ns=result.total_ns,
-            avg_ns=result.avg_ns,
-            min_ns=result.min_ns,
-            max_ns=result.max_ns,
-        )
+        self._result = result
+
+    @property
+    def name(self) -> str:
+        """Name of the benchmark."""
+        return self._result.name
+
+    @property
+    def iterations(self) -> int:
+        """Number of iterations executed."""
+        return self._result.iterations
+
+    @property
+    def total_ns(self) -> int:
+        """Total execution time in nanoseconds."""
+        return self._result.total_ns
+
+    @property
+    def avg_ns(self) -> int:
+        """Average execution time in nanoseconds."""
+        return self._result.avg_ns
+
+    @property
+    def min_ns(self) -> int:
+        """Minimum execution time in nanoseconds."""
+        return self._result.min_ns
+
+    @property
+    def max_ns(self) -> int:
+        """Maximum execution time in nanoseconds."""
+        return self._result.max_ns
 
     def print(self) -> None:
         """Print formatted benchmark results.
@@ -248,11 +258,11 @@ class BenchmarkResult:
         Prints comprehensive benchmark statistics in a human-readable format with appropriate units
         and formatting.
         """
-        _timing.BenchmarkRunner.print_result(self)
+        _timing.BenchmarkRunner.print_result(self._result)
 
 
 def benchmark(
-    name: str, func: Callable[[], Any], iterations: int = 1000
+    name: str, func: Callable[[], Any], *, iterations: int = 1000
 ) -> BenchmarkResult:
     """Utility function to benchmark a function with a given number of iterations.
 
@@ -287,7 +297,7 @@ def benchmark(
     - Max: 15.7μs
     """
     result = _timing.BenchmarkRunner.benchmark(name, func, iterations)
-    return BenchmarkResult.from_cpp(result)
+    return BenchmarkResult(result)
 
 
 __all__ = [
