@@ -1,7 +1,7 @@
 repos:
   # Standard pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-yaml
@@ -10,7 +10,7 @@ repos:
 
   # C++ formatting with clang-format
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.8
+    rev: v21.1.0
     hooks:
       - id: clang-format
         files: \.(cpp|hpp|h)$
@@ -37,6 +37,23 @@ repos:
       - id: isort
         files: \.py$
         args: ['--profile', 'black', '--filter-files']
+
+  # Python style checking with flake8
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        files: \.py$
+        args: ['--max-line-length=88']
+
+  # Python security linting with bandit
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        files: \.py$
+        args: ['-c', 'python/pyproject.toml']
+        additional_dependencies: ['bandit[toml]']
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
