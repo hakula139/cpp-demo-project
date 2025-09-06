@@ -108,7 +108,7 @@ class TestRandomGeneratorList:
             (-10.0, -9.0, 0),
         ],
     )
-    def test_generate_float_vector(
+    def test_generate_float_list(
         self, rg: RandomGenerator, min_val: float, max_val: float, count: int
     ) -> None:
         """Test generating list of floating-point values."""
