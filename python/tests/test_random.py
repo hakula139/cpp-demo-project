@@ -1,6 +1,7 @@
 """Tests for the random module."""
 
 import pytest
+
 from demo.containers import Container
 from demo.random import RandomGenerator, sample, shuffle
 

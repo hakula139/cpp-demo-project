@@ -81,17 +81,11 @@ class Shape:
         """
         self._shape.draw()
 
-    def __eq__(self, other: object) -> bool | NotImplementedType:
+    def __eq__(self, other: object) -> bool:
         """Check equality with another shape."""
         if not isinstance(other, type(self)):
-            return NotImplemented
+            return False
         return self._shape == other._shape
-
-    def __ne__(self, other: object) -> bool | NotImplementedType:
-        """Check inequality with another shape."""
-        if not isinstance(other, type(self)):
-            return NotImplemented
-        return self._shape != other._shape
 
     def __lt__(self, other: object) -> bool | NotImplementedType:
         """Check if this shape is smaller than another."""

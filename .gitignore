@@ -22,6 +22,12 @@ __pycache__/
 *.pyw
 *.pyz
 
+# pytest
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
 # Debug and temporary files
 *.log
 *.tmp

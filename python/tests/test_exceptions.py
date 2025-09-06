@@ -1,6 +1,7 @@
 """Tests for the exceptions module."""
 
 import pytest
+
 from demo.exceptions import *
 
 

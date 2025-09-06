@@ -1,5 +1,7 @@
 """Tests for the algorithms module."""
 
+import pytest
+
 from demo.algorithms import *
 from demo.containers import Container
 
@@ -54,6 +56,19 @@ class TestSort:
         data = Container(int, [3, 1, 4, 1, 5, 9, 2, 6, 5, 3])
         sort(data)
         assert list(data) == [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
+
+    def test_sort_unsupported_type(self) -> None:
+        """Test sorting unsupported type."""
+        data = [1, 'a']
+        with pytest.raises(TypeError):
+            sort(data)
+
+        class UnsupportedType:
+            pass
+
+        data = [UnsupportedType(), UnsupportedType()]
+        with pytest.raises(TypeError):
+            sort(data)  # type: ignore
 
 
 class TestCountIf:

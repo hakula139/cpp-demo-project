@@ -3,14 +3,8 @@
 from time import sleep
 
 import pytest
-from demo.timing import (
-    BenchmarkResult,
-    Timer,
-    benchmark,
-    measure_time,
-    time_function,
-    to_human_readable,
-)
+
+from demo.timing import Timer, benchmark, measure_time, time_function, to_human_readable
 
 
 class TestTimer:
@@ -131,7 +125,7 @@ class TestScopedTimer:
 
     def test_measure_time(self) -> None:
         """Test measure_time function."""
-        with measure_time('Scoped operation') as timer:
+        with measure_time() as timer:
             sleep(0.1)
 
         elapsed_ns = timer.elapsed_ns

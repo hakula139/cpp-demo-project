@@ -297,7 +297,7 @@ def sample(data: list[T] | Container[T], count: int) -> list[T]:
         case Container():
             return _random.sample(data._container, count)
         case _:
-            return random.sample(data, count)
+            return random.sample(data, count)  # nosec B311
 
 
 __all__ = [

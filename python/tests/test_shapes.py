@@ -3,6 +3,7 @@
 import math
 
 import pytest
+
 from demo.exceptions import ValidationException
 from demo.shapes import Circle, Rectangle, Shape
 
@@ -40,6 +41,11 @@ class TestCircle:
 
         assert perimeter == pytest.approx(math.pi * 10.0)
 
+    def test_draw(self) -> None:
+        """Test draw functionality."""
+        circle = Circle(5.0)
+        circle.draw()
+
     def test_equality_comparison(self) -> None:
         """Test equality comparison."""
         circle1 = Circle(5.0)
@@ -58,9 +64,25 @@ class TestCircle:
         large_circle = Circle(5.0)
 
         assert small_circle < large_circle
+        assert small_circle <= large_circle
         assert large_circle > small_circle
+        assert large_circle >= small_circle
         assert not (small_circle > large_circle)
+        assert not (small_circle >= large_circle)
         assert not (large_circle < small_circle)
+        assert not (large_circle <= small_circle)
+
+    def test_str(self) -> None:
+        """Test string representation."""
+        circle = Circle(5.0)
+
+        assert str(circle) == 'Circle (r = 5.00)'
+
+    def test_repr(self) -> None:
+        """Test string representation for debugging."""
+        circle = Circle(5.0)
+
+        assert repr(circle).startswith('<Circle(radius=5.00) at ')
 
 
 class TestRectangle:
@@ -136,6 +158,11 @@ class TestRectangle:
         else:
             assert perimeter == 2 * (width + height)
 
+    def test_draw(self) -> None:
+        """Test draw functionality."""
+        rect = Rectangle(4.0, 3.0)
+        rect.draw()
+
     def test_equality_comparison(self) -> None:
         """Test equality comparison."""
         rect1 = Rectangle(4.0, 3.0)
@@ -152,9 +179,13 @@ class TestRectangle:
         large_rect = Rectangle(4.0, 5.0)  # area = 20.0
 
         assert small_rect < large_rect
+        assert small_rect <= large_rect
         assert large_rect > small_rect
+        assert large_rect >= small_rect
         assert not (small_rect > large_rect)
+        assert not (small_rect >= large_rect)
         assert not (large_rect < small_rect)
+        assert not (large_rect <= small_rect)
 
     def test_three_way_comparison_with_same_area(self) -> None:
         """Test three-way comparison with same area."""
@@ -175,6 +206,18 @@ class TestRectangle:
         assert rect1 < rect2
         assert rect2 > rect1
         assert not (rect1 == rect2)
+
+    def test_str(self) -> None:
+        """Test string representation."""
+        rect = Rectangle(4.0, 3.0)
+
+        assert str(rect) == 'Rectangle (w = 4.00, h = 3.00)'
+
+    def test_repr(self) -> None:
+        """Test string representation for debugging."""
+        rect = Rectangle(4.0, 3.0)
+
+        assert repr(rect).startswith('<Rectangle(width=4.00, height=3.00) at ')
 
 
 class TestShapePolymorphism:
@@ -209,8 +252,14 @@ class TestShapePolymorphism:
         circle = Circle(3.0)
         rectangle = Rectangle(4.0, 5.0)
 
+        assert circle != rectangle
+        assert not (circle == rectangle)
+
         with pytest.raises(TypeError):
             _ = circle < rectangle
+
+        with pytest.raises(TypeError):
+            _ = circle <= rectangle
 
         shape1 = Shape(circle._shape)
         shape2 = Shape(rectangle._shape)

@@ -33,7 +33,6 @@ void BindShapes(py::module &m) {
       .def(py::init<double>())
       .def("get_radius", &Circle::GetRadius)
       .def("__eq__", [](const Circle &self, const Circle &other) { return self == other; })
-      .def("__ne__", [](const Circle &self, const Circle &other) { return self != other; })
       .def("__lt__", [](const Circle &self, const Circle &other) { return (self <=> other) < 0; })
       .def("__le__", [](const Circle &self, const Circle &other) { return (self <=> other) <= 0; })
       .def("__gt__", [](const Circle &self, const Circle &other) { return (self <=> other) > 0; })
@@ -52,7 +51,6 @@ void BindShapes(py::module &m) {
       .def("get_height", &Rectangle::GetHeight)
       .def("is_square", &Rectangle::IsSquare)
       .def("__eq__", [](const Rectangle &self, const Rectangle &other) { return self == other; })
-      .def("__ne__", [](const Rectangle &self, const Rectangle &other) { return self != other; })
       .def("__lt__",
            [](const Rectangle &self, const Rectangle &other) { return (self <=> other) < 0; })
       .def("__le__",
