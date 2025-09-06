@@ -54,7 +54,7 @@ This project serves as both a learning resource and a reference implementation f
     - [Build the project](#build-the-project)
     - [Run individual examples](#run-individual-examples)
     - [Run tests](#run-tests)
-    - [Build Python bindings](#build-python-bindings)
+    - [Build with Python bindings](#build-with-python-bindings)
     - [Run Python examples](#run-python-examples)
     - [Run Python tests](#run-python-tests)
   - [CMake Presets](#cmake-presets)
@@ -140,7 +140,7 @@ cmake --build --preset release
 ctest --preset release
 ```
 
-#### Build Python bindings
+#### Build with Python bindings
 
 ```bash
 cmake --preset release-python
@@ -162,7 +162,7 @@ python3 python/examples/timing_example.py
 
 ```bash
 # pip3 install pytest
-pytest python/tests -v
+pytest python
 ```
 
 ### CMake Presets
@@ -269,6 +269,9 @@ pre-commit run --all-files
 - **clang-format**: Formats C++ code according to the project style
 - **gersemi**: Formats CMake files with consistent indentation
 - **black**: Formats Python code with consistent style
+- **isort**: Sorts Python imports with consistent style
+- **flake8**: Lints Python code with consistent style
+- **bandit**: Lints Python code with security best practices
 - **markdownlint-cli2**: Lints Markdown files with consistent formatting
 
 The hooks will run automatically on `git commit` and prevent commits with formatting issues.
@@ -297,7 +300,9 @@ auto main() -> int {
 
   // Type-safe factory functions with validation
   auto circle = CreateCircle(5.0);
-  std::println("Area: {:.2f}, Perimeter: {:.2f}", circle->GetArea(), circle->GetPerimeter());
+  auto area = circle->GetArea();
+  auto perimeter = circle->GetPerimeter();
+  std::println("Area: {:.2f}, Perimeter: {:.2f}", area, perimeter);
 
   return 0;
 }
@@ -347,7 +352,6 @@ cpp-demo-project/
 │   ├── examples/                # Python usage examples and demonstrations
 │   │   └── [module]_example.py  # Python usage examples for the component
 │   └── tests/                   # Python test suite using pytest
-│       ├── conftest.py          # pytest configuration and common fixtures
 │       └── test_[module].py     # Python unit tests for the component
 ├── .clang-format                # clang-format configuration (for C++ code formatting)
 ├── .clang-tidy                  # clang-tidy configuration (for static analysis)
@@ -381,10 +385,11 @@ cpp-demo-project/
 - **Consistent formatting**
   - Uses `clang-format` for C++ code
   - Uses `gersemi` for CMake files
-  - Uses `black` for Python code
+  - Uses `black` and `isort` for Python code
   - Uses `markdownlint-cli2` for Markdown files
 - **Static analysis**
-  - Uses `clang-tidy` and `cppcheck` for static analysis
+  - Uses `clang-tidy` and `cppcheck` for C++ code
+  - Uses `flake8` and `bandit` for Python code
 - **Modern practices**
   - Follows Core Guidelines and modern C++23 best practices
   - Follows PEP 8 and modern Python 3.13 conventions
@@ -394,56 +399,7 @@ cpp-demo-project/
 
 ### Pre-commit Configuration
 
-The project includes a comprehensive pre-commit setup (`.pre-commit-config.yaml`):
-
-```yaml
-repos:
-  # Standard pre-commit hooks
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: check-added-large-files
-      - id: check-yaml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-
-  # C++ formatting with clang-format
-  - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.8
-    hooks:
-      - id: clang-format
-        files: \.(cpp|hpp|h)$
-
-  # CMake formatting with gersemi
-  - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.22.1
-    hooks:
-      - id: gersemi
-        files: (\.cmake|CMakeLists\.txt)$
-
-  # Python formatting with black
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
-        files: \.py$
-        args: ['-S']
-
-  # Python import sorting with isort
-  - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
-    hooks:
-      - id: isort
-        files: \.py$
-        args: ['--profile', 'black', '--filter-files']
-
-  # Markdown linting and formatting
-  - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
-    hooks:
-      - id: markdownlint-cli2
-        args: ['--config', '.markdownlint.yaml']
-```
+The project includes a comprehensive pre-commit setup [`.pre-commit-config.yaml`](.pre-commit-config.yaml).
 
 **Benefits:**
 
@@ -454,4 +410,4 @@ repos:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [`LICENSE`](LICENSE) file for details.
