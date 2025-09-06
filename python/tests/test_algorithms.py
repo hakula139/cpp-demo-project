@@ -59,16 +59,16 @@ class TestSort:
 
     def test_sort_unsupported_type(self) -> None:
         """Test sorting unsupported type."""
-        data = [1, 'a']
+        mixed_data: list[int | str] = [1, 'a']
         with pytest.raises(TypeError):
-            sort(data)
+            sort(mixed_data)
 
         class UnsupportedType:
             pass
 
-        data = [UnsupportedType(), UnsupportedType()]
+        unsupported_data = [UnsupportedType(), UnsupportedType()]
         with pytest.raises(TypeError):
-            sort(data)  # type: ignore
+            sort(unsupported_data)  # type: ignore
 
 
 class TestCountIf:

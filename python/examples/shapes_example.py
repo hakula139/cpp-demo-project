@@ -10,7 +10,7 @@ sys.path.append(str(python_dir.parent / 'build' / 'binding'))
 from demo.shapes import Circle, Rectangle, Shape
 
 
-def demonstrate_shape_creation():
+def demonstrate_shape_creation() -> None:
     """Demonstrate basic shape creation using constructors."""
     print('\n1. Creating shapes:')
 
@@ -27,7 +27,7 @@ def demonstrate_shape_creation():
     print(f'   {square}, is square: {square.is_square}')
 
 
-def demonstrate_polymorphic_behavior():
+def demonstrate_polymorphic_behavior() -> None:
     """Demonstrate polymorphic behavior with shape calculations."""
     print('\n2. Polymorphic calculations:')
 
@@ -44,7 +44,7 @@ def demonstrate_polymorphic_behavior():
         print(f'   Area: {area:.2f}, Perimeter: {perimeter:.2f}')
 
 
-def demonstrate_shape_comparisons():
+def demonstrate_shape_comparisons() -> None:
     """Demonstrate shape comparison operations."""
     print('\n3. Comparisons:')
 

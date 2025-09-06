@@ -49,7 +49,7 @@ def demonstrate_benchmarking() -> None:
     """Demonstrate benchmarking."""
     print('\n3. Benchmarking:')
 
-    def simple_task():
+    def simple_task() -> int:
         total = 0
         for i in range(1000):
             total += i
@@ -58,7 +58,7 @@ def demonstrate_benchmarking() -> None:
     result = benchmark('Simple task', simple_task, iterations=1000)
     result.print()
 
-    def list_ops():
+    def list_ops() -> None:
         data = list(range(1000))
         data.sort(reverse=True)
 
