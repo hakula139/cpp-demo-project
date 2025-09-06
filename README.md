@@ -270,6 +270,7 @@ pre-commit run --all-files
 - **gersemi**: Formats CMake files with consistent indentation
 - **black**: Formats Python code with consistent style
 - **isort**: Sorts Python imports with consistent style
+- **mypy**: Lints Python code with type hints
 - **flake8**: Lints Python code with consistent style
 - **bandit**: Lints Python code with security best practices
 - **markdownlint-cli2**: Lints Markdown files with consistent formatting
@@ -389,7 +390,7 @@ cpp-demo-project/
   - Uses `markdownlint-cli2` for Markdown files
 - **Static analysis**
   - Uses `clang-tidy` and `cppcheck` for C++ code
-  - Uses `flake8` and `bandit` for Python code
+  - Uses `mypy`, `flake8` and `bandit` for Python code
 - **Modern practices**
   - Follows Core Guidelines and modern C++23 best practices
   - Follows PEP 8 and modern Python 3.13 conventions

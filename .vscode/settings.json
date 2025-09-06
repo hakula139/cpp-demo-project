@@ -1,4 +1,5 @@
 {
+  "black-formatter.args": ["--config", "python/pyproject.toml"],
   "C_Cpp.autocomplete": "disabled",
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
@@ -19,14 +20,12 @@
   "cmake.automaticReconfigure": true,
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
-  "cursorpyright.analysis.extraPaths": [
-    "python/src",
-    "build/binding"
-  ],
+  "cursorpyright.analysis.extraPaths": ["build/binding", "python/src"],
   "editor.codeActionsOnSave": {
     "source.fixAll.clangd": "explicit",
     "source.organizeImports": "explicit"
   },
+  "editor.formatOnSave": true,
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
   },
@@ -39,10 +38,7 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.ignoreLimitWarning": true,
-  "isort.args": [
-    "--profile",
-    "black"
-  ],
+  "isort.args": ["--settings-path", "python/pyproject.toml"],
   "markdownlint.config": {
     "extends": ".markdownlint.yaml"
   }

@@ -27,37 +27,59 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        files: \.py$
-        args: ['-S']
+        files: ^python/.*\.pyi?$
+        args:
+          - --config
+          - python/pyproject.toml
 
   # Python import sorting with isort
   - repo: https://github.com/pycqa/isort
     rev: 6.0.1
     hooks:
       - id: isort
-        files: \.py$
-        args: ['--profile', 'black', '--filter-files']
+        files: ^python/.*\.pyi?$
+        args:
+          - --settings-path
+          - python/pyproject.toml
+
+  # Python type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.17.1
+    hooks:
+      - id: mypy
+        files: ^python/.*\.pyi?$
+        args:
+          - --config-file
+          - python/pyproject.toml
+        additional_dependencies:
+          - pytest
 
   # Python style checking with flake8
   # - repo: https://github.com/pycqa/flake8
   #   rev: 7.3.0
   #   hooks:
   #     - id: flake8
-  #       files: \.py$
-  #       args: ['--max-line-length=88']
+  #       files: ^python/.*\.pyi?$
+  #       args:
+  #         - --max-line-length=88
 
   # Python security linting with bandit
   - repo: https://github.com/pycqa/bandit
     rev: 1.8.6
     hooks:
       - id: bandit
-        files: \.py$
-        args: ['-c', 'python/pyproject.toml']
-        additional_dependencies: ['bandit[toml]']
+        files: ^python/.*\.pyi?$
+        args:
+          - -c
+          - python/pyproject.toml
+        additional_dependencies:
+          - bandit[toml]
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.18.1
     hooks:
       - id: markdownlint-cli2
-        args: ['--config', '.markdownlint.yaml']
+        args:
+          - --config
+          - .markdownlint.yaml
