@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <random>
 #include <ranges>
+#include <stdexcept>
 #include <vector>
 
 namespace cpp_features::random {
@@ -198,6 +199,9 @@ class RandomGenerator {
    * @endcode
    */
   [[nodiscard]] auto GenerateBool(double probability = 0.5) -> bool {
+    if (probability < 0.0 || probability > 1.0) {
+      throw std::invalid_argument("Probability must be between 0.0 and 1.0");
+    }
     std::bernoulli_distribution dist{probability};
     return dist(generator_);
   }

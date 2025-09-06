@@ -28,13 +28,13 @@ TEST_CASE("RandomGenerator construction", "[random][generator]") {
   SECTION("Explicit seed constructor") {
     constexpr std::uint32_t SEED = 12345;
 
-    RandomGenerator generator1{SEED};
-    auto first_value = generator1.GenerateInt(1, 1000);
+    RandomGenerator gen1{SEED};
+    auto value1 = gen1.GenerateInt(1, 1000);
 
-    RandomGenerator generator2{SEED};
-    auto second_value = generator2.GenerateInt(1, 1000);
+    RandomGenerator gen2{SEED};
+    auto value2 = gen2.GenerateInt(1, 1000);
 
-    REQUIRE(first_value == second_value);
+    REQUIRE(value1 == value2);
   }
 }
 
@@ -99,7 +99,7 @@ TEST_CASE("RandomGenerator floating-point generation", "[random][generator][floa
 
   SECTION("Generate float values") {
     constexpr float MIN_VAL = -10.0F;
-    constexpr float MAX_VAL = 40.0F;
+    constexpr float MAX_VAL = -5.0F;
 
     auto value = generator.GenerateReal(MIN_VAL, MAX_VAL);
 
@@ -151,7 +151,7 @@ TEST_CASE("RandomGenerator vector generation", "[random][generator][vector]") {
 
   SECTION("Generate empty vector") {
     auto int_values = generator.GenerateIntVector(1, 10, 0);
-    auto real_values = generator.GenerateRealVector(0.0, 1.0, 0);
+    auto real_values = generator.GenerateRealVector(-10.0, -9.0, 0);
 
     REQUIRE(int_values.empty());
     REQUIRE(real_values.empty());
@@ -190,7 +190,7 @@ TEST_CASE("RandomGenerator boolean generation", "[random][generator][boolean]") 
   }
 
   SECTION("Biased coin (90% true)") {
-    constexpr std::size_t ITERATIONS = 100;
+    constexpr std::size_t ITERATIONS = 1000;
     constexpr double HIGH_PROBABILITY = 0.9;
 
     std::size_t true_count = 0;
@@ -205,7 +205,7 @@ TEST_CASE("RandomGenerator boolean generation", "[random][generator][boolean]") 
   }
 
   SECTION("Low probability (10% true)") {
-    constexpr std::size_t ITERATIONS = 100;
+    constexpr std::size_t ITERATIONS = 1000;
     constexpr double LOW_PROBABILITY = 0.1;
 
     std::size_t true_count = 0;
@@ -220,13 +220,15 @@ TEST_CASE("RandomGenerator boolean generation", "[random][generator][boolean]") 
   }
 
   SECTION("Extreme probabilities") {
+    constexpr std::size_t ITERATIONS = 1000;
+
     // Test 0% probability
-    for (int i = 0; i < 10; ++i) {
+    for (std::size_t i = 0; i < ITERATIONS; ++i) {
       REQUIRE_FALSE(generator.GenerateBool(0.0));
     }
 
     // Test 100% probability
-    for (int i = 0; i < 10; ++i) {
+    for (std::size_t i = 0; i < ITERATIONS; ++i) {
       REQUIRE(generator.GenerateBool(1.0));
     }
   }
@@ -331,13 +333,19 @@ TEST_CASE("RandomGenerator seeding", "[random][generator][seeding]") {
 
 TEST_CASE("ShuffleContainer function", "[random][shuffle]") {
   SECTION("Shuffle vector") {
-    std::vector<int> original{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    std::vector<int> shuffled = original;
+    std::vector<int> original;
+    for (int i = 1; i <= 20; ++i) {
+      original.push_back(i);
+    }
 
+    std::vector<int> shuffled = original;
     ShuffleContainer(shuffled);
 
     // Size should remain the same
     REQUIRE(shuffled.size() == original.size());
+
+    // Should be different (very high probability)
+    REQUIRE(shuffled != original);
 
     // Should contain all the same elements
     std::ranges::sort(shuffled);
@@ -345,13 +353,19 @@ TEST_CASE("ShuffleContainer function", "[random][shuffle]") {
   }
 
   SECTION("Shuffle array") {
-    std::array<char, 4> original{'A', 'B', 'C', 'D'};
-    std::array<char, 4> shuffled = original;
+    std::array<char, 26> original{
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    };
 
+    std::array<char, 26> shuffled = original;
     ShuffleContainer(shuffled);
 
     // Size should remain the same
     REQUIRE(shuffled.size() == original.size());
+
+    // Should be different (very high probability)
+    REQUIRE(shuffled != original);
 
     // Should contain all the same elements
     std::ranges::sort(shuffled);
@@ -412,7 +426,8 @@ TEST_CASE("SampleFromRange function", "[random][sample]") {
     auto sample = SampleFromRange(small_population, LARGE_SAMPLE_SIZE);
 
     // Should return all available elements
-    REQUIRE(sample.size() == small_population.size());
+    std::ranges::sort(sample);
+    REQUIRE(sample == small_population);
   }
 
   SECTION("Sample zero elements") {

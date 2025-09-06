@@ -1,476 +1,389 @@
-"""Tests for Python random module.
-
-Comprehensive tests following C++ test patterns for random functionality.
-"""
+"""Tests for the random module."""
 
 import pytest
+from demo.containers import Container
+from demo.random import RandomGenerator, sample, shuffle
 
-from python import random as cpp_random
 
+class TestRandomGeneratorBasic:
+    """Test RandomGenerator creation and basic operations."""
 
-class TestRandomGenerator:
-    """Test RandomGenerator functionality."""
+    def test_default_constructor(self) -> None:
+        """Test creating random generator with default constructor."""
+        rg = RandomGenerator()
 
-    def test_random_generator_creation(self) -> None:
-        """Test basic random generator creation."""
-        gen = cpp_random.RandomGenerator()
-        assert gen is not None
-
-    def test_random_generator_with_seed(self) -> None:
-        """Test random generator with seed."""
-        gen = cpp_random.RandomGenerator(seed=12345)
-        assert gen is not None
-
-    def test_randint_basic(self) -> None:
-        """Test basic random integer generation."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.randint(1, 10)
-
+        value = rg.rand_int(1, 10)
         assert isinstance(value, int)
         assert 1 <= value <= 10
 
-    def test_randint_range(self) -> None:
-        """Test random integer generation in various ranges."""
-        gen = cpp_random.RandomGenerator(seed=42)
+    def test_explicit_seed_constructor(self) -> None:
+        """Test creating random generator with explicit seed."""
+        seed = 12345
 
-        # Test different ranges
-        for min_val, max_val in [(1, 5), (10, 20), (-5, 5), (100, 200)]:
-            value = gen.randint(min_val, max_val)
+        rg1 = RandomGenerator(seed=seed)
+        value1 = rg1.rand_int(1, 1000)
+
+        rg2 = RandomGenerator(seed=seed)
+        value2 = rg2.rand_int(1, 1000)
+
+        assert value1 == value2
+
+
+@pytest.fixture
+def rg() -> RandomGenerator:
+    """Fixture for random generator with fixed seed."""
+    return RandomGenerator(seed=42)
+
+
+class TestRandomGeneratorInt:
+    """Test RandomGenerator integral number generation."""
+
+    @pytest.mark.parametrize(
+        'min_val, max_val',
+        [
+            (1, 100),
+            (42, 42),
+            (-100, -10),
+            (1000000, 2000000),
+        ],
+    )
+    def test_generate_int_values(
+        self, rg: RandomGenerator, min_val: int, max_val: int
+    ) -> None:
+        """Test generating integer values in range."""
+        for _ in range(100):
+            value = rg.rand_int(min_val, max_val)
+
+            assert isinstance(value, int)
             assert min_val <= value <= max_val
 
-    def test_randlong(self) -> None:
-        """Test random long integer generation."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.randlong(1000000, 2000000)
 
-        assert isinstance(value, int)
-        assert 1000000 <= value <= 2000000
+class TestRandomGeneratorFloat:
+    """Test RandomGenerator floating-point number generation."""
 
-    def test_random_float(self) -> None:
-        """Test random float generation."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.random()
+    @pytest.mark.parametrize(
+        'min_val, max_val',
+        [
+            (0.0, 1.0),
+            (-10.0, -5.0),
+            (0.0, 0.001),
+        ],
+    )
+    def test_generate_float_values(
+        self, rg: RandomGenerator, min_val: float, max_val: float
+    ) -> None:
+        """Test generating floating-point values in range."""
+        for _ in range(100):
+            value = rg.rand_float(min_val, max_val)
+            assert isinstance(value, float)
+            assert min_val <= value < max_val
 
-        assert isinstance(value, float)
-        assert 0.0 <= value < 1.0
 
-    def test_uniform(self) -> None:
-        """Test uniform distribution."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.uniform(2.0, 8.0)
+class TestRandomGeneratorList:
+    """Test RandomGenerator list generation."""
 
-        assert isinstance(value, float)
-        assert 2.0 <= value < 8.0
-
-    def test_randfloat(self) -> None:
-        """Test random float32 generation."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.randfloat(1.0, 5.0)
-
-        assert isinstance(value, float)
-        assert 1.0 <= value < 5.0
-
-    def test_choice(self) -> None:
-        """Test random boolean generation."""
-        gen = cpp_random.RandomGenerator()
-
-        # Test with default probability
-        value = gen.choice()
-        assert isinstance(value, bool)
-
-        # Test with custom probability
-        value_high = gen.choice(0.9)
-        value_low = gen.choice(0.1)
-        assert isinstance(value_high, bool)
-        assert isinstance(value_low, bool)
-
-    def test_normal_distribution(self) -> None:
-        """Test normal distribution."""
-        gen = cpp_random.RandomGenerator()
-
-        # Test with default parameters
-        value = gen.normal()
-        assert isinstance(value, float)
-
-        # Test with custom parameters
-        value_custom = gen.normal(mean=10.0, stddev=2.0)
-        assert isinstance(value_custom, float)
-
-    def test_normal_float(self) -> None:
-        """Test normal distribution with float32."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.normal_float(5.0, 1.5)
-
-        assert isinstance(value, float)
-
-    def test_integers_vector(self) -> None:
-        """Test generating vector of integers."""
-        gen = cpp_random.RandomGenerator()
-        values = gen.integers(1, 100, 10)
+    @pytest.mark.parametrize(
+        'min_val, max_val, count',
+        [
+            (1, 49, 10),
+            (1, 10, 0),
+        ],
+    )
+    def test_generate_int_list(
+        self, rg: RandomGenerator, min_val: int, max_val: int, count: int
+    ) -> None:
+        """Test generating list of integers."""
+        values = rg.rand_ints(min_val, max_val, count)
 
         assert isinstance(values, list)
-        assert len(values) == 10
-        assert all(isinstance(v, int) for v in values)
-        assert all(1 <= v <= 100 for v in values)
+        assert len(values) == count
+        for value in values:
+            assert isinstance(value, int)
+            assert min_val <= value <= max_val
 
-    def test_floats_vector(self) -> None:
-        """Test generating vector of floats."""
-        gen = cpp_random.RandomGenerator()
-        values = gen.floats(0.0, 1.0, 5)
+    @pytest.mark.parametrize(
+        'min_val, max_val, count',
+        [
+            (0.0, 1.0, 10),
+            (-10.0, -9.0, 0),
+        ],
+    )
+    def test_generate_float_vector(
+        self, rg: RandomGenerator, min_val: float, max_val: float, count: int
+    ) -> None:
+        """Test generating list of floating-point values."""
+        values = rg.rand_floats(min_val, max_val, count)
 
         assert isinstance(values, list)
-        assert len(values) == 5
-        assert all(isinstance(v, float) for v in values)
-        assert all(0.0 <= v < 1.0 for v in values)
+        assert len(values) == count
+        for value in values:
+            assert isinstance(value, float)
+            assert min_val <= value < max_val
+
+    @pytest.mark.parametrize(
+        'min_val, max_val, count',
+        [
+            (1, 100, 1000),
+        ],
+    )
+    def test_generate_large_list(
+        self, rg: RandomGenerator, min_val: int, max_val: int, count: int
+    ) -> None:
+        """Test generating large list."""
+        values = rg.rand_ints(min_val, max_val, count)
+
+        assert isinstance(values, list)
+        assert len(values) == count
+
+        # Check that we get some distribution (not all the same value)
+        first_value = values[0]
+        has_different = any(value != first_value for value in values)
+        assert has_different  # Should have some variety
+
+    def test_generate_negative_count(self, rg: RandomGenerator) -> None:
+        """Test generating list with negative count."""
+        with pytest.raises(ValueError, match='Count must be non-negative'):
+            rg.rand_ints(1, 10, -1)
+
+        with pytest.raises(ValueError, match='Count must be non-negative'):
+            rg.rand_floats(0.0, 1.0, -1)
+
+
+class TestRandomGeneratorBool:
+    """Test RandomGenerator boolean generation."""
+
+    @pytest.mark.parametrize(
+        'probability',
+        [
+            0.5,
+            0.9,
+            0.1,
+        ],
+    )
+    def test_coin_flips(self, rg: RandomGenerator, probability: float) -> None:
+        """Test fair coin flip (50% probability)."""
+        iterations = 1000
+
+        true_count = 0
+        for _ in range(iterations):
+            if rg.rand_bool(probability):
+                true_count += 1
+
+        # Should be roughly the probability (allow some variance)
+        assert true_count > int(iterations * (probability - 0.2))
+        assert true_count < int(iterations * (probability + 0.2))
+
+    def test_extreme_probabilities(self, rg: RandomGenerator) -> None:
+        """Test extreme probability values."""
+        iterations = 1000
+
+        # Test 0% probability
+        for _ in range(iterations):
+            assert rg.rand_bool(0.0) is False
+
+        # Test 100% probability
+        for _ in range(iterations):
+            assert rg.rand_bool(1.0) is True
+
+    def test_invalid_probability(self, rg: RandomGenerator) -> None:
+        """Test invalid probability values."""
+        with pytest.raises(ValueError, match='Probability must be between 0.0 and 1.0'):
+            rg.rand_bool(-0.5)
+
+        with pytest.raises(ValueError, match='Probability must be between 0.0 and 1.0'):
+            rg.rand_bool(10.0)
+
+
+class TestRandomGeneratorNormal:
+    """Test RandomGenerator normal distribution generation."""
+
+    def test_standard_normal_distribution(self, rg: RandomGenerator) -> None:
+        """Test standard normal distribution."""
+        mean = 0.0
+        stddev = 1.0
+        iterations = 1000
+
+        values = []
+        for _ in range(iterations):
+            values.append(rg.normal(mean, stddev))
+
+        # Calculate sample mean and verify it's close to expected
+        sample_mean = sum(values) / len(values)
+
+        # Sample mean should be close to theoretical mean (within 0.2)
+        assert abs(sample_mean - mean) < 0.2
+
+        # Most values should be within 3 standard deviations
+        within_3_sigma = sum(1 for val in values if abs(val - mean) <= 3.0 * stddev)
+        # At least 99% should be within 3 sigma
+        assert within_3_sigma > int(iterations * 0.99)
 
-    def test_seed_reproducibility(self) -> None:
-        """Test seed reproducibility."""
-        gen1 = cpp_random.RandomGenerator(seed=123)
-        gen2 = cpp_random.RandomGenerator(seed=123)
+    @pytest.mark.parametrize(
+        'mean, stddev',
+        [
+            (100.0, 15.0),
+            (5.0, 0.1),
+        ],
+    )
+    def test_custom_normal_distribution(
+        self, rg: RandomGenerator, mean: float, stddev: float
+    ) -> None:
+        """Test custom normal distribution parameters."""
+        value = rg.normal(mean, stddev)
 
-        # Same seed should produce same sequence
-        values1 = [gen1.randint(1, 1000) for _ in range(5)]
-        values2 = [gen2.randint(1, 1000) for _ in range(5)]
+        # Value should be reasonable (within 5 standard deviations)
+        assert value > mean - (5.0 * stddev)
+        assert value < mean + (5.0 * stddev)
 
-        assert values1 == values2
 
-    def test_seed_method(self) -> None:
-        """Test seeding after creation."""
-        gen = cpp_random.RandomGenerator()
+class TestRandomGeneratorSeeding:
+    """Test RandomGenerator seeding functionality."""
 
-        # Set seed and generate values
-        gen.seed(456)
-        values1 = [gen.randint(1, 100) for _ in range(3)]
+    def test_manual_seeding_deterministic(self) -> None:
+        """Test that manual seeding produces deterministic results."""
+        seed = 12345
 
-        # Reset with same seed
-        gen.seed(456)
-        values2 = [gen.randint(1, 100) for _ in range(3)]
+        rg1 = RandomGenerator(seed=seed)
+        rg2 = RandomGenerator(seed=seed)
 
-        assert values1 == values2
+        # Generate several values from both generators
+        for _ in range(10):
+            val1 = rg1.rand_int(1, 1000)
+            val2 = rg2.rand_int(1, 1000)
 
-    def test_seed_with_time(self) -> None:
-        """Test seeding with current time."""
-        gen = cpp_random.RandomGenerator()
-        gen.seed_with_time()
+            assert val1 == val2
 
-        # Should be able to generate values
-        value = gen.randint(1, 100)
-        assert 1 <= value <= 100
+    def test_reseeding_resets_sequence(self) -> None:
+        """Test that re-seeding resets the sequence."""
+        seed = 54321
 
+        rg = RandomGenerator()
+        rg.seed(seed)
+        first_sequence = rg.rand_ints(1, 100, 100)
 
-class TestGlobalFunctions:
-    """Test global random functions."""
+        rg.seed(seed)  # Reset with same seed
+        second_sequence = rg.rand_ints(1, 100, 100)
 
-    def test_shuffle_int_list(self) -> None:
-        """Test shuffling integer list."""
-        original = [1, 2, 3, 4, 5]
-        data = original.copy()
+        assert first_sequence == second_sequence
 
-        cpp_random.shuffle(data)
+    def test_seed_with_time_non_deterministic(self) -> None:
+        """Test that seed_with_time provides non-deterministic behavior."""
+        import time
 
-        # List should still contain same elements
-        assert sorted(data) == sorted(original)
-        assert len(data) == len(original)
+        rg = RandomGenerator()
+        rg.seed_with_time()
+        first_sequence = rg.rand_ints(1, 100, 100)
 
-    def test_shuffle_float_list(self) -> None:
-        """Test shuffling float list."""
-        original = [1.1, 2.2, 3.3, 4.4, 5.5]
-        data = original.copy()
+        time.sleep(0.01)
+        rg.seed_with_time()
+        second_sequence = rg.rand_ints(1, 100, 100)
 
-        cpp_random.shuffle(data)
+        assert first_sequence != second_sequence
 
-        assert sorted(data) == sorted(original)
-        assert len(data) == len(original)
 
-    def test_shuffle_string_list(self) -> None:
-        """Test shuffling string list."""
-        original = ['apple', 'banana', 'cherry', 'date']
-        data = original.copy()
+class TestShuffleContainer:
+    """Test shuffle container functionality."""
 
-        cpp_random.shuffle(data)
+    def test_shuffle_list(self) -> None:
+        """Test shuffling a list."""
+        original = [x for x in range(1, 21)]
 
-        assert sorted(data) == sorted(original)
-        assert len(data) == len(original)
+        shuffled = original.copy()
+        shuffle(shuffled)
 
-    def test_shuffle_unsupported_type(self) -> None:
-        """Test shuffling unsupported type falls back to Python random."""
-        data = [{'a': 1}, {'b': 2}, {'c': 3}]
-        original = data.copy()
+        # Size should remain the same
+        assert len(shuffled) == len(original)
 
-        # Should not raise exception
-        cpp_random.shuffle(data)
+        # Should be different (very high probability)
+        assert shuffled != original
 
-        # Should contain same elements (though order may change)
-        assert len(data) == len(original)
+        # Should contain all the same elements
+        assert sorted(shuffled) == sorted(original)
 
-    def test_sample_int_list(self) -> None:
-        """Test sampling from integer list."""
-        population = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        sample = cpp_random.sample(population, 3)
+    def test_shuffle_container(self) -> None:
+        """Test shuffling container."""
+        data = [x for x in range(1, 21)]
+        container = Container(int, data)
 
-        assert isinstance(sample, list)
-        assert len(sample) == 3
-        assert all(item in population for item in sample)
-        assert len(set(sample)) == 3  # No duplicates
+        shuffled = Container(int, data.copy())
+        shuffle(shuffled)
 
-    def test_sample_float_list(self) -> None:
-        """Test sampling from float list."""
-        population = [1.1, 2.2, 3.3, 4.4, 5.5]
-        sample = cpp_random.sample(population, 2)
+        # Size should remain the same
+        assert len(shuffled) == len(container)
 
-        assert len(sample) == 2
-        assert all(item in population for item in sample)
-
-    def test_sample_string_list(self) -> None:
-        """Test sampling from string list."""
-        population = ['a', 'b', 'c', 'd', 'e']
-        sample = cpp_random.sample(population, 3)
-
-        assert len(sample) == 3
-        assert all(item in population for item in sample)
-
-    def test_sample_string_characters(self) -> None:
-        """Test sampling characters from string."""
-        text = 'hello world'
-        sample = cpp_random.sample_string(text, 5)
-
-        assert isinstance(sample, list)
-        assert len(sample) == 5
-        assert all(char in text for char in sample)
-
-    def test_sample_unsupported_type(self) -> None:
-        """Test sampling unsupported type falls back to Python random."""
-        population = [{'a': 1}, {'b': 2}, {'c': 3}, {'d': 4}]
-        sample = cpp_random.sample(population, 2)
-
-        assert len(sample) == 2
-
-
-class TestDistributions:
-    """Test probability distributions."""
-
-    def test_uniform_int_distribution(self) -> None:
-        """Test uniform integer distribution."""
-        gen = cpp_random.RandomGenerator(seed=42)
-        dist = cpp_random.UniformInt(gen, 10, 20)
-
-        value = dist.sample()
-        assert isinstance(value, int)
-        assert 10 <= value <= 20
-
-        samples = dist.samples(5)
-        assert len(samples) == 5
-        assert all(10 <= v <= 20 for v in samples)
-
-    def test_uniform_float_distribution(self) -> None:
-        """Test uniform float distribution."""
-        gen = cpp_random.RandomGenerator(seed=42)
-        dist = cpp_random.UniformFloat(gen, 1.0, 5.0)
-
-        value = dist.sample()
-        assert isinstance(value, float)
-        assert 1.0 <= value < 5.0
-
-        samples = dist.samples(10)
-        assert len(samples) == 10
-        assert all(1.0 <= v < 5.0 for v in samples)
-
-    def test_normal_distribution_class(self) -> None:
-        """Test normal distribution class."""
-        gen = cpp_random.RandomGenerator(seed=42)
-
-        # Standard normal distribution
-        std_normal = cpp_random.Normal(gen)
-        value = std_normal.sample()
-        assert isinstance(value, float)
-
-        # Custom normal distribution
-        custom_normal = cpp_random.Normal(gen, mean=100.0, stddev=15.0)
-        samples = custom_normal.samples(100)
-
-        # Statistical tests (approximate)
-        mean_sample = sum(samples) / len(samples)
-        assert 85.0 < mean_sample < 115.0  # Should be around 100 ± 15
+        # Should be different (very high probability)
+        assert shuffled != container
 
-    def test_distribution_inheritance(self) -> None:
-        """Test that distributions follow inheritance pattern."""
-        gen = cpp_random.RandomGenerator()
+        # Should contain all the same elements
+        assert sorted(shuffled) == list(container)
 
-        # All distributions should be instances of Distribution
-        uniform_int = cpp_random.UniformInt(gen, 1, 10)
-        uniform_float = cpp_random.UniformFloat(gen, 1.0, 10.0)
-        normal = cpp_random.Normal(gen)
-
-        # Test that they all have sample and samples methods
-        assert hasattr(uniform_int, 'sample')
-        assert hasattr(uniform_int, 'samples')
-        assert hasattr(uniform_float, 'sample')
-        assert hasattr(uniform_float, 'samples')
-        assert hasattr(normal, 'sample')
-        assert hasattr(normal, 'samples')
-
+    def test_shuffle_single_element(self) -> None:
+        """Test shuffling single element."""
+        single = Container(int, [42])
+        shuffle(single)
 
-class TestConvenienceFunctions:
-    """Test convenience functions using default generator."""
+        assert len(single) == 1
+        assert list(single) == [42]
 
-    def test_randint_convenience(self) -> None:
-        """Test randint convenience function."""
-        value = cpp_random.randint(1, 100)
-        assert isinstance(value, int)
-        assert 1 <= value <= 100
+    def test_shuffle_empty_container(self) -> None:
+        """Test shuffling empty container."""
+        empty = Container(int, [])
+        shuffle(empty)
 
-    def test_random_convenience(self) -> None:
-        """Test random convenience function."""
-        value = cpp_random.random()
-        assert isinstance(value, float)
-        assert 0.0 <= value < 1.0
+        assert list(empty) == []
 
-    def test_uniform_convenience(self) -> None:
-        """Test uniform convenience function."""
-        value = cpp_random.uniform(5.0, 10.0)
-        assert isinstance(value, float)
-        assert 5.0 <= value < 10.0
 
-    def test_choice_convenience(self) -> None:
-        """Test choice convenience function."""
-        value = cpp_random.choice()
-        assert isinstance(value, bool)
+class TestSampleFromRange:
+    """Test sample from range functionality."""
 
-        value_biased = cpp_random.choice(0.8)
-        assert isinstance(value_biased, bool)
+    def test_sample_from_list(self) -> None:
+        """Test sampling from a list."""
+        population = [x for x in range(1, 11)]
+        sample_size = 3
 
-    def test_normal_convenience(self) -> None:
-        """Test normal convenience function."""
-        value = cpp_random.normal()
-        assert isinstance(value, float)
+        sample_result = sample(population, sample_size)
 
-        value_custom = cpp_random.normal(mean=50.0, stddev=10.0)
-        assert isinstance(value_custom, float)
+        assert isinstance(sample_result, list)
+        assert len(sample_result) == sample_size
 
+        # All sampled elements should be from the original population
+        for element in sample_result:
+            assert element in population
 
-class TestRandomEdgeCases:
-    """Test edge cases and error conditions."""
+    def test_sample_from_container(self) -> None:
+        """Test sampling from a container."""
+        container = Container(float, [float(x) for x in range(1, 11)])
+        sample_size = 5
 
-    def test_randint_same_bounds(self) -> None:
-        """Test randint with same min and max."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.randint(5, 5)
-        assert value == 5
-
-    def test_uniform_zero_range(self) -> None:
-        """Test uniform with minimal range."""
-        gen = cpp_random.RandomGenerator()
-        value = gen.uniform(1.0, 1.0)
-        assert value == 1.0
+        sample_result = sample(container, sample_size)
 
-    def test_sample_larger_than_population(self) -> None:
-        """Test sampling more items than available."""
-        population = [1, 2, 3]
+        assert isinstance(sample_result, list)
+        assert len(sample_result) == sample_size
 
-        with pytest.raises(Exception):  # Should raise an error
-            cpp_random.sample(population, 5)
-
-    def test_empty_vector_generation(self) -> None:
-        """Test generating empty vectors."""
-        gen = cpp_random.RandomGenerator()
-
-        int_vec = gen.integers(1, 10, 0)
-        float_vec = gen.floats(0.0, 1.0, 0)
-
-        assert int_vec == []
-        assert float_vec == []
-
-    def test_negative_count_vector(self) -> None:
-        """Test generating vectors with negative count."""
-        gen = cpp_random.RandomGenerator()
-
-        # Should handle gracefully or raise appropriate error
-        try:
-            gen.integers(1, 10, -1)
-        except Exception:
-            pass  # Expected to fail
-
-
-class TestRandomIntegration:
-    """Integration tests for random functionality."""
-
-    def test_multiple_generators_independence(self) -> None:
-        """Test that multiple generators are independent."""
-        gen1 = cpp_random.RandomGenerator(seed=111)
-        gen2 = cpp_random.RandomGenerator(seed=222)
-
-        values1 = [gen1.randint(1, 1000) for _ in range(10)]
-        values2 = [gen2.randint(1, 1000) for _ in range(10)]
-
-        # Different seeds should produce different sequences
-        assert values1 != values2
-
-    def test_random_data_pipeline(self) -> None:
-        """Test complete random data generation pipeline."""
-        gen = cpp_random.RandomGenerator(seed=42)
-
-        # Generate random data
-        int_data = gen.integers(1, 100, 20)
-
-        # Shuffle the data
-        cpp_random.shuffle(int_data)
-
-        # Sample from the shuffled data
-        sample_data = cpp_random.sample(int_data, 5)
-
-        assert len(int_data) == 20
-        assert len(sample_data) == 5
-        assert all(item in int_data for item in sample_data)
-
-    def test_statistical_properties(self) -> None:
-        """Test statistical properties of distributions."""
-        gen = cpp_random.RandomGenerator(seed=12345)
-
-        # Generate large sample from uniform distribution
-        uniform_samples = gen.floats(0.0, 1.0, 1000)
-
-        # Basic statistical checks
-        mean = sum(uniform_samples) / len(uniform_samples)
-        assert 0.4 < mean < 0.6  # Should be around 0.5
-
-        min_val = min(uniform_samples)
-        max_val = max(uniform_samples)
-        assert 0.0 <= min_val < 1.0
-        assert 0.0 <= max_val < 1.0
-
-    def test_cross_type_operations(self) -> None:
-        """Test operations across different random types."""
-        gen = cpp_random.RandomGenerator(seed=999)
-
-        # Generate different types of random data
-        integers = gen.integers(1, 10, 5)
-        floats = gen.floats(1.0, 10.0, 5)
-        booleans = [gen.choice() for _ in range(5)]
-
-        # Verify types and ranges
-        assert all(isinstance(x, int) and 1 <= x <= 10 for x in integers)
-        assert all(isinstance(x, float) and 1.0 <= x < 10.0 for x in floats)
-        assert all(isinstance(x, bool) for x in booleans)
-
-        # Test shuffling mixed data
-        mixed_strings = [str(x) for x in integers + floats]
-        cpp_random.shuffle(mixed_strings)
-        assert len(mixed_strings) == 10
-
-    def test_performance_consistency(self) -> None:
-        """Test that random generation performance is consistent."""
-        gen = cpp_random.RandomGenerator()
-
-        # Generate multiple large batches
-        batch1 = gen.integers(1, 1000000, 1000)
-        batch2 = gen.integers(1, 1000000, 1000)
-        batch3 = gen.integers(1, 1000000, 1000)
-
-        # All batches should be complete
-        assert len(batch1) == 1000
-        assert len(batch2) == 1000
-        assert len(batch3) == 1000
-
-        # Values should be in range
-        for batch in [batch1, batch2, batch3]:
-            assert all(1 <= x <= 1000000 for x in batch)
+        # All sampled elements should be from the original population
+        for element in sample_result:
+            assert element in container
+
+    def test_sample_more_than_available(self) -> None:
+        """Test sampling more than available elements."""
+        small_population = Container(int, [x for x in range(1, 4)])
+        large_sample_size = 10
+
+        sample_result = sample(small_population, large_sample_size)
+
+        # Should return all available elements
+        assert sorted(sample_result) == list(small_population)
+
+    def test_sample_zero_elements(self) -> None:
+        """Test sampling zero elements."""
+        population = Container(int, [x for x in range(1, 6)])
+
+        sample_result = sample(population, 0)
+        assert sample_result == []
+
+    def test_sample_from_empty_range(self) -> None:
+        """Test sampling from empty range."""
+        empty_population = Container(int, [])
+
+        sample_result = sample(empty_population, 5)
+        assert sample_result == []

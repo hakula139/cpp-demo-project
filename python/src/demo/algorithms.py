@@ -34,9 +34,9 @@ def sort(
     >>> sort(data)
     >>> data
     [1, 1, 2, 3, 3, 4, 5, 5, 6, 9]
-    >>> data = Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple'])
-    >>> sort(data)
-    >>> list(data)
+    >>> container = Container(str, ['cherry', 'banana', 'elderberry', 'date', 'apple'])
+    >>> sort(container)
+    >>> list(container)
     ['apple', 'banana', 'cherry', 'date', 'elderberry']
     """
     match data:

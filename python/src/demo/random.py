@@ -1,5 +1,6 @@
 """Python wrapper for the random module."""
 
+import random
 from typing import TypeVar
 
 import cpp_features.random as _random
@@ -23,9 +24,9 @@ class RandomGenerator:
         Examples
         --------
         >>> RandomGenerator()
-        <RandomGenerator(seed=None) at 0x13911eaa0>>
+        <RandomGenerator(seed=None) at 0x13911eaa0>
         >>> RandomGenerator(seed=12345)
-        <RandomGenerator(seed=12345) at 0x13911eaa0>>
+        <RandomGenerator(seed=12345) at 0x13911eaa0>
         """
         if seed is not None:
             self._generator = _random.RandomGenerator(seed)
@@ -51,6 +52,7 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.rand_int(1, 10)
         5
         """
@@ -75,6 +77,7 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.rand_float(0.0, 1.0)
         0.5
         """
@@ -102,9 +105,12 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.rand_ints(1, 10, 5)
         [3, 8, 2, 6, 4]
         """
+        if count < 0:
+            raise ValueError('Count must be non-negative')
         return self._generator.rand_ints(min_val, max_val, count)
 
     def rand_floats(self, min_val: float, max_val: float, count: int) -> list[float]:
@@ -129,9 +135,12 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.rand_floats(0.0, 1.0, 5)
         [0.234, 0.765, 0.123, 0.890, 0.456]
         """
+        if count < 0:
+            raise ValueError('Count must be non-negative')
         return self._generator.rand_floats(min_val, max_val, count)
 
     def rand_bool(self, probability: float = 0.5) -> bool:
@@ -152,6 +161,7 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.rand_bool()     # 50% chance of True
         False
         >>> rg.rand_bool(0.7)  # 70% chance of True
@@ -180,6 +190,7 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.normal()
         0.5
         >>> rg.normal(100.0, 15.0)
@@ -200,11 +211,13 @@ class RandomGenerator:
 
         Examples
         --------
-        >>> rg.seed(42)
-        >>> rg.rand_int(1, 10)
+        >>> rg1 = RandomGenerator()
+        >>> rg1.seed(42)
+        >>> rg1.rand_int(1, 10)
         5
-        >>> rg.seed(42)
-        >>> rg.rand_int(1, 10)
+        >>> rg2 = RandomGenerator()
+        >>> rg2.seed(42)
+        >>> rg2.rand_int(1, 10)
         5
         """
         self._generator.seed(seed)
@@ -218,19 +231,20 @@ class RandomGenerator:
 
         Examples
         --------
+        >>> rg = RandomGenerator()
         >>> rg.seed_with_time()
         """
         self._generator.seed_with_time()
 
 
-def shuffle(container: list[T] | Container[T] | str) -> None:
+def shuffle(data: list[T] | Container[T]) -> None:
     """Randomly shuffle elements in a container.
 
     Randomly reorders the elements in the provided range using the Fisher-Yates shuffle algorithm.
 
     Parameters
     ----------
-    container : list[T] | Container[T] | str
+    data : list[T] | Container[T]
         The container to shuffle in-place
 
     Examples
@@ -239,15 +253,19 @@ def shuffle(container: list[T] | Container[T] | str) -> None:
     >>> shuffle(deck)
     >>> deck
     [6, 10, 8, 3, 1, 4, 2, 7, 9, 5]
-    >>> text = 'abcdefg'
-    >>> shuffle(text)
-    >>> text
-    'gcbefad'
+    >>> container = Container(str, ['apple', 'banana', 'cherry', 'date', 'elderberry'])
+    >>> shuffle(container)
+    >>> list(container)
+    ['cherry', 'banana', 'elderberry', 'date', 'apple']
     """
-    _random.shuffle(container)
+    match data:
+        case Container():
+            _random.shuffle(data._container)
+        case _:
+            random.shuffle(data)
 
 
-def sample(container: list[T] | Container[T] | str, count: int) -> list[T]:
+def sample(data: list[T] | Container[T], count: int) -> list[T]:
     """Randomly sample elements from a range.
 
     Selects a random subset of elements from the input range without replacement.
@@ -256,7 +274,7 @@ def sample(container: list[T] | Container[T] | str, count: int) -> list[T]:
 
     Parameters
     ----------
-    container : list[T] | Container[T] | str
+    data : list[T] | Container[T]
         The source container to sample from
     count : int
         Number of elements to sample
@@ -271,11 +289,15 @@ def sample(container: list[T] | Container[T] | str, count: int) -> list[T]:
     >>> deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     >>> sample(deck, 5)
     [6, 10, 8, 3, 1]
-    >>> text = 'abcdefg'
-    >>> sample(text, 3)
-    ['g', 'c', 'b']
+    >>> container = Container(str, ['apple', 'banana', 'cherry', 'date', 'elderberry'])
+    >>> sample(container, 3)
+    ['cherry', 'banana', 'elderberry']
     """
-    return _random.sample(container, count)
+    match data:
+        case Container():
+            return _random.sample(data._container, count)
+        case _:
+            return random.sample(data, count)
 
 
 __all__ = [
