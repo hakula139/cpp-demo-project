@@ -1,4 +1,7 @@
 {
+  "[cmake]": {
+    "editor.formatOnSave": false
+  },
   "C_Cpp.autocomplete": "disabled",
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",

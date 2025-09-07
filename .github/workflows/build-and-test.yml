@@ -135,6 +135,8 @@ jobs:
             --preset ${{ matrix.preset }} \
             --parallel
 
+          cp build/binding/*.so python/src/demo/
+
       - name: Run C++ tests
         run: |
           ctest \
@@ -142,8 +144,6 @@ jobs:
             --parallel
 
       - name: Run Python tests
-        env:
-          PYTHONPATH: 'python/src:build/binding'
         run: |
           cd python
           poetry run pytest
