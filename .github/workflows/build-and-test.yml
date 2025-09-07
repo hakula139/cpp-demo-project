@@ -119,7 +119,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           cd python
-          pip3 install poetry
+          pip3 install poetry --break-system-packages
           poetry install
 
       - name: Configure

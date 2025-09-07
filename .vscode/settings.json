@@ -1,5 +1,4 @@
 {
-  "black-formatter.args": ["--config", "python/pyproject.toml"],
   "C_Cpp.autocomplete": "disabled",
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
@@ -38,8 +37,8 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.ignoreLimitWarning": true,
-  "isort.args": ["--settings-path", "python/pyproject.toml"],
   "markdownlint.config": {
     "extends": ".markdownlint.yaml"
-  }
+  },
+  "ruff.args": ["--config", "python/pyproject.toml"]
 }
