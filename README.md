@@ -240,10 +240,8 @@ pre-commit run --all-files
   - Checks for added large files
 - **clang-format**: Formats C++ code according to the project style
 - **gersemi**: Formats CMake files with consistent indentation
-- **black**: Formats Python code with consistent style
-- **isort**: Sorts Python imports with consistent style
+- **ruff**: Lint and format Python code with consistent style
 - **mypy**: Lints Python code with type hints
-- **flake8**: Lints Python code with consistent style
 - **bandit**: Lints Python code with security best practices
 - **markdownlint-cli2**: Lints Markdown files with consistent formatting
 
@@ -354,11 +352,11 @@ cpp-demo-project/
 - **Consistent formatting**
   - Uses `clang-format` for C++ code
   - Uses `gersemi` for CMake files
-  - Uses `black` and `isort` for Python code
+  - Uses `ruff` for Python code
   - Uses `markdownlint-cli2` for Markdown files
 - **Static analysis**
   - Uses `clang-tidy` and `cppcheck` for C++ code
-  - Uses `mypy`, `flake8` and `bandit` for Python code
+  - Uses `ruff`, `mypy` and `bandit` for Python code
 - **Modern practices**
   - Follows Core Guidelines and modern C++23 best practices
   - Follows PEP 8 and modern Python 3.13 conventions

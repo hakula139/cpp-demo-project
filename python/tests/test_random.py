@@ -287,7 +287,7 @@ class TestShuffleContainer:
 
     def test_shuffle_list(self) -> None:
         """Test shuffling a list."""
-        original = [x for x in range(1, 21)]
+        original = list(range(1, 21))
 
         shuffled = original.copy()
         shuffle(shuffled)
@@ -303,7 +303,7 @@ class TestShuffleContainer:
 
     def test_shuffle_container(self) -> None:
         """Test shuffling container."""
-        data = [x for x in range(1, 21)]
+        data = list(range(1, 21))
         container = Container(int, data)
 
         shuffled = Container(int, data.copy())
@@ -339,7 +339,7 @@ class TestSampleFromRange:
 
     def test_sample_from_list(self) -> None:
         """Test sampling from a list."""
-        population = [x for x in range(1, 11)]
+        population = list(range(1, 11))
         sample_size = 3
 
         sample_result = sample(population, sample_size)
@@ -367,7 +367,7 @@ class TestSampleFromRange:
 
     def test_sample_more_than_available(self) -> None:
         """Test sampling more than available elements."""
-        small_population = Container(int, [x for x in range(1, 4)])
+        small_population = Container(int, list(range(1, 4)))
         large_sample_size = 10
 
         sample_result = sample(small_population, large_sample_size)
@@ -377,7 +377,7 @@ class TestSampleFromRange:
 
     def test_sample_zero_elements(self) -> None:
         """Test sampling zero elements."""
-        population = Container(int, [x for x in range(1, 6)])
+        population = Container(int, list(range(1, 6)))
 
         sample_result = sample(population, 0)
         assert sample_result == []

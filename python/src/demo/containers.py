@@ -1,16 +1,17 @@
 """Python wrapper for the containers module."""
 
 import builtins
-from collections.abc import Iterable
-from typing import Callable, Generic, Iterator, TypeVar
+from collections.abc import Callable, Iterable, Iterator
+from typing import TypeVar
 
 from .cpp_features import containers as _containers
+
 
 T = TypeVar('T')
 U = TypeVar('U')
 
 
-class Container(Generic[T]):
+class Container[T]:
     """A generic container wrapper with enhanced functionality."""
 
     def __init__(

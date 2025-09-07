@@ -27,8 +27,8 @@ modern C++ code, with comprehensive type hints, testing, and development tools.
 
 ### Code Quality & Development
 
-- **Automatic Formatting**: Pre-commit hooks with `black` and `isort`
-- **Linting**: Pre-commit hooks with `flake8` and `bandit` for code style and security checks
+- **Automatic Formatting**: Pre-commit hooks with `ruff format`
+- **Linting**: Pre-commit hooks with `ruff check` and `bandit` for code style and security checks
 - **Type Checking**: Full `mypy` support with strict type checking
 - **Poetry**: Modern dependency management and packaging
 - **Test Coverage**: 100% test coverage with HTML and XML reports
@@ -190,17 +190,14 @@ The project uses a comprehensive set of tools to maintain code quality:
 # All-in-one command to run all quality checks
 poetry run pre-commit run --all-files
 
-# Format code with black
-poetry run black .
+# Lint with ruff
+poetry run ruff check src
 
-# Sort imports with isort
-poetry run isort .
+# Format with ruff
+poetry run ruff format src
 
 # Check types with mypy
 poetry run mypy .
-
-# Lint with flake8
-poetry run flake8 src --max-line-length=88
 
 # Security analysis with bandit
 poetry run bandit -r src

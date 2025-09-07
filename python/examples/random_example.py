@@ -70,15 +70,15 @@ def demonstrate_range_operations() -> None:
     print('\n4. Range Operations:')
 
     # Container shuffling
-    deck = Container(int, [x for x in range(1, 9)])
+    deck = Container(int, list(range(1, 9)))
     print(f'   Original deck: {deck}')
 
-    shuffled_deck = Container(int, [x for x in range(1, 9)])
+    shuffled_deck = Container(int, list(range(1, 9)))
     shuffle(shuffled_deck)
     print(f'   Shuffled deck: {shuffled_deck}')
 
     # Random sampling
-    population = Container(int, [x for x in range(10, 100, 10)])
+    population = Container(int, list(range(10, 100, 10)))
     sample_result = Container(int, sample(population, 4))
     print(f'   Sample from population: {sample_result}')
 

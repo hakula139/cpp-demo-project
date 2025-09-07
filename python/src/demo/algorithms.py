@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from collections.abc import Callable, Iterable
+from typing import TYPE_CHECKING, Any, TypeVar
+
 
 if TYPE_CHECKING:
     from _typeshed import SupportsRichComparisonT
 
 from .containers import Container
 from .cpp_features import algorithms as _algorithms
+
 
 T = TypeVar('T')
 U = TypeVar('U')

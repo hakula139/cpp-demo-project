@@ -2,6 +2,7 @@
 
 from . import algorithms, containers, exceptions, random, shapes, timing
 
+
 __version__ = '1.0.0'
 
 __all__ = [

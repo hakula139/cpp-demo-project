@@ -241,7 +241,9 @@ class TestShapePolymorphism:
             (Rectangle, 4.0, 8.0),
         ]
 
-        for shape, (cls, area, perimeter) in zip(shapes, expected_results):
+        for shape, (cls, area, perimeter) in zip(
+            shapes, expected_results, strict=False
+        ):
             assert isinstance(shape, cls)
             assert isinstance(shape, Shape)
             assert shape.get_area() == pytest.approx(area)

@@ -10,6 +10,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
+
 # Global flag to track build result
 _is_build_success = False
 
@@ -45,7 +46,7 @@ def exit_failure() -> None:
 
 
 @contextmanager
-def tracker() -> Generator[set[Path], None, None]:
+def tracker() -> Generator[set[Path]]:
     """Automatically track files for cleanup."""
     files: set[Path] = set()
     try:

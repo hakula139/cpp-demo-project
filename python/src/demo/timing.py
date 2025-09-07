@@ -1,8 +1,9 @@
 """Python wrapper for the timing module."""
 
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from types import TracebackType
-from typing import Any, Callable, Generator
+from typing import Any
 
 from .cpp_features import timing as _timing
 
@@ -136,7 +137,7 @@ class Timer:
 
 
 @contextmanager
-def measure_time(name: str | None = None) -> Generator[Timer, None, None]:
+def measure_time(name: str | None = None) -> Generator[Timer]:
     """Context manager for measuring the execution time of a block of code.
 
     Parameters
