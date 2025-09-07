@@ -34,10 +34,10 @@ This project serves as both a learning resource and a reference implementation f
 
 ### Code Quality & Development
 
-- **Static Analysis**: Integrated `clang-tidy` and `cppcheck` for code quality
 - **Automatic Formatting**: Pre-commit hooks with `clang-format` and `gersemi`
+- **Static Analysis**: Integrated `clang-tidy` and `cppcheck` for code quality
 - **Documentation**: Comprehensive Doxygen-style documentation
-- **CI/CD Ready**: Modern CMake configuration for easy integration
+- **CI/CD Automation**: Automatic build and test workflows with CMake presets
 
 ## 📋 Table of Contents
 
@@ -52,11 +52,8 @@ This project serves as both a learning resource and a reference implementation f
   - [Quick Start](#quick-start)
     - [Clone the repository](#clone-the-repository)
     - [Build the project](#build-the-project)
-    - [Run individual examples](#run-individual-examples)
+    - [Run examples](#run-examples)
     - [Run tests](#run-tests)
-    - [Build with Python bindings](#build-with-python-bindings)
-    - [Run Python examples](#run-python-examples)
-    - [Run Python tests](#run-python-tests)
   - [CMake Presets](#cmake-presets)
     - [Configure Presets](#configure-presets)
     - [Build \& Test Presets](#build--test-presets)
@@ -72,7 +69,7 @@ This project serves as both a learning resource and a reference implementation f
 - [📁 Project Structure](#-project-structure)
 - [🔧 Components Overview](#-components-overview)
 - [💻 Development Notes](#-development-notes)
-  - [Code Style](#code-style)
+  - [Code Quality](#code-quality)
   - [Pre-commit Configuration](#pre-commit-configuration)
 - [📄 License](#-license)
 
@@ -122,7 +119,7 @@ cmake --preset release
 cmake --build --preset release
 ```
 
-#### Run individual examples
+#### Run examples
 
 ```bash
 ./build/examples/algorithms_example
@@ -138,31 +135,6 @@ cmake --build --preset release
 
 ```bash
 ctest --preset release
-```
-
-#### Build with Python bindings
-
-```bash
-cmake --preset release-python
-cmake --build --preset release-python
-```
-
-#### Run Python examples
-
-```bash
-python3 python/examples/algorithms_example.py
-python3 python/examples/containers_example.py
-python3 python/examples/exceptions_example.py
-python3 python/examples/random_example.py
-python3 python/examples/shapes_example.py
-python3 python/examples/timing_example.py
-```
-
-#### Run Python tests
-
-```bash
-# pip3 install pytest
-pytest python
 ```
 
 ### CMake Presets
@@ -309,6 +281,8 @@ auto main() -> int {
 }
 ```
 
+More examples can be found in the [`examples`](examples) directory.
+
 ## 📁 Project Structure
 
 ```text
@@ -347,13 +321,7 @@ cpp-demo-project/
 │   ├── CMakeLists.txt           # Python bindings configuration
 │   ├── cpp_features.cpp         # Main pybind11 module
 │   └── [module]_binding.cpp     # Individual module bindings
-├── python/                      # Python wrapper modules
-│   ├── src/                     # Python source implementation files
-│   │   └── [module].py          # Python source implementation for the component
-│   ├── examples/                # Python usage examples and demonstrations
-│   │   └── [module]_example.py  # Python usage examples for the component
-│   └── tests/                   # Python test suite using pytest
-│       └── test_[module].py     # Python unit tests for the component
+├── python/                      # Python wrapper modules (see python/README.md for more details)
 ├── .clang-format                # clang-format configuration (for C++ code formatting)
 ├── .clang-tidy                  # clang-tidy configuration (for static analysis)
 ├── .clangd                      # clangd configuration (for code completion)
@@ -381,7 +349,7 @@ cpp-demo-project/
 
 ## 💻 Development Notes
 
-### Code Style
+### Code Quality
 
 - **Consistent formatting**
   - Uses `clang-format` for C++ code
