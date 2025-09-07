@@ -119,7 +119,7 @@ This function:
 
 Dependencies:
   - Git (for fetching from GitHub)
-  - Python 3.13+ development headers
+  - Python 3.12+ development headers
   - pybind11 v3.0.0 from https://github.com/pybind/pybind11.git
 
 Variables used:

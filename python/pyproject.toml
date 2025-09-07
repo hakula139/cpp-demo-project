@@ -8,7 +8,7 @@ description = "Python bindings for Modern C++ Features Demo Project"
 authors = [{ name = "Hakula Chen", email = "i@hakula.xyz" }]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 keywords = ["cpp", "cpp23", "pybind11", "demo"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
     "Programming Language :: C++",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
     "Typing :: Typed",
 ]
@@ -37,7 +37,7 @@ include = [{ path = "src/demo/*.so", format = ["sdist", "wheel"] }]
 version = "0.0.0"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = ">=3.12"
 
 [tool.poetry.group.dev.dependencies]
 # Testing
@@ -139,7 +139,7 @@ force-single-line = false
 known-first-party = ["demo"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.12"
 check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true

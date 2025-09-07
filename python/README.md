@@ -1,7 +1,7 @@
 # Python Bindings for Modern C++ Features Demo Project
 
 [![Build & Test](https://github.com/hakula139/cpp-demo-project/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/hakula139/cpp-demo-project/actions/workflows/build-and-test.yml)
-[![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
 [![Poetry](https://img.shields.io/badge/poetry-latest-blue.svg)](https://python-poetry.org)
 [![pybind11](https://img.shields.io/badge/pybind11-latest-green.svg)](https://pybind11.readthedocs.io)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-green.svg)](https://pytest.org)
@@ -18,7 +18,7 @@ modern C++ code, with comprehensive type hints, testing, and development tools.
 
 - **Selected C++23 Features**: Python API for key C++ components with practical Python applications
 - **pybind11 Integration**: Seamless C++ / Python interoperability with automatic conversions
-- **Modern Python 3.13**: Leverages latest Python features and performance improvements
+- **Modern Python 3.12**: Leverages latest Python features and performance improvements
 - **Pythonic Design**: Intuitive Python APIs that follow PEP conventions
 - **Type Safety**: Comprehensive type hints and runtime type checking
 - **Iterator Support**: Python-native iteration over C++ containers and ranges
@@ -59,7 +59,7 @@ modern C++ code, with comprehensive type hints, testing, and development tools.
 
 ### Prerequisites
 
-- **Python 3.13+**
+- **Python 3.12+**
 - **[Poetry]** (for dependency management)
 
 [Poetry]: https://python-poetry.org

@@ -30,7 +30,7 @@ This project serves as both a learning resource and a reference implementation f
 - **Type Safety**: Concept-based constraints preventing common programming errors
 - **Performance Tools**: Built-in timing utilities and benchmark framework
 - **Error Handling**: Multiple error handling strategies (exceptions, `Result` type, `std::expected`)
-- **Python Bindings**: Complete pybind11 integration with modern Python 3.13 features
+- **Python Bindings**: Complete pybind11 integration with modern Python features
 
 ### Code Quality & Development
 
@@ -93,7 +93,7 @@ This project demonstrates practical applications of:
 - **C++23 compatible compiler** ([Clang] 20+ / [GCC] 14+)
 - **[CMake] 3.23+**
 - **[Ninja] build system** (required for CMake - faster builds than Make)
-- **Python 3.13+** (optional, for Python bindings)
+- **Python 3.12+** (optional, for Python bindings)
 
 It's recommended to use a development container for the best development experience.
 See [`.devcontainer/README.md`](.devcontainer/README.md) for more details.
@@ -359,7 +359,7 @@ cpp-demo-project/
   - Uses `ruff`, `mypy` and `bandit` for Python code
 - **Modern practices**
   - Follows Core Guidelines and modern C++23 best practices
-  - Follows PEP 8 and modern Python 3.13 conventions
+  - Follows PEP 8 and modern Python conventions
 - **Comprehensive documentation**
   - Doxygen-style documentation for C++ code
   - Numpy-style docstrings for Python code
