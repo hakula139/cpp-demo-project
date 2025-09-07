@@ -1,6 +1,7 @@
 # Build artifacts
 bin/
 build/
+dist/
 out/
 
 # C++ compiled files
@@ -16,6 +17,7 @@ out/
 
 # Python
 __pycache__/
+.venv/
 *.pyc
 *.pyo
 *.pyd

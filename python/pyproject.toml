@@ -26,6 +26,9 @@ classifiers = [
     "Typing :: Typed",
 ]
 packages = [{ include = "demo", from = "src" }]
+# Note: .so files must be copied to src/ before building
+# Use `poetry run build` to build the package
+include = ["src/*.so"]
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -58,6 +61,7 @@ pytest-xdist = "^3.8.0"
 pytest-benchmark = "^5.1.0"
 
 [tool.poetry.scripts]
+build = "scripts.build:main"
 demo-algorithms = "examples.algorithms_example:main"
 demo-containers = "examples.containers_example:main"
 demo-exceptions = "examples.exceptions_example:main"
