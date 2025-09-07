@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from types import TracebackType
 from typing import Any, Callable, Generator
 
-import cpp_features.timing as _timing
+from .cpp_features import timing as _timing
 
 
 class Timer:

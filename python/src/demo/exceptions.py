@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-import cpp_features.exceptions as _exceptions
+from .cpp_features import exceptions as _exceptions
 
 
 class ErrorSeverity(Enum):

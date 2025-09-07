@@ -8,9 +8,8 @@ from typing import TYPE_CHECKING, Any, Callable, TypeVar
 if TYPE_CHECKING:
     from _typeshed import SupportsRichComparisonT
 
-import cpp_features.algorithms as _algorithms
-
 from .containers import Container
+from .cpp_features import algorithms as _algorithms
 
 T = TypeVar('T')
 U = TypeVar('U')

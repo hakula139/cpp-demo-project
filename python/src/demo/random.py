@@ -3,9 +3,8 @@
 import random
 from typing import TypeVar
 
-import cpp_features.random as _random
-
 from .containers import Container
+from .cpp_features import random as _random
 
 T = TypeVar('T')
 

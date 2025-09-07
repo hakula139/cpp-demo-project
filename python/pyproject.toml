@@ -1,17 +1,14 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
 
-[tool.poetry]
+[project]
 name = "demo-python"
-version = "1.0.0"
-description = "Python bindings for C++ Demo Project"
-authors = ["Hakula Chen <i@hakula.xyz>"]
-license = "MIT"
+description = "Python bindings for Modern C++ Features Demo Project"
+authors = [{ name = "Hakula Chen", email = "i@hakula.xyz" }]
+license = { text = "MIT" }
 readme = "README.md"
-homepage = "https://github.com/hakula139/cpp-demo-project"
-repository = "https://github.com/hakula139/cpp-demo-project"
-documentation = "https://github.com/hakula139/cpp-demo-project"
+requires-python = ">=3.13"
 keywords = ["cpp", "cpp23", "pybind11", "demo"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -25,10 +22,19 @@ classifiers = [
     "Operating System :: OS Independent",
     "Typing :: Typed",
 ]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+Homepage = "https://github.com/hakula139/cpp-demo-project"
+Repository = "https://github.com/hakula139/cpp-demo-project"
+Documentation = "https://github.com/hakula139/cpp-demo-project"
+
+[tool.poetry]
+# Note: .so files must be copied to src/demo/ before building
+# Use `python3 scripts/build.py` to build the package
 packages = [{ include = "demo", from = "src" }]
-# Note: .so files must be copied to src/ before building
-# Use `poetry run build` to build the package
-include = ["src/*.so"]
+include = [{ path = "src/demo/*.so", format = ["sdist", "wheel"] }]
+version = "0.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.13"
@@ -60,14 +66,12 @@ pytest-cov = "^6.3.0"
 pytest-xdist = "^3.8.0"
 pytest-benchmark = "^5.1.0"
 
-[tool.poetry.scripts]
-build = "scripts.build:main"
-demo-algorithms = "examples.algorithms_example:main"
-demo-containers = "examples.containers_example:main"
-demo-exceptions = "examples.exceptions_example:main"
-demo-random = "examples.random_example:main"
-demo-shapes = "examples.shapes_example:main"
-demo-timing = "examples.timing_example:main"
+[tool.poetry-dynamic-versioning]
+enable = true
+
+[tool.poetry-dynamic-versioning.from-file]
+source = "src/demo/__init__.py"
+pattern = "__version__ = '([^']+)'"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -82,7 +86,7 @@ addopts = [
     "--cov-report=term-missing",
     "--cov-report=html:htmlcov",
     "--cov-report=xml",
-    "--cov-fail-under=85",
+    "--cov-fail-under=90",
 ]
 markers = [
     "slow: mark a test as slow (deselect with '-m \"not slow\"')",
@@ -128,12 +132,13 @@ check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true
 disallow_untyped_defs = true
+ignore_missing_imports = true # FIXME: remove this after generating stubs for pybind11 modules
 no_implicit_optional = true
 show_error_codes = true
 strict_equality = true
 warn_no_return = true
 warn_redundant_casts = true
-warn_return_any = false
+warn_return_any = false # FIXME: enable this after generating stubs for pybind11 modules
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true

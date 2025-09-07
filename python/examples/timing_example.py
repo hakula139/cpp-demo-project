@@ -1,20 +1,8 @@
 """Example demonstrating the usage of the timing module."""
 
-import sys
-from pathlib import Path
 from time import sleep
 
-python_dir = Path(__file__).parent.parent
-sys.path.append(str(python_dir / 'src'))
-sys.path.append(str(python_dir.parent / 'build' / 'binding'))
-
-from demo.timing import (  # noqa: E402
-    Timer,
-    benchmark,
-    measure_time,
-    time_function,
-    to_human_readable,
-)
+from demo.timing import Timer, benchmark, measure_time, time_function, to_human_readable
 
 
 def demonstrate_basic_timer() -> None:

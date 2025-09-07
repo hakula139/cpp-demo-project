@@ -85,6 +85,7 @@ def sync_so_files(
     so_files: list[Path], src_dir: Path, tracked_files: set[Path]
 ) -> None:
     """Sync .so files to the source directory for packaging."""
+    src_dir.mkdir(parents=True, exist_ok=True)
     for so_file in so_files:
         dst_file = src_dir / so_file.name
         print(f'   Syncing {so_file.name}...')
@@ -121,24 +122,26 @@ def verify_package(dist_dir: Path, expected_so_count: int) -> None:
     """Verify that .so files are included in the built package."""
     print_colored('\n3. Verify .so files are included', Color.BLUE)
 
-    tar_path = shutil.which('tar')
-    if not tar_path:
-        print_colored('   tar not found in PATH!', Color.RED)
+    unzip_path = shutil.which('unzip')
+    if not unzip_path:
+        print_colored('   unzip not found in PATH!', Color.RED)
         sys.exit(1)
 
-    tarball = next(dist_dir.glob('*.tar.gz'))
-    if not tarball.exists() or not str(tarball).endswith('.tar.gz'):
-        print_colored(f'   Invalid tarball: {tarball}', Color.RED)
+    wheel = next(dist_dir.glob('*.whl'))
+    if not wheel.exists() or not str(wheel).endswith('.whl'):
+        print_colored(f'   Invalid wheel: {wheel}', Color.RED)
         sys.exit(1)
 
     verify_result = subprocess.run(
-        [tar_path, '-tzf', str(tarball)],
+        [unzip_path, '-l', str(wheel)],
         capture_output=True,
         text=True,  # nosec B603
     )
 
     so_in_package = [
-        line for line in verify_result.stdout.split('\n') if line.endswith('.so')
+        line.split()[-1]
+        for line in verify_result.stdout.split('\n')
+        if line.endswith('.so')
     ]
 
     if so_in_package:
@@ -169,7 +172,7 @@ def main() -> None:
     python_dir = Path(__file__).parent.parent
     project_root = python_dir.parent
     build_dir = project_root / 'build' / 'binding'
-    src_dir = python_dir / 'src'
+    src_dir = python_dir / 'src' / 'demo'
     dist_dir = python_dir / 'dist'
 
     so_files = find_so_files(build_dir)

@@ -1,14 +1,7 @@
 """Example demonstrating the usage of the random module."""
 
-import sys
-from pathlib import Path
-
-python_dir = Path(__file__).parent.parent
-sys.path.append(str(python_dir / 'src'))
-sys.path.append(str(python_dir.parent / 'build' / 'binding'))
-
-from demo.containers import Container  # noqa: E402
-from demo.random import RandomGenerator, sample, shuffle  # noqa: E402
+from demo.containers import Container
+from demo.random import RandomGenerator, sample, shuffle
 
 
 def demonstrate_basic_generation() -> None:

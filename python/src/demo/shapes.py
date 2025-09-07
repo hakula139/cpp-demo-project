@@ -2,7 +2,7 @@
 
 from types import NotImplementedType
 
-import cpp_features.shapes as _shapes
+from .cpp_features import shapes as _shapes
 
 
 class Shape:

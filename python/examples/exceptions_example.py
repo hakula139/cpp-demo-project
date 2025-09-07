@@ -1,13 +1,6 @@
 """Example demonstrating the usage of the exceptions module."""
 
-import sys
-from pathlib import Path
-
-python_dir = Path(__file__).parent.parent
-sys.path.append(str(python_dir / 'src'))
-sys.path.append(str(python_dir.parent / 'build' / 'binding'))
-
-from demo.exceptions import (  # noqa: E402
+from demo.exceptions import (
     BaseException,
     CalculationException,
     ErrorSeverity,

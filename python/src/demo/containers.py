@@ -4,7 +4,7 @@ import builtins
 from collections.abc import Iterable
 from typing import Callable, Generic, Iterator, TypeVar
 
-import cpp_features.containers as _containers
+from .cpp_features import containers as _containers
 
 T = TypeVar('T')
 U = TypeVar('U')
