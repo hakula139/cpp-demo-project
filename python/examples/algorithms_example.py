@@ -7,8 +7,14 @@ python_dir = Path(__file__).parent.parent
 sys.path.append(str(python_dir / 'src'))
 sys.path.append(str(python_dir.parent / 'build' / 'binding'))
 
-from demo.algorithms import count_if, find_min_max, pipeline, sort, transform_to_list
-from demo.containers import Container
+from demo.algorithms import (  # noqa: E402
+    count_if,
+    find_min_max,
+    pipeline,
+    sort,
+    transform_to_list,
+)
+from demo.containers import Container  # noqa: E402
 
 
 def main() -> None:

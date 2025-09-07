@@ -2,7 +2,18 @@
 
 import pytest
 
-from demo.exceptions import *
+from demo.exceptions import (
+    BaseException,
+    CalculationException,
+    ErrorSeverity,
+    ResourceException,
+    ValidationException,
+    _test_throw_base_exception,
+    _test_throw_calculation_exception,
+    _test_throw_resource_exception,
+    _test_throw_unknown_exception,
+    _test_throw_validation_exception,
+)
 
 
 class TestErrorSeverity:

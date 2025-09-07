@@ -66,9 +66,11 @@ def count_if(data: Iterable[T], predicate: Callable[[T], bool]) -> int:
 
     Examples
     --------
-    >>> count_if([1, 2, 3, 4, 5], lambda x: x % 2 == 1)
+    >>> data = [1, 2, 3, 4, 5]
+    >>> count_if(data, lambda x: x % 2 == 1)
     3
-    >>> count_if(Container(str, ['apple', 'banana', 'cherry']), lambda x: len(x) > 5)
+    >>> container = Container(str, ['apple', 'banana', 'cherry'])
+    >>> count_if(container, lambda x: len(x) > 5)
     2
     """
     match data:
@@ -98,9 +100,11 @@ def transform_to_list(data: Iterable[T], func: Callable[[T], U]) -> list[U]:
 
     Examples
     --------
-    >>> transform_to_list([1, 2, 3, 4, 5], lambda x: x * 2)
+    >>> data = [1, 2, 3, 4, 5]
+    >>> transform_to_list(data, lambda x: x * 2)
     [2, 4, 6, 8, 10]
-    >>> transform_to_list(Container(str, ['apple', 'banana', 'cherry']), lambda x: x.upper())
+    >>> container = Container(str, ['apple', 'banana', 'cherry'])
+    >>> transform_to_list(container, lambda x: x.upper())
     ['APPLE', 'BANANA', 'CHERRY']
     """
     match data:
@@ -124,6 +128,15 @@ def find_min_max(
     -------
     tuple[SupportsRichComparisonT, SupportsRichComparisonT]
         A tuple containing the minimum and maximum elements (min, max)
+
+    Examples
+    --------
+    >>> data = [1, 2, 3, 4, 5]
+    >>> find_min_max(data)
+    (1, 5)
+    >>> container = Container(str, ['apple', 'banana', 'cherry'])
+    >>> find_min_max(container)
+    ('apple', 'cherry')
     """
     match data:
         case Container():
@@ -154,7 +167,6 @@ def pipeline(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     ...     lambda data: [x for x in data if x > 5],
     ...     sum,
     ... )
-    ...
     >>> process([1, 2, 3, 4, 5])
     24
     """

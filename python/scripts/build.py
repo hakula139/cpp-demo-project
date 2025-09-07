@@ -33,7 +33,7 @@ def exit_success(dist_dir: Path) -> None:
     global _is_build_success
     _is_build_success = True
 
-    print_colored(f'\nBuild complete! The package is ready in', Color.GREEN, end=' ')
+    print_colored('\nBuild complete! The package is ready in', Color.GREEN, end=' ')
     print_colored(str(dist_dir), Color.CYAN)
 
 
@@ -151,7 +151,8 @@ def verify_package(dist_dir: Path, expected_so_count: int) -> None:
 
     if len(so_in_package) != expected_so_count:
         print_colored(
-            f'   Expected {expected_so_count} .so files in package, but found {len(so_in_package)}!',
+            f'   Expected {expected_so_count} .so files in package, '
+            f'but found {len(so_in_package)}!',
             Color.RED,
         )
         sys.exit(1)

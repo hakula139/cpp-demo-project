@@ -7,7 +7,7 @@ python_dir = Path(__file__).parent.parent
 sys.path.append(str(python_dir / 'src'))
 sys.path.append(str(python_dir.parent / 'build' / 'binding'))
 
-from demo.exceptions import (
+from demo.exceptions import (  # noqa: E402
     BaseException,
     CalculationException,
     ErrorSeverity,

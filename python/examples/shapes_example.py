@@ -7,7 +7,7 @@ python_dir = Path(__file__).parent.parent
 sys.path.append(str(python_dir / 'src'))
 sys.path.append(str(python_dir.parent / 'build' / 'binding'))
 
-from demo.shapes import Circle, Rectangle, Shape
+from demo.shapes import Circle, Rectangle, Shape  # noqa: E402
 
 
 def demonstrate_shape_creation() -> None:

@@ -55,13 +55,13 @@ repos:
           - pytest
 
   # Python style checking with flake8
-  # - repo: https://github.com/pycqa/flake8
-  #   rev: 7.3.0
-  #   hooks:
-  #     - id: flake8
-  #       files: ^python/.*\.pyi?$
-  #       args:
-  #         - --max-line-length=88
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        files: ^python/.*\.pyi?$
+        args:
+          - --max-line-length=88
 
   # Python security linting with bandit
   - repo: https://github.com/pycqa/bandit

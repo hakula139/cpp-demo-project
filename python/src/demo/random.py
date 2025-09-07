@@ -36,7 +36,8 @@ class RandomGenerator:
     def rand_int(self, min_val: int, max_val: int) -> int:
         """Generate a random integer within a range.
 
-        Generates a uniformly distributed random integral value within the specified range.
+        Generates a uniformly distributed random integral value within the
+        specified range.
 
         Parameters
         ----------
@@ -61,7 +62,8 @@ class RandomGenerator:
     def rand_float(self, min_val: float, max_val: float) -> float:
         """Generate a random floating-point value within a range.
 
-        Generates a uniformly distributed random floating-point value within the specified range.
+        Generates a uniformly distributed random floating-point value within the
+        specified range.
 
         Parameters
         ----------
@@ -86,8 +88,8 @@ class RandomGenerator:
     def rand_ints(self, min_val: int, max_val: int, count: int) -> list[int]:
         """Generate a list of random integral values.
 
-        Efficiently generates a vector of uniformly distributed random integral values.
-        Each value is independently generated within the specified range.
+        Efficiently generates a vector of uniformly distributed random integral
+        values. Each value is independently generated within the specified range.
 
         Parameters
         ----------
@@ -116,8 +118,8 @@ class RandomGenerator:
     def rand_floats(self, min_val: float, max_val: float, count: int) -> list[float]:
         """Generate a list of random floating-point values.
 
-        Efficiently generates a vector of uniformly distributed random floating-point values.
-        Each value is independently generated within the specified range.
+        Efficiently generates a vector of uniformly distributed random floating-point
+        values. Each value is independently generated within the specified range.
 
         Parameters
         ----------
@@ -146,8 +148,9 @@ class RandomGenerator:
     def rand_bool(self, probability: float = 0.5) -> bool:
         """Generate a random boolean value with specified probability.
 
-        Generates a random boolean value using a Bernoulli distribution with the specified probability.
-        A probability of 0.5 creates a fair coin flip, while other values bias the outcome accordingly.
+        Generates a random boolean value using a Bernoulli distribution with the
+        specified probability. A probability of 0.5 creates a fair coin flip,
+        while other values bias the outcome accordingly.
 
         Parameters
         ----------
@@ -172,9 +175,9 @@ class RandomGenerator:
     def normal(self, mean: float = 0.0, stddev: float = 1.0) -> float:
         """Generate a random value from a normal (Gaussian) distribution.
 
-        Generates a random value from a normal (Gaussian) distribution with the specified mean and
-        standard deviation. This is useful for generating naturally distributed data, noise, or
-        measurements with known statistics.
+        Generates a random value from a normal (Gaussian) distribution with the
+        specified mean and standard deviation. This is useful for generating
+        naturally distributed data, noise, or measurements with known statistics.
 
         Parameters
         ----------
@@ -201,8 +204,9 @@ class RandomGenerator:
     def seed(self, seed: int) -> None:
         """Manually seed the random number generator.
 
-        Sets a specific seed for the random number generator. This allows for reproducible random
-        sequences, which is useful for testing, debugging, or when deterministic behavior is required.
+        Sets a specific seed for the random number generator. This allows for
+        reproducible random sequences, which is useful for testing, debugging,
+        or when deterministic behavior is required.
 
         Parameters
         ----------
@@ -225,9 +229,9 @@ class RandomGenerator:
     def seed_with_time(self) -> None:
         """Seed the generator using current time.
 
-        Re-seeds the random number generator using the current high-resolution time.
-        This provides non-deterministic behavior and is useful when you want to reset the generator
-        with a new unpredictable seed.
+        Re-seeds the random number generator using the current high-resolution
+        time. This provides non-deterministic behavior and is useful when you
+        want to reset the generator with a new unpredictable seed.
 
         Examples
         --------
@@ -240,7 +244,8 @@ class RandomGenerator:
 def shuffle(data: list[T] | Container[T]) -> None:
     """Randomly shuffle elements in a container.
 
-    Randomly reorders the elements in the provided range using the Fisher-Yates shuffle algorithm.
+    Randomly reorders the elements in the provided range using the Fisher-Yates
+    shuffle algorithm.
 
     Parameters
     ----------
@@ -269,8 +274,8 @@ def sample(data: list[T] | Container[T], count: int) -> list[T]:
     """Randomly sample elements from a range.
 
     Selects a random subset of elements from the input range without replacement.
-    If count exceeds the range size, all elements are returned. The relative order of sampled
-    elements is preserved.
+    If count exceeds the range size, all elements are returned. The relative order of
+    sampled elements is preserved.
 
     Parameters
     ----------

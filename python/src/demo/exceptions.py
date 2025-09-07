@@ -50,8 +50,8 @@ class BaseException(Exception):
 class ValidationException(BaseException):
     """Exception for validation and input errors.
 
-    Specialized exception for validation failures, with optional field name to identify which input
-    field caused the validation error.
+    Specialized exception for validation failures, with optional field name to identify
+    which input field caused the validation error.
 
     Examples
     --------
@@ -76,8 +76,8 @@ class ValidationException(BaseException):
 class ResourceException(BaseException):
     """Exception for resource-related errors.
 
-    Used for errors related to external resources such as files, network connections, databases, or
-    any other system resources.
+    Used for errors related to external resources such as files, network connections,
+    databases, or any other system resources.
 
     Examples
     --------
@@ -102,8 +102,8 @@ class ResourceException(BaseException):
 class CalculationException(BaseException):
     """Exception for mathematical and calculation errors.
 
-    Specialized exception for mathematical operations, calculations, and numerical processing errors.
-    Stores the input value that caused the error.
+    Specialized exception for mathematical operations, calculations, and numerical
+    processing errors. Stores the input value that caused the error.
 
     Examples
     --------

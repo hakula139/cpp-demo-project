@@ -1,7 +1,6 @@
 """Python wrapper for the timing module."""
 
 from contextlib import contextmanager
-from dataclasses import dataclass
 from types import TracebackType
 from typing import Any, Callable, Generator
 
@@ -31,17 +30,17 @@ class Timer:
         """Stop the timer.
 
         Captures the current time as the end point for timing measurements.
-        After calling stop(), get_elapsed() methods will return the fixed duration between start()
-        and stop() calls.
+        After calling stop(), get_elapsed() methods will return the fixed
+        duration between start() and stop() calls.
         """
         self._timer.stop()
 
     def reset(self) -> None:
         """Reset the timer to start a new measurement.
 
-        Resets the timer by capturing the current time as the new start point and clearing any
-        previously recorded end time. This allows reusing the same timer instance for multiple
-        measurements.
+        Resets the timer by capturing the current time as the new start point and
+        clearing any previously recorded end time. This allows reusing the same
+        timer instance for multiple measurements.
         """
         self._timer.reset()
 
@@ -172,8 +171,8 @@ def measure_time(name: str | None = None) -> Generator[Timer, None, None]:
 def to_human_readable(ns: int) -> str:
     """Convert a duration in nanoseconds to a human-readable string.
 
-    Automatically selects the most appropriate unit (ns, μs, ms, s) based on the magnitude of the
-    duration for optimal readability.
+    Automatically selects the most appropriate unit (ns, μs, ms, s) based on the
+    magnitude of the duration for optimal readability.
 
     Parameters
     ----------
@@ -255,8 +254,8 @@ class BenchmarkResult:
     def print(self) -> None:
         """Print formatted benchmark results.
 
-        Prints comprehensive benchmark statistics in a human-readable format with appropriate units
-        and formatting.
+        Prints comprehensive benchmark statistics in a human-readable format with
+        appropriate units and formatting.
         """
         _timing.BenchmarkRunner.print_result(self._result)
 

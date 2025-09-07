@@ -2,7 +2,7 @@
 
 import pytest
 
-from demo.algorithms import *
+from demo.algorithms import count_if, find_min_max, pipeline, sort, transform_to_list
 from demo.containers import Container
 
 

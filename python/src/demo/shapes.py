@@ -160,7 +160,7 @@ class Rectangle(Shape):
         width : float
             Width of the rectangle
         height : float, optional
-            Height of the rectangle. If not provided, the rectangle is assumed to be a square.
+            Height of the rectangle. If not provided, defaults to the width.
 
         Raises
         ------
