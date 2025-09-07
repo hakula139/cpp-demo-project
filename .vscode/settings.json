@@ -20,7 +20,7 @@
   "cmake.automaticReconfigure": true,
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
-  "cursorpyright.analysis.extraPaths": ["build/binding", "python/src"],
+  "cursorpyright.analysis.extraPaths": ["python/src"],
   "editor.codeActionsOnSave": {
     "source.fixAll.clangd": "explicit",
     "source.organizeImports": "explicit"

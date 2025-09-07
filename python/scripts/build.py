@@ -82,15 +82,18 @@ def find_so_files(build_dir: Path) -> list[Path]:
 
 
 def sync_so_files(
-    so_files: list[Path], src_dir: Path, tracked_files: set[Path]
+    so_files: list[Path], src_dir: Path, tracked_files: set[Path] | None = None
 ) -> None:
     """Sync .so files to the source directory for packaging."""
     src_dir.mkdir(parents=True, exist_ok=True)
+
     for so_file in so_files:
         dst_file = src_dir / so_file.name
         print(f'   Syncing {so_file.name}...')
         shutil.copy2(so_file, dst_file)
-        tracked_files.add(dst_file)
+
+        if tracked_files:
+            tracked_files.add(dst_file)
 
     print_colored(f'   Synced {len(so_files)} .so files to {src_dir}', Color.GREEN)
 
@@ -176,10 +179,9 @@ def main() -> None:
     dist_dir = python_dir / 'dist'
 
     so_files = find_so_files(build_dir)
-    with tracker() as tracked_files:
-        sync_so_files(so_files, src_dir, tracked_files)
-        build_package(python_dir)
-        verify_package(dist_dir, len(so_files))
+    sync_so_files(so_files, src_dir)
+    build_package(python_dir)
+    verify_package(dist_dir, len(so_files))
 
     exit_success(dist_dir)
 
