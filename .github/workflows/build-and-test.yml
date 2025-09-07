@@ -145,7 +145,8 @@ jobs:
         env:
           PYTHONPATH: 'python/src:build/binding'
         run: |
-          poetry run pytest python/tests -v
+          cd python
+          poetry run pytest
 
       - name: Run C++ examples
         run: |
@@ -157,7 +158,9 @@ jobs:
 
       - name: Run Python examples
         run: |
-          for example in python/examples/*_example.py; do
+          cd python
+          eval $(poetry env activate)
+          for example in examples/*_example.py; do
             echo "Running $example..."
             python3 $example
             echo
