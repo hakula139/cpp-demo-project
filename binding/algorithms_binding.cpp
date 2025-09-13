@@ -3,7 +3,6 @@
  * @brief Python bindings for the algorithms module
  */
 
-#include <cstddef>
 #include <functional>
 #include <ranges>
 #include <string>
