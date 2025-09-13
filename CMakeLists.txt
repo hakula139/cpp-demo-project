@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 # Project configuration
-project(demo VERSION 1.0.0 DESCRIPTION "Demo project for modern C++ features" LANGUAGES CXX)
+project(demo VERSION 1.1.0 DESCRIPTION "Demo project for modern C++ features" LANGUAGES CXX)
 
 # Only build tests if this is the main project
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

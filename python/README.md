@@ -93,7 +93,7 @@ eval $(poetry env activate)
 python3 scripts/build.py
 
 # Install the package
-pip3 install dist/demo_python-1.0.0-py3-none-any.whl
+pip3 install dist/demo_python-1.1.0-py3-none-any.whl
 ```
 
 #### Run examples

@@ -1,9 +1,10 @@
 [build-system]
-requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
-build-backend = "poetry_dynamic_versioning.backend"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "demo-python"
+version = "1.1.0"
 description = "Python bindings for Modern C++ Features Demo Project"
 authors = [{ name = "Hakula Chen", email = "i@hakula.xyz" }]
 license = { text = "MIT" }
@@ -22,7 +23,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Typing :: Typed",
 ]
-dynamic = ["version", "dependencies"]
+dynamic = ["dependencies"]
 
 [project.urls]
 Homepage = "https://github.com/hakula139/cpp-demo-project"
@@ -34,7 +35,6 @@ Documentation = "https://github.com/hakula139/cpp-demo-project"
 # Use `python3 scripts/build.py` to build the package
 packages = [{ include = "demo", from = "src" }]
 include = [{ path = "src/demo/*.so", format = ["sdist", "wheel"] }]
-version = "0.0.0"
 
 [tool.poetry.dependencies]
 python = ">=3.12"
@@ -47,7 +47,7 @@ pytest-xdist = "^3.8.0"
 pytest-benchmark = "^5.1.0"
 
 # Type checking
-mypy = "^1.17.1"
+mypy = "^1.18.1"
 
 # Code formatting and linting
 ruff = "^0.12.12"
@@ -63,13 +63,6 @@ pytest = "^8.4.2"
 pytest-cov = "^6.3.0"
 pytest-xdist = "^3.8.0"
 pytest-benchmark = "^5.1.0"
-
-[tool.poetry-dynamic-versioning]
-enable = true
-
-[tool.poetry-dynamic-versioning.from-file]
-source = "src/demo/__init__.py"
-pattern = "__version__ = '([^']+)'"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
