@@ -19,6 +19,7 @@
         "clangd.arguments": [
           "--background-index",
           "--clang-tidy",
+          "--compile-commands-dir=build",
           "--completion-style=detailed",
           "--enable-config",
           "--header-insertion=iwyu",
@@ -37,11 +38,11 @@
           "source.organizeImports": "explicit"
         },
         "editor.detectIndentation": false,
+        "editor.formatOnSave": true,
         "editor.semanticTokenColorCustomizations": {
           "enabled": true
         },
         "editor.suggest.insertMode": "replace",
-        "editor.tabSize": 2,
         "files.associations": {
           "*.cpp": "cpp",
           "*.h": "cpp",
@@ -51,7 +52,9 @@
         "files.trimFinalNewlines": true,
         "markdownlint.config": {
           "extends": ".markdownlint.yaml"
-        }
+        },
+        "python.analysis.extraPaths": ["python/src"],
+        "ruff.args": ["--config", "python/pyproject.toml"]
       },
       "extensions": [
         "KylinIdeTeam.kylin-clangd",
@@ -59,6 +62,9 @@
         "KylinIdeTeam.kylin-cmake-tools",
         "KylinIdeTeam.cmake-intellisence",
         "cschlosser.doxdocgen",
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "esbenp.prettier-vscode",
         "yzhang.markdown-all-in-one",
         "shd101wyy.markdown-preview-enhanced",
         "DavidAnson.vscode-markdownlint",

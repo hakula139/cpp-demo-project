@@ -43,5 +43,6 @@
   "markdownlint.config": {
     "extends": ".markdownlint.yaml"
   },
+  "python.analysis.extraPaths": ["python/src"],
   "ruff.args": ["--config", "python/pyproject.toml"]
 }
