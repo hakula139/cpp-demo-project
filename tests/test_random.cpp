@@ -426,8 +426,11 @@ TEST_CASE("SampleFromRange function", "[random][sample]") {
     auto sample = SampleFromRange(small_population, LARGE_SAMPLE_SIZE);
 
     // Should return all available elements
-    std::ranges::sort(sample);
-    REQUIRE(sample == small_population);
+    REQUIRE(sample.size() == small_population.size());
+
+    for (const auto &element : small_population) {
+      REQUIRE(std::ranges::find(sample, element) != sample.end());
+    }
   }
 
   SECTION("Sample zero elements") {
