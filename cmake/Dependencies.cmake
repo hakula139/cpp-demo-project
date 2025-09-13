@@ -65,7 +65,7 @@ function(setup_catch2_dependency)
     FetchContent_Declare(
       Catch2
       GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-      GIT_TAG v3.8.1
+      GIT_TAG v3.10.0
       GIT_SHALLOW TRUE
     )
 
@@ -155,7 +155,7 @@ function(setup_pybind11_dependency)
     FetchContent_Declare(
       pybind11
       GIT_REPOSITORY https://github.com/pybind/pybind11.git
-      GIT_TAG v3.0.0
+      GIT_TAG v3.0.1
       GIT_SHALLOW TRUE
     )
 
