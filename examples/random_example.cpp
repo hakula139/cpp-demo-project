@@ -76,10 +76,10 @@ void DemonstrateProbabilityDistributions() {
 void DemonstrateSeedingAndReproducibility() {
   std::println("\n3. Seeding and Reproducibility:");
   RandomGenerator gen1{123};
+  auto value1 = gen1.GenerateInt(1, 1000);
   RandomGenerator gen2{123};
-  auto val1 = gen1.GenerateInt(1, 1000);
-  auto val2 = gen2.GenerateInt(1, 1000);
-  std::println("   Same seed (123): {} == {}", val1, val2);
+  auto value2 = gen2.GenerateInt(1, 1000);
+  std::println("   Same seed (123): {} == {}", value1, value2);
 
   RandomGenerator gen3;  // Random seed
   gen3.SeedWithTime();
@@ -134,7 +134,7 @@ void DemonstratePracticalApplications() {
     }
   }
   auto pi_estimate = 4.0 * inside_circle / SAMPLES;
-  std::println("   Monte Carlo π estimation ({} samples): {:.4f}", SAMPLES, pi_estimate);
+  std::println("   Monte Carlo π estimation ({} samples): {:.3f}", SAMPLES, pi_estimate);
 }
 
 }  // namespace

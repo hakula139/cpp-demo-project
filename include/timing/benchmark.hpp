@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <numeric>
 #include <print>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -52,7 +53,7 @@ class BenchmarkRunner {
    * total time, and statistical measures.
    */
   struct BenchmarkResult {
-    std::string_view name;   ///< Name of the benchmark
+    std::string name;        ///< Name of the benchmark
     std::size_t iterations;  ///< Number of iterations executed
     std::int64_t total_ns;   ///< Total execution time in nanoseconds
     std::int64_t avg_ns;     ///< Average execution time in nanoseconds
@@ -95,7 +96,7 @@ class BenchmarkRunner {
     auto [min_ns, max_ns] = algorithms::FindMinMax(times);
 
     return {
-        .name = name,
+        .name = std::string{name},
         .iterations = iterations,
         .total_ns = total_ns,
         .avg_ns = avg_ns,

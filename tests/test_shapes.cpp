@@ -82,6 +82,7 @@ TEST_CASE("Circle comparison operations", "[shapes][circle][comparison]") {
     REQUIRE(small_circle < large_circle);
     REQUIRE(large_circle > small_circle);
     REQUIRE_FALSE(small_circle > large_circle);
+    REQUIRE_FALSE(large_circle < small_circle);
   }
 
   SECTION("Comparison with same radius") {

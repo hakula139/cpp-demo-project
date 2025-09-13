@@ -1,6 +1,7 @@
 # Build artifacts
 bin/
 build/
+dist/
 out/
 
 # C++ compiled files
@@ -13,6 +14,23 @@ out/
 *.so
 *.dylib
 *.dll
+
+# Python
+__pycache__/
+.venv/
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
+# pytest
+.benchmarks/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
 
 # Debug and temporary files
 *.log

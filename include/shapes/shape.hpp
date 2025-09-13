@@ -109,15 +109,6 @@ class Shape {
    */
   [[nodiscard]] constexpr auto GetName() const noexcept -> std::string_view { return name_; }
 
-  /**
-   * @brief Three-way comparison operator
-   * @param other The other shape to compare with
-   * @return Comparison result
-   *
-   * Provides lexicographic comparison based on shape names.
-   */
-  [[nodiscard]] auto operator<=>(const Shape &other) const = default;
-
  protected:
   /**
    * @brief Construct a shape with the specified name

@@ -37,8 +37,8 @@ jobs:
           - clang
           - gcc
         preset:
-          - debug-strict
-          - release-strict
+          - debug-python-strict
+          - release-python-strict
 
     steps:
       - name: Checkout
@@ -90,7 +90,6 @@ jobs:
         run: |
           brew install --quiet \
             catch2 \
-            cmake \
             cppcheck \
             ninja \
             llvm@${{ env.LLVM_VERSION }}
@@ -106,7 +105,6 @@ jobs:
         if: runner.os == 'macOS' && matrix.compiler == 'gcc'
         run: |
           brew install --quiet \
-            cmake \
             cppcheck \
             ninja \
             gcc@${{ env.GCC_VERSION }}
@@ -118,17 +116,55 @@ jobs:
           echo "CPPFLAGS=-I$GCC_HOME/include" >>$GITHUB_ENV
           echo "LDFLAGS=-L$GCC_HOME/lib/gcc/${{ env.GCC_VERSION }}" >>$GITHUB_ENV
 
-      - name: Configure with preset
+      - name: Install Python dependencies
         run: |
-          cmake --preset ${{ matrix.preset }} -DENABLE_CLANG_TIDY=${{ matrix.compiler == 'clang' }}
+          cd python
+          pip3 install poetry --break-system-packages
+          poetry install
 
-      - name: Build with preset
+      - name: Configure
         run: |
-          cmake --build --preset ${{ matrix.preset }} --parallel
+          cmake \
+            --preset ${{ matrix.preset }} \
+            -DENABLE_CLANG_TIDY=${{ matrix.compiler == 'clang' }}
 
-      - name: Test with preset
+      - name: Build
         run: |
-          ctest --preset ${{ matrix.preset }} --parallel
+          cmake \
+            --build \
+            --preset ${{ matrix.preset }} \
+            --parallel
+
+          cp build/binding/*.so python/src/demo/
+
+      - name: Run C++ tests
+        run: |
+          ctest \
+            --preset ${{ matrix.preset }} \
+            --parallel
+
+      - name: Run Python tests
+        run: |
+          cd python
+          poetry run pytest
+
+      - name: Run C++ examples
+        run: |
+          for example in build/examples/*_example; do
+            echo "Running $example..."
+            $example
+            echo
+          done
+
+      - name: Run Python examples
+        run: |
+          cd python
+          eval $(poetry env activate)
+          for example in examples/*_example.py; do
+            echo "Running $example..."
+            python3 $example
+            echo
+          done
 
       - name: Upload build logs
         if: failure()
@@ -136,5 +172,5 @@ jobs:
         with:
           name: build-logs-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.preset }}
           path: |
-            build/${{ matrix.preset }}/
+            build/
           retention-days: 3

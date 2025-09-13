@@ -1,0 +1,156 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "demo-python"
+version = "1.1.0"
+description = "Python bindings for Modern C++ Features Demo Project"
+authors = [{ name = "Hakula Chen", email = "i@hakula.xyz" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.12"
+keywords = ["cpp", "cpp23", "pybind11", "demo"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Testing",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+dynamic = ["dependencies"]
+
+[project.urls]
+Homepage = "https://github.com/hakula139/cpp-demo-project"
+Repository = "https://github.com/hakula139/cpp-demo-project"
+Documentation = "https://github.com/hakula139/cpp-demo-project"
+
+[tool.poetry]
+# Note: .so files must be copied to src/demo/ before building
+# Use `python3 scripts/build.py` to build the package
+packages = [{ include = "demo", from = "src" }]
+include = [{ path = "src/demo/*.so", format = ["sdist", "wheel"] }]
+
+[tool.poetry.dependencies]
+python = ">=3.12"
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^8.4.2"
+pytest-cov = "^6.3.0"
+pytest-xdist = "^3.8.0"
+pytest-benchmark = "^5.1.0"
+
+# Type checking
+mypy = "^1.18.1"
+
+# Code formatting and linting
+ruff = "^0.12.12"
+bandit = "^1.8.6"
+
+# TODO: Documentation
+
+# Development tools
+pre-commit = "^4.3.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.4.2"
+pytest-cov = "^6.3.0"
+pytest-xdist = "^3.8.0"
+pytest-benchmark = "^5.1.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-config",
+    "--strict-markers",
+    "--verbose",
+    "--cov=src/demo",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml",
+    "--cov-fail-under=90",
+]
+markers = [
+    "slow: mark a test as slow (deselect with '-m \"not slow\"')",
+    "integration: mark a test as integration test",
+]
+filterwarnings = ["error", "ignore::UserWarning", "ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["src/demo"]
+omit = ["*/__pycache__/*", "*/examples/*", "*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "return NotImplemented",
+    "if __name__ == '__main__':",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@abstractmethod",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "I",   # isort
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+split-on-trailing-comma = true
+combine-as-imports = true
+force-single-line = false
+known-first-party = ["demo"]
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+ignore_missing_imports = true # FIXME: remove this after generating stubs for pybind11 modules
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = false # FIXME: enable this after generating stubs for pybind11 modules
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["cpp_features.*"]
+ignore_missing_imports = true
+
+[tool.bandit]
+skips = ["B101"]

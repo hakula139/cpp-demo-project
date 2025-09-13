@@ -30,13 +30,14 @@ This project serves as both a learning resource and a reference implementation f
 - **Type Safety**: Concept-based constraints preventing common programming errors
 - **Performance Tools**: Built-in timing utilities and benchmark framework
 - **Error Handling**: Multiple error handling strategies (exceptions, `Result` type, `std::expected`)
+- **Python Bindings**: Complete pybind11 integration with modern Python features
 
 ### Code Quality & Development
 
-- **Static Analysis**: Integrated `clang-tidy` and `cppcheck` for code quality
 - **Automatic Formatting**: Pre-commit hooks with `clang-format` and `gersemi`
+- **Static Analysis**: Integrated `clang-tidy` and `cppcheck` for code quality
 - **Documentation**: Comprehensive Doxygen-style documentation
-- **CI/CD Ready**: Modern CMake configuration for easy integration
+- **CI/CD Automation**: Automatic build and test workflows with CMake presets
 
 ## 📋 Table of Contents
 
@@ -51,7 +52,7 @@ This project serves as both a learning resource and a reference implementation f
   - [Quick Start](#quick-start)
     - [Clone the repository](#clone-the-repository)
     - [Build the project](#build-the-project)
-    - [Run individual examples](#run-individual-examples)
+    - [Run examples](#run-examples)
     - [Run tests](#run-tests)
   - [CMake Presets](#cmake-presets)
     - [Configure Presets](#configure-presets)
@@ -68,7 +69,7 @@ This project serves as both a learning resource and a reference implementation f
 - [📁 Project Structure](#-project-structure)
 - [🔧 Components Overview](#-components-overview)
 - [💻 Development Notes](#-development-notes)
-  - [Code Style](#code-style)
+  - [Code Quality](#code-quality)
   - [Pre-commit Configuration](#pre-commit-configuration)
 - [📄 License](#-license)
 
@@ -92,6 +93,7 @@ This project demonstrates practical applications of:
 - **C++23 compatible compiler** ([Clang] 20+ / [GCC] 14+)
 - **[CMake] 3.23+**
 - **[Ninja] build system** (required for CMake - faster builds than Make)
+- **Python 3.12+** (optional, for Python bindings)
 
 It's recommended to use a development container for the best development experience.
 See [`.devcontainer/README.md`](.devcontainer/README.md) for more details.
@@ -117,15 +119,16 @@ cmake --preset release
 cmake --build --preset release
 ```
 
-#### Run individual examples
+#### Run examples
 
 ```bash
-./build/release/examples/algorithms_example
-./build/release/examples/containers_example
-./build/release/examples/exceptions_example
-./build/release/examples/memory_example
-./build/release/examples/random_example
-./build/release/examples/shapes_example
+./build/examples/algorithms_example
+./build/examples/containers_example
+./build/examples/exceptions_example
+./build/examples/memory_example
+./build/examples/random_example
+./build/examples/shapes_example
+./build/examples/timing_example
 ```
 
 #### Run tests
@@ -140,14 +143,20 @@ This project uses CMake presets for streamlined build configuration.
 
 #### Configure Presets
 
-| Preset             | Description                                                       |
-| ------------------ | ----------------------------------------------------------------- |
-| `debug`            | Debug build with symbols and no optimization                      |
-| `release`          | Release build with full optimization                              |
-| `debug-no-tests`   | Debug build without tests and examples (faster config)            |
-| `release-no-tests` | Release build without tests and examples (faster config)          |
-| `debug-strict`     | Debug build with static analysis and warnings treated as errors   |
-| `release-strict`   | Release build with static analysis and warnings treated as errors |
+| Preset                    | Description                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `debug`                   | Debug build with symbols and no optimization                                       |
+| `release`                 | Release build with full optimization                                               |
+| `debug-no-tests`          | Debug build without tests and examples (faster config)                             |
+| `release-no-tests`        | Release build without tests and examples (faster config)                           |
+| `debug-strict`            | Debug build with static analysis and warnings treated as errors                    |
+| `release-strict`          | Release build with static analysis and warnings treated as errors                  |
+| `debug-python`            | Debug build with Python bindings                                                   |
+| `release-python`          | Release build with Python bindings                                                 |
+| `debug-python-no-tests`   | Debug build with Python bindings, without tests and examples                       |
+| `release-python-no-tests` | Release build with Python bindings, without tests and examples                     |
+| `debug-python-strict`     | Debug build with Python bindings, static analysis and warnings treated as errors   |
+| `release-python-strict`   | Release build with Python bindings, static analysis and warnings treated as errors |
 
 #### Build & Test Presets
 
@@ -155,10 +164,18 @@ Each configure preset has corresponding build and test presets with the same nam
 
 #### Workflow Presets
 
-| Preset             | Description                                         |
-| ------------------ | --------------------------------------------------- |
-| `debug-workflow`   | Complete debug workflow: configure + build + test   |
-| `release-workflow` | Complete release workflow: configure + build + test |
+Each workflow preset is a combination of the configure, build, and test presets.
+
+| Preset                           | Description                                          |
+| -------------------------------- | ---------------------------------------------------- |
+| `debug-workflow`                 | Complete workflow for `debug` preset                 |
+| `release-workflow`               | Complete workflow for `release` preset               |
+| `debug-strict-workflow`          | Complete workflow for `debug-strict` preset          |
+| `release-strict-workflow`        | Complete workflow for `release-strict` preset        |
+| `debug-python-workflow`          | Complete workflow for `debug-python` preset          |
+| `release-python-workflow`        | Complete workflow for `release-python` preset        |
+| `debug-python-strict-workflow`   | Complete workflow for `debug-python-strict` preset   |
+| `release-python-strict-workflow` | Complete workflow for `release-python-strict` preset |
 
 #### Usage Examples
 
@@ -189,7 +206,7 @@ cmake --workflow --preset release-workflow  # Complete release cycle
 
 ### Build Options
 
-See [`cmake/README.md`](cmake/README.md#options) for available build options.
+See [`cmake/README.md`](cmake/README.md#options) for additional build options.
 
 ### Pre-commit Setup (Recommended)
 
@@ -223,6 +240,9 @@ pre-commit run --all-files
   - Checks for added large files
 - **clang-format**: Formats C++ code according to the project style
 - **gersemi**: Formats CMake files with consistent indentation
+- **ruff**: Lint and format Python code with consistent style
+- **mypy**: Lints Python code with type hints
+- **bandit**: Lints Python code with security best practices
 - **markdownlint-cli2**: Lints Markdown files with consistent formatting
 
 The hooks will run automatically on `git commit` and prevent commits with formatting issues.
@@ -245,62 +265,71 @@ auto main() -> int {
   Container<int> numbers{42, 17, 89, 3, 56};
   std::println("Original: {}", numbers);
 
+  // Sort the container in place
   SortContainer(numbers);
   std::println("Sorted: {}", numbers);
 
   // Type-safe factory functions with validation
   auto circle = CreateCircle(5.0);
-  std::println("Area: {:.2f}, Perimeter: {:.2f}", circle->GetArea(), circle->GetPerimeter());
+  auto area = circle->GetArea();
+  auto perimeter = circle->GetPerimeter();
+  std::println("Area: {:.2f}, Perimeter: {:.2f}", area, perimeter);
 
   return 0;
 }
 ```
 
+More examples can be found in the [`examples`](examples) directory.
+
 ## 📁 Project Structure
 
 ```text
 cpp-demo-project/
-├── .github/                    # GitHub Actions configuration
-│   └── workflows/              # GitHub Actions workflows
-├── .vscode/                    # VS Code configuration
-│   ├── launch.json             # VS Code launch configuration
-│   ├── settings.json           # VS Code settings
-│   └── tasks.json              # VS Code tasks
-├── build/                      # Build output (generated by CMake)
-│   ├── debug/                  # Debug build output
-│   ├── release/                # Release build output
-│   └── [other presets]
-├── cmake/                      # CMake modules and utilities
-│   ├── CompilerWarnings.cmake  # Compiler warning configuration
-│   ├── Dependencies.cmake      # External dependencies configuration
-│   ├── ModuleHelpers.cmake     # Module helper functions
-│   ├── StaticAnalysis.cmake    # Static analysis tools
-│   ├── config.cmake.in         # Package configuration
-│   └── README.md               # CMake modules documentation
-├── include/                    # Public header files
-│   ├── algorithms/             # STL algorithm wrappers with concepts
-│   ├── concepts/               # Custom concepts and type traits
-│   ├── containers/             # Modern container wrapper with ranges support
-│   ├── exceptions/             # Custom exception hierarchy and Result type
-│   ├── memory/                 # Resource management and RAII utilities
-│   ├── random/                 # Type-safe random number generation
-│   ├── shapes/                 # Polymorphic shapes with factory functions
-│   └── timing/                 # Performance measurement and benchmarking
-├── src/                        # Source implementation files
-│   ├── CMakeLists.txt          # Components configuration
-│   └── [mirrors include structure]
-├── examples/                   # Usage examples and demonstrations
-├── tests/                      # Test suite using Catch2 v3
-├── .clang-format               # clang-format configuration (for C++ code formatting)
-├── .clang-tidy                 # clang-tidy configuration (for static analysis)
-├── .clangd                     # clangd configuration (for code completion)
-├── .gersemirc                  # gersemi configuration (for CMake code formatting)
-├── .markdownlint.yaml          # markdownlint configuration (for Markdown formatting)
-├── .pre-commit-config.yaml     # pre-commit hooks configuration
-├── CMakeLists.txt              # Main project configuration
-├── CMakePresets.json           # CMake presets configuration
-├── LICENSE                     # MIT License
-└── README.md                   # This file
+├── .github/                     # GitHub Actions configuration
+│   └── workflows/               # GitHub Actions workflows
+├── .vscode/                     # VS Code configuration
+│   ├── launch.json              # VS Code launch configuration
+│   ├── settings.json            # VS Code settings
+│   └── tasks.json               # VS Code tasks
+├── build/                       # Build output (generated by CMake)
+├── cmake/                       # CMake modules and utilities
+│   ├── CompilerWarnings.cmake   # Compiler warning configuration
+│   ├── Dependencies.cmake       # External dependencies configuration
+│   ├── ModuleHelpers.cmake      # Module helper functions
+│   ├── StaticAnalysis.cmake     # Static analysis tools
+│   ├── config.cmake.in          # Package configuration
+│   └── README.md                # CMake modules documentation
+├── include/                     # Public C++ header files
+│   ├── algorithms/              # STL algorithm wrappers with concepts
+│   ├── concepts/                # Custom concepts and type traits
+│   ├── containers/              # Modern container wrapper with ranges support
+│   ├── exceptions/              # Custom exception hierarchy and Result type
+│   ├── memory/                  # Resource management and RAII utilities
+│   ├── random/                  # Type-safe random number generation
+│   ├── shapes/                  # Polymorphic shapes with factory functions
+│   └── timing/                  # Performance measurement and benchmarking
+├── src/                         # C++ source implementation files
+│   ├── CMakeLists.txt           # Components configuration
+│   └── [module]/                # C++ source implementation for the component
+├── examples/                    # C++ usage examples and demonstrations
+│   └── [module]_example.cpp     # C++ usage examples for the component
+├── tests/                       # C++ test suite using Catch2 v3
+│   └── test_[module].cpp        # C++ unit tests for the component
+├── binding/                     # pybind11 C++ binding files
+│   ├── CMakeLists.txt           # Python bindings configuration
+│   ├── cpp_features.cpp         # Main pybind11 module
+│   └── [module]_binding.cpp     # Individual module bindings
+├── python/                      # Python wrapper modules (see python/README.md for more details)
+├── .clang-format                # clang-format configuration (for C++ code formatting)
+├── .clang-tidy                  # clang-tidy configuration (for static analysis)
+├── .clangd                      # clangd configuration (for code completion)
+├── .gersemirc                   # gersemi configuration (for CMake code formatting)
+├── .markdownlint.yaml           # markdownlint configuration (for Markdown formatting)
+├── .pre-commit-config.yaml      # pre-commit hooks configuration
+├── CMakeLists.txt               # Main project configuration
+├── CMakePresets.json            # CMake presets configuration
+├── LICENSE                      # MIT License
+└── README.md                    # This file
 ```
 
 ## 🔧 Components Overview
@@ -318,51 +347,26 @@ cpp-demo-project/
 
 ## 💻 Development Notes
 
-### Code Style
+### Code Quality
 
-This project follows the **Google C++ Style Guide** with some modifications:
-
-- **Automatic formatting**: Uses `.clang-format` for C++ code and `gersemi` for CMake files
-- **Static analysis**: Enabled with `.clang-tidy` for code quality checks
-- **Modern C++ practices**: Follows Core Guidelines and C++23 best practices
-- **Documentation**: Comprehensive Doxygen-style documentation
+- **Consistent formatting**
+  - Uses `clang-format` for C++ code
+  - Uses `gersemi` for CMake files
+  - Uses `ruff` for Python code
+  - Uses `markdownlint-cli2` for Markdown files
+- **Static analysis**
+  - Uses `clang-tidy` and `cppcheck` for C++ code
+  - Uses `ruff`, `mypy` and `bandit` for Python code
+- **Modern practices**
+  - Follows Core Guidelines and modern C++23 best practices
+  - Follows PEP 8 and modern Python conventions
+- **Comprehensive documentation**
+  - Doxygen-style documentation for C++ code
+  - Numpy-style docstrings for Python code
 
 ### Pre-commit Configuration
 
-The project includes a comprehensive pre-commit setup (`.pre-commit-config.yaml`):
-
-```yaml
-repos:
-  # Standard pre-commit hooks
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: check-added-large-files
-      - id: check-yaml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-
-  # C++ formatting with clang-format
-  - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.7
-    hooks:
-      - id: clang-format
-        files: \.(cpp|hpp|h)$
-
-  # CMake formatting with gersemi
-  - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.19.3
-    hooks:
-      - id: gersemi
-        files: (\.cmake|CMakeLists\.txt)$
-
-  # Markdown linting and formatting
-  - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
-    hooks:
-      - id: markdownlint-cli2
-        args: ['--config', '.markdownlint.yaml']
-```
+The project includes a comprehensive pre-commit setup [`.pre-commit-config.yaml`](.pre-commit-config.yaml).
 
 **Benefits:**
 
@@ -373,4 +377,4 @@ repos:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [`LICENSE`](LICENSE) file for details.

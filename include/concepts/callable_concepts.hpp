@@ -94,6 +94,30 @@ concept TimerCallback = std::invocable<Func, std::int64_t> &&
                         std::same_as<std::invoke_result_t<Func, std::int64_t>, void>;
 
 /**
+ * @brief Concept for transformation functions that can be used with container transformations
+ *
+ * @tparam Func The type of the transformation function
+ * @tparam Input The type of the input elements
+ * @tparam Output The type of the output elements
+ *
+ * This concept ensures that a type can be used as a transformation function for container
+ * operations. The function must be invocable with an Input type and return an Output type.
+ *
+ * @code
+ * template <TransformFunction<int, int> Func>
+ * auto transform_elements(const std::vector<int> &vec, Func func) {
+ *   return vec | std::views::transform(func);
+ * }
+ *
+ * auto square = [](int n) { return n * n; };
+ * auto squared_numbers = transform_elements(numbers, square);
+ * @endcode
+ */
+template <typename Func, typename Input, typename Output = Input>
+concept TransformFunction =
+    std::invocable<Func, Input> && std::convertible_to<std::invoke_result_t<Func, Input>, Output>;
+
+/**
  * @brief Concept for predicate functions that can be used with container filtering
  *
  * @tparam Predicate The predicate type to check
@@ -101,13 +125,11 @@ concept TimerCallback = std::invocable<Func, std::int64_t> &&
  *
  * This concept ensures that a type can be used as a predicate for filtering operations.
  * The predicate must be invocable with a const reference to T and return a type that
- * is convertible to bool. This allows for flexible usage with lambdas, function pointers,
- * functors, and other callable objects.
+ * is convertible to bool.
  *
  * @code
  * template <typename T, PredicateFor<T> Predicate>
  * auto filter_elements(const std::vector<T> &vec, Predicate predicate) {
- *   // Use predicate to filter elements
  *   return vec | std::views::filter(predicate);
  * }
  *
@@ -116,7 +138,6 @@ concept TimerCallback = std::invocable<Func, std::int64_t> &&
  * @endcode
  */
 template <typename Predicate, typename T>
-concept PredicateFor = std::invocable<Predicate, const T &> &&
-                       std::convertible_to<std::invoke_result_t<Predicate, const T &>, bool>;
+concept PredicateFor = TransformFunction<Predicate, const T &, bool>;
 
 }  // namespace cpp_features::concepts

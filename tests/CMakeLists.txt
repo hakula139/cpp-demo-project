@@ -1,6 +1,6 @@
 # Tests CMakeLists.txt
 
-# Check if Catch2 is available
+# Ensure Catch2 is available
 if(NOT TARGET Catch2::Catch2WithMain)
   if(NOT COMMAND catch_discover_tests)
     message(
@@ -19,7 +19,7 @@ add_executable(
   test_memory.cpp
   test_random.cpp
   test_shapes.cpp
-  test_timer.cpp
+  test_timing.cpp
 )
 
 # Link against the demo library and Catch2

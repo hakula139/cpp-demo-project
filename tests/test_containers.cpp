@@ -75,23 +75,6 @@ TEST_CASE("Container basic operations", "[containers][basic]") {
     REQUIRE(val1->get() == "!!!!!");
   }
 
-  SECTION("Access elements") {
-    Container<int> container{10, 20};
-
-    auto val0 = container.At(0);
-    REQUIRE(val0.has_value());
-    REQUIRE(val0->get() == 10);
-
-    auto val1 = container.At(1);
-    REQUIRE(val1.has_value());
-    REQUIRE(val1->get() == 20);
-
-    auto val2 = container.At(2);
-    REQUIRE_FALSE(val2.has_value());
-    REQUIRE_THROWS_AS(val2.value(), std::bad_expected_access<ContainerError>);
-    REQUIRE(val2.error() == ContainerError::kOutOfBounds);
-  }
-
   SECTION("Remove elements") {
     Container<int> container{1, 2, 3, 2, 4, 2};
 
@@ -117,6 +100,42 @@ TEST_CASE("Container basic operations", "[containers][basic]") {
     REQUIRE_THROWS_AS(val3.value(), std::bad_expected_access<ContainerError>);
     REQUIRE(val3.error() == ContainerError::kOutOfBounds);
   }
+
+  SECTION("Access elements") {
+    Container<int> container{10, 20};
+
+    auto val0 = container.At(0);
+    REQUIRE(val0.has_value());
+    REQUIRE(val0->get() == 10);
+
+    auto val1 = container.At(1);
+    REQUIRE(val1.has_value());
+    REQUIRE(val1->get() == 20);
+
+    auto val2 = container.At(2);
+    REQUIRE_FALSE(val2.has_value());
+    REQUIRE_THROWS_AS(val2.value(), std::bad_expected_access<ContainerError>);
+    REQUIRE(val2.error() == ContainerError::kOutOfBounds);
+  }
+
+  SECTION("Iterator support") {
+    Container<int> container{1, 2, 3};
+
+    auto it = container.begin();
+    REQUIRE(*it == 1);
+
+    ++it;
+    REQUIRE(*it == 2);
+
+    ++it;
+    REQUIRE(*it == 3);
+
+    ++it;
+    REQUIRE(it == container.end());
+
+    --it;
+    REQUIRE(*it == 3);
+  }
 }
 
 TEST_CASE("Container views and ranges", "[containers][ranges]") {
@@ -138,25 +157,6 @@ TEST_CASE("Container views and ranges", "[containers][ranges]") {
 
     REQUIRE(squared_values.size() == 5);
     REQUIRE(squared_values == std::vector<int>{1, 4, 9, 16, 25});
-  }
-
-  SECTION("Iterator support") {
-    Container<int> container{1, 2, 3};
-
-    auto it = container.begin();
-    REQUIRE(*it == 1);
-
-    ++it;
-    REQUIRE(*it == 2);
-
-    ++it;
-    REQUIRE(*it == 3);
-
-    ++it;
-    REQUIRE(it == container.end());
-
-    --it;
-    REQUIRE(*it == 3);
   }
 }
 

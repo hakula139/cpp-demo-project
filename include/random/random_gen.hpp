@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <random>
 #include <ranges>
+#include <stdexcept>
 #include <vector>
 
 namespace cpp_features::random {
@@ -85,7 +86,7 @@ class RandomGenerator {
    * @tparam T Integral type that satisfies std::integral concept
    * @param min Minimum value (inclusive)
    * @param max Maximum value (inclusive)
-   * @return Random value of type T in the range [min, max]
+   * @return A random value of type T in the range [min, max]
    *
    * Generates a uniformly distributed random integral value within the specified range.
    * Both bounds are inclusive. The type T must be an integral type (int, long, etc.).
@@ -107,7 +108,7 @@ class RandomGenerator {
    * @tparam T Floating-point type that satisfies std::floating_point concept
    * @param min Minimum value (inclusive)
    * @param max Maximum value (exclusive)
-   * @return Random value of type T in the range [min, max)
+   * @return A random value of type T in the range [min, max)
    *
    * Generates a uniformly distributed random floating-point value within the specified range.
    * The minimum bound is inclusive, the maximum bound is exclusive. The type T must be a
@@ -131,7 +132,7 @@ class RandomGenerator {
    * @param min Minimum value for each element (inclusive)
    * @param max Maximum value for each element (inclusive)
    * @param count Number of random values to generate
-   * @return Vector containing count random values of type T
+   * @return A vector of random integral values
    *
    * Efficiently generates a vector of uniformly distributed random integral values.
    * Each value is independently generated within the specified range.
@@ -160,7 +161,7 @@ class RandomGenerator {
    * @param min Minimum value for each element (inclusive)
    * @param max Maximum value for each element (exclusive)
    * @param count Number of random values to generate
-   * @return Vector containing count random values of type T
+   * @return A vector of random floating-point values
    *
    * Efficiently generates a vector of uniformly distributed random floating-point values.
    * Each value is independently generated within the specified range.
@@ -186,7 +187,7 @@ class RandomGenerator {
    * @brief Generate a random boolean value with specified probability
    *
    * @param probability Probability of returning true (default: 0.5)
-   * @return Random boolean value
+   * @return A random boolean value
    *
    * Generates a random boolean value using a Bernoulli distribution with the specified probability.
    * A probability of 0.5 creates a fair coin flip, while other values bias the outcome accordingly.
@@ -198,6 +199,9 @@ class RandomGenerator {
    * @endcode
    */
   [[nodiscard]] auto GenerateBool(double probability = 0.5) -> bool {
+    if (probability < 0.0 || probability > 1.0) {
+      throw std::invalid_argument("Probability must be between 0.0 and 1.0");
+    }
     std::bernoulli_distribution dist{probability};
     return dist(generator_);
   }
@@ -208,7 +212,7 @@ class RandomGenerator {
    * @tparam T Floating-point type that satisfies std::floating_point concept
    * @param mean Mean (center) of the distribution
    * @param stddev Standard deviation of the distribution
-   * @return Random value from the normal distribution
+   * @return A random value from the normal distribution
    *
    * Generates a random value from a normal (Gaussian) distribution with the specified mean and
    * standard deviation. This is useful for generating naturally distributed data, noise, or
@@ -281,7 +285,7 @@ class RandomGenerator {
  * @endcode
  */
 template <std::ranges::random_access_range Range>
-void ShuffleContainer(Range &&range) {
+void ShuffleContainer(Range &range) {
   thread_local std::random_device rd;
   thread_local std::mt19937 gen{rd()};
   std::shuffle(std::ranges::begin(range), std::ranges::end(range), gen);
@@ -293,7 +297,7 @@ void ShuffleContainer(Range &&range) {
  * @tparam Range Type that satisfies std::ranges::input_range concept
  * @param range The source range to sample from
  * @param count Number of elements to sample
- * @return Vector containing randomly selected elements from the range
+ * @return A vector of randomly selected elements from the range
  *
  * Selects a random subset of elements from the input range without replacement.
  * If count exceeds the range size, all elements are returned. The relative order of sampled

@@ -1,7 +1,7 @@
 repos:
   # Standard pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-yaml
@@ -10,21 +10,64 @@ repos:
 
   # C++ formatting with clang-format
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v20.1.8
+    rev: v21.1.0
     hooks:
       - id: clang-format
         files: \.(cpp|hpp|h)$
 
   # CMake formatting with gersemi
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.21.0
+    rev: 0.22.1
     hooks:
       - id: gersemi
         files: (\.cmake|CMakeLists\.txt)$
+
+  # Python type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.17.1
+    hooks:
+      - id: mypy
+        files: ^python/.*\.pyi?$
+        args:
+          - --config-file
+          - python/pyproject.toml
+        additional_dependencies:
+          - pytest
+
+  # Python linting and formatting with ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.12
+    hooks:
+      - id: ruff-check
+        files: ^python/.*\.pyi?$
+        args:
+          - --config
+          - python/pyproject.toml
+          - --fix
+          - --unsafe-fixes
+      - id: ruff-format
+        files: ^python/.*\.pyi?$
+        args:
+          - --config
+          - python/pyproject.toml
+
+  # Python security linting with bandit
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        files: ^python/.*\.pyi?$
+        args:
+          - -c
+          - python/pyproject.toml
+        additional_dependencies:
+          - bandit[toml]
 
   # Markdown linting and formatting
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.18.1
     hooks:
       - id: markdownlint-cli2
-        args: ['--config', '.markdownlint.yaml']
+        args:
+          - --config
+          - .markdownlint.yaml

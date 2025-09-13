@@ -1,10 +1,14 @@
 {
+  "[cmake]": {
+    "editor.formatOnSave": false
+  },
   "C_Cpp.autocomplete": "disabled",
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp.intelliSenseEngine": "disabled",
   "clangd.arguments": [
     "--background-index",
     "--clang-tidy",
+    "--compile-commands-dir=build",
     "--completion-style=detailed",
     "--enable-config",
     "--header-insertion=iwyu",
@@ -18,16 +22,16 @@
   "cmake.automaticReconfigure": true,
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
+  "cursorpyright.analysis.extraPaths": ["python/src"],
   "editor.codeActionsOnSave": {
     "source.fixAll.clangd": "explicit",
     "source.organizeImports": "explicit"
   },
-  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
   },
   "editor.suggest.insertMode": "replace",
-  "editor.tabSize": 2,
   "files.associations": {
     "*.cpp": "cpp",
     "*.h": "cpp",
@@ -38,5 +42,7 @@
   "git.ignoreLimitWarning": true,
   "markdownlint.config": {
     "extends": ".markdownlint.yaml"
-  }
+  },
+  "python.analysis.extraPaths": ["python/src"],
+  "ruff.args": ["--config", "python/pyproject.toml"]
 }

@@ -1,0 +1,17 @@
+---
+InheritParentConfig: true
+Checks: >
+  bugprone-*,
+  -bugprone-exception-escape,
+  cert-*,
+  clang-analyzer-*,
+  google-*,
+  -google-build-using-namespace,
+  misc-*,
+  -misc-const-correctness,
+  -misc-use-internal-linkage,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -readability-identifier-length,
+  -readability-magic-numbers

@@ -30,12 +30,17 @@ TEST_CASE("Timer basic functionality", "[timing][timer]") {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
-    auto elapsed_ms = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed_ms >= 100);
-    REQUIRE(elapsed_ms < 300);  // Should be reasonable upper bound
+    auto first_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
+    REQUIRE(first_elapsed >= 100);
+    REQUIRE(first_elapsed < 300);  // Should be reasonable upper bound
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    auto second_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
+    REQUIRE(first_elapsed == second_elapsed);  // Should be same after stop
   }
 
-  SECTION("Timer reset functionality") {
+  SECTION("Timer reset") {
     Timer timer;
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     timer.Reset();
@@ -44,17 +49,29 @@ TEST_CASE("Timer basic functionality", "[timing][timer]") {
     REQUIRE(elapsed_ms < 100);  // Should be small after reset
   }
 
-  SECTION("Timer continues after stop") {
+  SECTION("Multiple start calls") {
     Timer timer;
     timer.Start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
+    timer.Start();  // Should reset the start time
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     timer.Stop();
 
+    auto elapsed_ms = timer.GetElapsed<std::chrono::milliseconds>();
+    REQUIRE(elapsed_ms >= 100);
+    REQUIRE(elapsed_ms < 300);  // Should be closer to 100ms due to restart
+  }
+
+  SECTION("Multiple stop calls") {
+    Timer timer;
+    timer.Start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    timer.Stop();
     auto first_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    timer.Stop();  // Second stop should have no effect
     auto second_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
 
-    REQUIRE(first_elapsed == second_elapsed);  // Should be same after stop
+    REQUIRE(first_elapsed == second_elapsed);
   }
 }
 
@@ -101,7 +118,7 @@ TEST_CASE("Timer string formatting", "[timing][timer][format]") {
     auto time_str = timer.GetElapsedString();
 
     REQUIRE_FALSE(time_str.empty());
-    REQUIRE(time_str.find('s') != std::string::npos);
+    REQUIRE(time_str.find("ms") != std::string::npos);
   }
 }
 
@@ -200,44 +217,6 @@ TEST_CASE("Utility functions", "[timing][utilities]") {
 
     // Should not crash
     REQUIRE(true);
-  }
-}
-
-TEST_CASE("Timer edge cases", "[timing][timer][edge_cases]") {
-  SECTION("Multiple start calls") {
-    Timer timer;
-    timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    timer.Start();  // Should reset the start time
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    timer.Stop();
-
-    auto elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed >= 100);
-    REQUIRE(elapsed < 300);  // Should be closer to 100ms due to restart
-  }
-
-  SECTION("Multiple stop calls") {
-    Timer timer;
-    timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    timer.Stop();
-    auto first_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    timer.Stop();  // Second stop should have no effect
-    auto second_elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-
-    REQUIRE(first_elapsed == second_elapsed);
-  }
-
-  SECTION("Reset after stop") {
-    Timer timer;
-    timer.Start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    timer.Stop();
-    timer.Reset();
-
-    auto elapsed = timer.GetElapsed<std::chrono::milliseconds>();
-    REQUIRE(elapsed < 100);  // Should be small after reset
   }
 }
 

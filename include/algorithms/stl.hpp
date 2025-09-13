@@ -53,8 +53,7 @@ void SortContainer(Container &container) {
  * @return The number of elements that satisfy the predicate
  *
  * Counts the number of elements in the range for which the predicate returns true.
- * The predicate must be callable with elements of the range and return a value
- * convertible to bool.
+ * The predicate must be callable with elements of the range and return a value convertible to bool.
  *
  * @code
  * std::vector<int> numbers{1, 2, 3, 4, 5, 6};
@@ -77,9 +76,8 @@ auto CountIf(Range &&range, Predicate predicate) -> std::size_t {
  * @param transform The transformation function to apply to each element
  * @return A vector containing the transformed elements
  *
- * Applies the transformation function to each element in the input range and
- * collects the results in a new vector. The transformation function must be
- * callable with elements of the range.
+ * Applies the transformation function to each element in the input range and collects the results
+ * in a new vector. The transformation function must be callable with elements of the range.
  *
  * @code
  * std::vector<int> numbers{1, 2, 3, 4, 5};

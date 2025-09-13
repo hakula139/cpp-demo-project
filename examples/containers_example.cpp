@@ -45,7 +45,7 @@ auto main() -> int {
     std::println("Error accessing element at index {}", index);
   }
 
-  // Demonstrate views and filters
+  // Demonstrate filtering
   auto even_view = numbers.GetFilteredView([](int x) { return x % 2 == 0; });
   std::print("Even numbers: ");
   std::ranges::for_each(even_view, [](int x) { std::print("{} ", x); });
